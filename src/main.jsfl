@@ -215,13 +215,13 @@ Item.prototype.setIndex = function (index) {
 /**
  * key frame
  */
-function Frame(frame) {
+function Frame(frame, totalFrame) {
+    this.totalFrame = totalFrame;
     this.frame = frame;
     this.parseRotate(frame);
     this.element = frame.elements[0];
     this.parseFrame(this.element);
     this.instance = this.parseInstance(this.element);
-    //console.log(this.element.elementType);// instance, shapeObj, tlfText, text, shape
     this.elementIndex = 0;
     if(this.element.elementType != 'instance') {
         console.log('not supported yet');
@@ -265,26 +265,33 @@ Frame.prototype.exportLua = function (lua, onlyposition) {
     if (onlyposition) {
         lua.inline('onlyposition' + this.position);
     } else {
-        var attrs = {drawable: this.elementIndex, start: this.startFrame, duration: this.duration, animation: this.tweenType, rotationDirection: this.direction, rotationCycles: this.cycles };
-        if(this.element.instanceType == 'symbol') {
-            attrs.alpha = this.element.colorAlphaPercent / 100;
-            if(this.instance.type == 'movieclip' && this.element.name) {
-                attrs.name = this.element.name;
-            }
-        }
-        var res = this.insertLinerKeyframe(this.nextFrame);
+        var res = this.insertLinerKeyframe(this.nextFrame,this.lastFrame);
         each(res,function(f){
-	        lua.childBegin();
-        	var str = '{ ' + ' index = ' + f.elementIndex + ', mat = {' + f.mat.a*1024 + ', ' + f.mat.b*1024 + ', ' + f.mat.c*1024 +', ' + f.mat.d*1024 + ', ' + f.mat.tx*16 + ', ' + f.mat.ty*16 + ' }}';
-        	if (f.text){ str += "--  " + f.text}
-        	lua.inline(str);
-	        lua.childEnd();
+            if (f.type && f.type == "blank"){
+                var str = "{}, -- blank"
+                //insert blank frame
+                lua.inline(str);
+            }else{
+                var str = '{ ' + ' index = ' + f.elementIndex + ', mat = {' + f.mat.a*1024 + ', ' + f.mat.b*1024 + ', ' + f.mat.c*1024 +', ' + f.mat.d*1024 + ', ' + f.mat.tx*16 + ', ' + f.mat.ty*16 + ' }}';
+                if (f.text){ str += ", --  " + f.text}
+                lua.childBegin();
+                lua.inline(str);
+                lua.childEnd();
+            }
         });
     }
 }
 
-Frame.prototype.insertLinerKeyframe = function (nextFrame){
+Frame.prototype.insertLinerKeyframe = function (nextFrame, lastFrame){
 	var res = [];
+    //First frame is blank
+    if (!lastFrame && this.startFrame!=1 ){
+        for (var i = 0, len = this.startFrame; i < len; i ++){
+            res.push({
+                'type' : "blank",
+            });
+        }
+    }
 	res.push({
 		'elementIndex' : this.elementIndex,
 		'mat' : {
@@ -320,7 +327,7 @@ Frame.prototype.insertLinerKeyframe = function (nextFrame){
 			});
 		}
 	}else{
-		for (var i = 0; i < this.duration; i++){
+		for (var i = 1; i < this.duration; i++){
 			res.push({
 				'elementIndex' : this.elementIndex,
 				'mat' : {
@@ -334,22 +341,33 @@ Frame.prototype.insertLinerKeyframe = function (nextFrame){
 				'text' : "<copy insert>",
 			});
 		}
-		if (nextFrame){	//插入空白帧
+		if (nextFrame){	// insert blank frame
 			for (var i = 0; i < nextFrame.startFrame - this.startFrame - this.duration; i++){
-				res.push({});
+				res.push({
+                    'type' : "blank",
+                });
 			};
 		}
 	}
+    //fill the frames till end
+    if (!nextFrame && this.startFrame + this.duration < this.totalFrame ){
+        for (var i = 0, len = this.totalFrame - this.startFrame - this.duration; i < len; i ++){
+            res.push({
+                'type' : "blank",
+            });
+        }
+    }
 	return res;
 }
 
-function Layer(flash, layer) {
+function Layer(flash, layer, frameCount) {
     this.flash = flash;
     this.layer = layer;
     this.frames = [];
     this.elements = [];
     this.graphic = false;
     this.index = flash.curIndex ++;
+    this.totalFrame = frameCount;
 }
 Layer.prototype.parse = function () {
     each(this.layer.frames, this.parseFrame, this);
@@ -376,7 +394,7 @@ Layer.prototype.parseFrame = function (frame, i) {
         console.log('unsupported frame.elements');
     }
 
-    var f = new Frame(frame);
+    var f = new Frame(frame, this.totalFrame);
     this.frames.push(f);
     this.distinctElement(f);
 }
@@ -419,6 +437,7 @@ Layer.prototype.exportLibraryLua = function (lua) {
 Layer.prototype.exportFramesLua = function (lua) {
 	for (var i = 0, len = this.frames.length; i < len; i ++){
 		this.frames[i].nextFrame = this.frames[i + 1];
+        this.frames[i].lastFrame = this.frames[i - 1];
 	}
     each(this.frames, function (frame) {
         frame.exportLua(lua);
@@ -456,7 +475,7 @@ Timeline.prototype.checkSprite = function () {
     }
 }
 Timeline.prototype.parseLayers = function (layer) {
-    var l = new Layer(this.flash, layer);
+    var l = new Layer(this.flash, layer, this.timeline.frameCount);
     this.layers.push(l);
     l.parse();
 }
