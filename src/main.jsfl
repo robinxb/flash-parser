@@ -1,6 +1,9 @@
 eval("var src = " + FLfile.read(jsonPath));
 src.findSrc = function (filename){
     // fl.trace("looking for " + filename)
+    if (! src.frames[filename]){
+        fl.trace(filename);
+    }
 	return src.frames[filename].frame;
 	// fl.trace("not found " + filename)
 }
@@ -94,7 +97,7 @@ Flash.prototype.loadLibrary = function (library) {
         } else if (item.itemType == 'bitmap') {
             var filename = this.genBitmapName();
             itemwrap.setContent(new BitmapItem(filename));
-        } else if (item.itemType != 'folder') {
+        } else if (item.itemType == 'folder') {
             console.log('not supported library item:' + item.itemType);
         }
     }, this);
@@ -224,7 +227,7 @@ function Frame(frame, totalFrame) {
     this.instance = this.parseInstance(this.element);
     this.elementIndex = 0;
     if(this.element.elementType != 'instance') {
-        console.log('not supported yet');
+        console.log('not supported yet : ' + this.element.elementType + this.element.name);
     }
 }
 Frame.prototype.parseRotate = function (frame) {
@@ -260,6 +263,10 @@ Frame.prototype.parseInstance = function (element) {
 Frame.prototype.parseFrame = function (element) {
 	this.mat = element.matrix;
 	this.tmat = element.getTransformationPoint();
+    // console.log(element.name, this.mat.tx,this.tmat.x,",,,",element.x);
+    // console.log(element.scaleX)
+    // console.log(element.rotation)
+    // console.log(this.mat.a,this.mat.b,this.mat.c,this.mat.d,this.mat.tx,this.mat.ty)
 }
 Frame.prototype.exportLua = function (lua, onlyposition) {
     if (onlyposition) {
@@ -475,9 +482,15 @@ Timeline.prototype.checkSprite = function () {
     }
 }
 Timeline.prototype.parseLayers = function (layer) {
-    var l = new Layer(this.flash, layer, this.timeline.frameCount);
-    this.layers.push(l);
-    l.parse();
+    if (layer.layerType != 'normal'){
+        console.log("Not supported layer type: " + layer.layerType + " @ " + layer.name);
+    }else if (layer.visible == false){
+        console.log("Invisible Layer found : " + layer.name + " , pass.")
+    }else{
+        var l = new Layer(this.flash, layer, this.timeline.frameCount);
+        this.layers.push(l);
+        l.parse();
+    }
 }
 Timeline.prototype.exportLua = function (lua) {
     if (!this.graphic) {
