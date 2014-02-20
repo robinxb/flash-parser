@@ -1,11 +1,11 @@
-eval("var src = " + FLfile.read(jsonPath));
+// var outputPath = "file:///tmp/flash_parser/output/";
+// var src = "file:///tmp/flash_parser/t.json";
+eval("var src = " + FLfile.read("file:///tmp/flash_parser/t.json"));
 src.findSrc = function (filename){
-    // fl.trace("looking for " + filename)
     if (! src.frames[filename]){
-        fl.trace(filename);
+        fl.trace("cant find " + filename);
     }
 	return src.frames[filename].frame;
-	// fl.trace("not found " + filename)
 }
 
 var console = {
@@ -58,12 +58,10 @@ BitmapItem.prototype.exportLua = function (lua) {
 	lua.end();
 }
 
-function Flash(document, dest, path, luafile, imgCounter) {
+function Flash(document, dest, path, luafile, imgCounter, index) {
     this.timelines = [];
     this.document = document;
-    this.curIndex = 0;
-    fl.trace("path " + path)
-    fl.trace('dest ' + dest)
+    this.curIndex = index;
 
     this.resourcePath = path;
     if (path.length == 0) {
@@ -95,7 +93,8 @@ Flash.prototype.loadLibrary = function (library) {
             this.timelines.push(timeline);
             itemwrap.setContent(timeline);
         } else if (item.itemType == 'bitmap') {
-            var filename = this.genBitmapName();
+            // var filename = this.genBitmapName();
+            var filename = item.name;
             itemwrap.setContent(new BitmapItem(filename));
         } else if (item.itemType == 'folder') {
             console.log('not supported library item:' + item.itemType);
@@ -139,13 +138,15 @@ Flash.prototype.exportLua = function () {
 }
 Flash.prototype.saveLua = function (lua) {
     var URI = this.getFilePath(this.luaFile+ '.lua');
+    fl.trace("preparing output " + URI)
     if (FLfile.write(URI, lua.buffer)) {
         console.log('export:' + URI + ' success');
     }
 }
 Flash.prototype.parse = function (timeline) {
     // add default timeline
-    this.main = new Timeline(this, timeline).setName('main');
+    this.main = new Timeline(this, timeline).setName(this.luaFile);
+    this.main.bIsMain = true
     this.main.parse();
     this.main.referResource();
 
@@ -161,6 +162,7 @@ Flash.prototype.parse = function (timeline) {
         }
     });
     this.main.index = index;
+    this.curIndex = index + 1
 }
 Flash.prototype.findItem = function (name) {
     return this.itemsmap[name];
@@ -496,7 +498,10 @@ Timeline.prototype.exportLua = function (lua) {
     if (!this.graphic) {
 		lua.begin();
 		lua.inline('type = "animation"');
-		lua.inline('export = "' + this.name + '\"');
+		lua.inline('tlname = "' + this.name + '\"');
+        if (this.bIsMain == true) {
+            lua.inline('export = "' + this.name + '\"');
+        }
 		lua.inline('id = ' + this.index);
 		lua.inline('framecount = ' + this.timeline.frameCount);
 		var componentCnt = 0
@@ -544,10 +549,11 @@ Timeline.prototype.setName = function (name) {
     this.name = name;
     return this;
 }
-function exportFla(dest, path, filename, imgCounter) {
-    var flash = new Flash(fl.getDocumentDOM(), dest, path, filename, imgCounter);
+function exportFla(dest, path, filename, imgCounter, beginIndex) {
+    var flash = new Flash(fl.getDocumentDOM(), dest, path, filename, imgCounter, beginIndex);
     flash.parse(fl.getDocumentDOM().getTimeline());
     flash.exportLua();
+    return flash.curIndex + 1
 }
 function DistinctImages() {
     this.imageCount = 0;
@@ -611,7 +617,47 @@ Lua.prototype.childEnd = function(){
 	this.buffer += this.getIndentBuffer() + '},\n';
 }
 
+function batToDo(folder)
+{
+    var files = FLfile.listFolder(folder + "/*.fla", "files");
+    var i = 0;
+    var imgCounter = new DistinctImages();
+    var nextindex = 0
+    for(; i < files.length; i++)
+    {
+        nextindex = pub(folder, files[i], imgCounter, nextindex);
+    }
+    
+    var directorys = FLfile.listFolder(folder + "/../", "directories");
+    for(i = 0; i < directorys.length; i++)
+    {
+        batToDo(folder + "/" + directorys[i]);
+    }
+}
+
+function DistinctImages() {
+    this.imageCount = 0;
+}
+DistinctImages.prototype.nextName = function () {
+    var name = 'imgs_' + (this.imageCount < 10 ? '0' + this.imageCount : this.imageCount) + '.png';
+    this.imageCount++;
+    return name;
+}
+
+function pub(dir, file, imgCounter, beginIndex)
+{
+    fl.trace("start parse "+ file)
+    var doc = fl.openDocument(dir + "/" + file);
+    var outputPath = "file:///tmp/flash_parser/output/" ;
+    var nextindex = exportFla(outputPath,'', doc.name ,new DistinctImages(), beginIndex);
+    doc.close();
+    fl.trace(file + "trace done! max index:" + nextindex)
+    return nextindex
+
+}
 console.clear();
-exportFla(outputPath,'', 'output',new DistinctImages());
-console.log('done...');
-FLfile.write("file:///tmp/flash_parser_done.tmp", "nothing");
+console.log('start loop');
+var publishFolder = fl.browseForFolderURL("请选择你要批量发布.fla的目录");
+batToDo(publishFolder);
+console.log('ALL DONE !');
+FLfile.write("file:///tmp/flash_parser.tmp","");
