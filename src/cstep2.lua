@@ -81,8 +81,7 @@ local function rebuild_animation_id(name ,t, id_table)
 	end
 end
 
-local function combine_one_ani_files(base_name, ani_files, id_table)
-	local pub_lib = {}
+local function combine_one_ani_files(base_name, ani_files, id_table, pub_lib)
 	for ani_name, t in pairs(ani_files) do
 		mark_component_name(t)
 	end
@@ -96,9 +95,8 @@ local function combine_one_ani_files(base_name, ani_files, id_table)
 		rebuild_animation_id(base_name.."_"..ani_name ,t, id_table)
 	end
 
-
 	if bUseAction then
-		now_id = #id_table + 1
+		local now_id = #id_table + 1
 		id_table[now_id] = true
 		local combine = { type = "animation", id = now_id, export = base_name, component = {}}
 		local export_table = {}
@@ -126,23 +124,9 @@ end
 
 local output = {}
 local id_table = {}
-local last_max_id = 0
+local pub_lib = {}
 for k,v in pairs(f) do
-	local this_combine = combine_one_ani_files(k, v, id_table)
-
-
-	if last_max_id ~= 0 then
-		for k2,v2 in pairs(v) do
-			for k3,v3 in pairs(v2) do
-				v3.id = last_max_id + v3.id
-				if v3.type == "animation" then
-					for k4,v4 in pairs(v3.component) do
-						v4.id = last_max_id + v4.id
-					end
-				end
-			end
-		end
-	end
+	local this_combine = combine_one_ani_files(k, v, id_table, pub_lib)
 
 	for k2,v2 in pairs(v) do
 		for k3,v3 in pairs(v2) do
@@ -150,10 +134,6 @@ for k,v in pairs(f) do
 		end
 	end
 	if this_combine then table.insert(output, this_combine) end
-
-	for k1,v1 in pairs(output) do
-		if v1.id > last_max_id then last_max_id = v1.id end
-	end
 end
 
 local file = io.open("final_output.lua","w")

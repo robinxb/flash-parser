@@ -313,24 +313,26 @@ Frame.prototype.insertLinerKeyframe = function (nextFrame, lastFrame){
 		},
 	});
 	if (nextFrame && nextFrame.startFrame == (this.startFrame+this.duration) ){ //确保是连续的，否则直接复制当前帧 x this.duration次
-		var delta = {
-			'a' : (this.mat.a - nextFrame.mat.a) / (this.duration + 1) ,
-			'b' : (this.mat.b - nextFrame.mat.b) / (this.duration + 1) ,
-			'c' : (this.mat.c - nextFrame.mat.c) / (this.duration + 1),
-			'd' : (this.mat.d - nextFrame.mat.d) / (this.duration + 1),
-			'tx' : (this.mat.tx - nextFrame.mat.tx) / (this.duration + 1),
-			'ty' : (this.mat.ty - nextFrame.mat.ty) / (this.duration + 1),
-		};
+
+        var mat_table = [];
+        if (this.duration > 1){
+            var t_mat = gen_trans_mat(this.mat, nextFrame.mat, this.duration);       
+            mat_table.push(this.mat)
+            for (var i = 1; i < this.duration; i++){
+                mat_table.push(m_mul(mat_table[i-1], t_mat))
+            }
+        }
+
 		for (var i = 1; i < this.duration; i++){
 			res.push({
 				'elementIndex' : this.elementIndex,
 				'mat' : {
-					'a' : this.mat.a - (delta.a * (i)),
-					'b' : this.mat.b - (delta.b * (i)),
-					'c' : this.mat.c - (delta.c * (i)),
-					'd' : this.mat.d - (delta.d * (i)),
-					'tx' : this.mat.tx - (delta.tx * (i)),
-					'ty' : this.mat.ty - (delta.ty * (i)),
+                    'a' : mat_table[i].a,
+                    'b' : mat_table[i].b,
+                    'c' : mat_table[i].c,
+                    'd' : mat_table[i].d,
+                    'tx' : mat_table[i].tx,
+                    'ty' : mat_table[i].ty,
 				},
 				'text' : "<liner insert>",
 			});
@@ -444,6 +446,9 @@ Layer.prototype.exportLibraryLua = function (lua) {
     });
 }
 Layer.prototype.exportFramesLua = function (lua) {
+    // for (var i = 0, len = this.frames.length; i < len; i ++){
+    //     this.frames[i].convertToFrameByFrameAnimation()
+    // }
 	for (var i = 0, len = this.frames.length; i < len; i ++){
 		this.frames[i].nextFrame = this.frames[i + 1];
         this.frames[i].lastFrame = this.frames[i - 1];
@@ -657,6 +662,105 @@ function pub(dir, file, imgCounter, beginIndex)
     return nextindex
 
 }
+
+function m_add(a, b){
+    var r = {
+        'a' : a.a + b.a,
+        'b' : a.b + b.b,
+        'c' : a.c + b.c,
+        'd' : a.d + b.d,
+        'tx': a.tx + b.tx,
+        'ty': a.ty + b.ty,
+    };
+    return r
+}
+
+function m_mul(a, b){
+    var r = {
+        'a' : 0,
+        'b' : 0,
+        'c' : 0,
+        'd' : 0,
+        'tx': 0,
+        'ty': 0,
+    };
+    r.a = (a.a * b.a + a.b * b.c) / 1024;
+    r.b = (a.a * b.b + a.b * b.d) / 1024;
+    r.c = (a.c * b.a + a.d * b.c) / 1024;
+    r.d = (a.c * b.b + a.d * b.d) / 1024;
+    r.tx = (a.tx * b.a + a.ty * b.c) / 1024 + b.tx;
+    r.ty = (a.tx * b.b + a.ty * b.d) / 1024 + b.ty;
+    return r
+}
+
+function m_inv(m){
+    var o = {
+        'a' : 0,
+        'b' : 0,
+        'c' : 0,
+        'd' : 0,
+        'tx': 0,
+        'ty': 0,
+    };
+    var t = m.a * m.d - m.b * m.c;
+    o.a = m.d * 1024 * 1024 / t;
+    o.b = - m.b * 1024 * 1024 / t;
+    o.c = - m.c * 1024 * 1024 / t;
+    o.d = m.a * 1024 * 1024 / t;
+    o.tx = - (m.tx * o.a + m.ty * o.c) / 1024;
+    o.ty = - (m.tx * o.b + m.ty * o.d) / 1024;
+    return o
+}
+
+function m_div(m){
+    return {
+        'a' : m.a / 2,
+        'b' : m.b / 2,
+        'c' : m.c / 2,
+        'd' : m.d / 2,
+        'tx' : m.tx / 2,
+        'ty' : m.ty / 2,
+    }
+}
+
+function gen_trans_mat(b_mat, n_mat, duration){
+    function _gen_once(Y){
+        var Z = {'a' : 1024, 'b' : 0, 'c' : 0, 'd': 1024, 'tx':0, 'ty':0};
+        function _sqrt(Y, Z){
+            var Y_1 = m_add(Y, m_inv(Z)) ;
+            var Z_1 = m_add(Z, m_inv(Y)) ;
+
+
+            return [m_div(Y_1), m_div(Z_1)]
+        }
+
+        var r = [];
+        for (var i = 0; i < 6; i ++){
+            r = _sqrt(Y, Z);
+            Y = r[0];
+            Z = r[1];
+        }
+        return Y
+    }
+
+    function _gen_1024(b_mat, n_mat){
+        var Y = m_mul(m_inv(b_mat), n_mat);
+        for (var i = 0; i < 11; i++){
+            Y = _gen_once(Y);
+        }
+        return Y
+    }
+
+    var tt = _gen_1024(b_mat, n_mat);
+    var r = tt;
+    // var times = 32768 / duration;
+    var times = 2048  / duration;
+    for (i = 0; i < times; i++){
+        r = m_mul(r, tt);
+    }
+    return r
+}
+
 console.clear();
 console.log('start loop');
 var publishFolder = fl.browseForFolderURL("请选择你要批量发布.fla的目录");
