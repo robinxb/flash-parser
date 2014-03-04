@@ -22,6 +22,46 @@ function mt.dump(data, prefix)
 	return str
 end
 
+function mt.final_dump(data, prefix, oneline)
+	function use_one_line(k, v)
+		if  k == "mat" or 
+			k == "src" or
+			k == "screen" then
+			return true
+		end
+		return false
+	end
+
+	oneline = oneline or false
+	if prefix == nil or type(prefix) ~= "string" then
+		prefix = ""
+	end
+
+	local str = ""
+	for k,v in pairs(data) do
+		if type(v) == "table" then
+			local oneline_flag = use_one_line(k, v)
+			if oneline_flag then
+				str = str..prefix..(type(k)=="string" and k.." = " or "").."{"
+			else
+				str = str..prefix..(type(k)=="string" and k.." = " or "").."{\n"
+			end
+			str = str..mt.final_dump(v, prefix.."    ", oneline_flag)
+			str = str..(oneline_flag and "" or prefix).."},\n"
+		else
+			str = str..(oneline and "" or prefix )..(type(k)=="string" and k.." = " or "")
+			str = str ..(type(v) == "string" and "\""..v.."\"" or v)
+			if oneline then
+				str = str .. ", "
+			else
+				str = str ..",\n"
+			end
+
+		end
+	end
+	return str
+end
+
 function mt.print_r(d)
 	local print = print
 	local tconcat = table.concat
@@ -179,7 +219,6 @@ function mt.make_id(data)
 				if v.type == "animation" then
 					assert(name2id[v.filename])
 					v.cid = name2id[v.filename]
-					-- v.id = id
 					id = id + 1
 				else
 					_make_ani_id(v, id, name2id)
@@ -249,4 +288,39 @@ function mt.export_ani(ani)
 	return total_frame
 end
 
+function mt:rebuild_tree(tree) --main funcitona
+	local main = nil
+	mt.foreach(data, function(d) if d.export then main = d return end end)
+
+	assert(main)
+	local total_frame = main.framecount
+	local id = main.id
+	local lib_build = mt.build_lib(data)
+
+	local frames = {}
+	for i = 1, total_frame do
+		table.insert(frames, mt.build_single_frame_tree(lib_build[id], i, lib_build))
+	end
+
+	ani_lib = mt.make_id(frames)
+	pic_lib = {}
+
+	for t,v in ipairs(ani_lib) do
+		local ani,pic = mt.split_ani_and_pic(v)
+		frames[t] = ani
+
+		for k,v in ipairs(pic) do
+			if not pic_lib[v.filename] then
+				pic_lib[v.filename] = v
+			end
+		end
+	end
+	ani_lib = mt.export_ani(ani_lib)
+	local output = {}
+	mt.foreach(pic_lib, function (d) table.insert(output, d) end)
+	table.insert(output, ani_lib)
+	return output
+end
+
+-- function mt:
 return mt

@@ -649,7 +649,9 @@ function pub(dir, file, imgCounter, beginIndex)
     fl.trace("start parse "+ file)
     var doc = fl.openDocument(dir + "/" + file);
     var outputPath = "file:///tmp/flash_parser/output/" ;
-    var nextindex = exportFla(outputPath,'', doc.name ,new DistinctImages(), beginIndex);
+    var filename = doc.name
+    filename = filename.replace(".fla", "")
+    var nextindex = exportFla(outputPath,'',filename ,new DistinctImages(), beginIndex);
     doc.close();
     fl.trace(file + "trace done! max index:" + nextindex)
     return nextindex
