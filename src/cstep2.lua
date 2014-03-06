@@ -105,13 +105,12 @@ local function combine_one_ani_files(base_name, ani_files, id_table, pub_lib)
 
 	if bUseAction then
 		local now_id = #id_table + 1
-		id_table[now_id] = true
 		local combine = { type = "animation", id = now_id, export = base_name, component = {}}
 		local export_table = {}
 		for ani_name, t in pairs(ani_files) do
 			for k,v in pairs(t) do
 				if v.export then
-					table.insert(export_table, {ac_name = v.export, c_id = v.id, frame_count = v.frame_count})
+					table.insert(export_table, {ac_name = ani_name, c_id = v.id, frame_count = v.frame_count})
 				end
 			end
 		end
@@ -126,7 +125,15 @@ local function combine_one_ani_files(base_name, ani_files, id_table, pub_lib)
 				table.insert(combine[index], {{index = index-1},})
 			end
 		end
-		return combine
+		
+		local file_count = 0
+		for ani_name, t in pairs(ani_files) do
+			file_count = file_count + 1
+			if file_count > 1 then
+				id_table[now_id] = true
+				return combine
+			end
+		end
 	end
 end
 

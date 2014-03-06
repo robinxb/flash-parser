@@ -341,5 +341,4 @@ function mt:rebuild_tree(tree) --main funcitona
 	return output
 end
 
--- function mt:
 return mt
