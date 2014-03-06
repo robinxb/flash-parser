@@ -31,7 +31,7 @@ done < ./flash_parser.tmp
 rm ./flash_parser.tmp
 
 cd flash_parser
-TexturePacker --format json --data ./t.json --sheet ./t.png --premultiply-alpha --trim-mode None --disable-rotation  ./images/*.*
+TexturePacker --format json --data ./t.json --sheet ./t.png --premultiply-alpha  ./images/*.*
 if [ $? != 0 ] || [ ! -f t.json ] || [ ! -f t.png ]
 then
 	echo "Error while run TexturePacker, exit."

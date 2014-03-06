@@ -5,7 +5,7 @@ src.findSrc = function (filename){
     if (! src.frames[filename]){
         fl.trace("cant find " + filename);
     }
-	return src.frames[filename].frame;
+    return src.frames[filename];
 }
 
 var console = {
@@ -38,25 +38,6 @@ function reverseEach(array, fn, bind) {
 function BitmapItem(path) {
     this.filename = path;
 }
-BitmapItem.prototype.exportLua = function (lua) {
-	lua.begin();
-	lua.inline('type = "picture"');
-	lua.inline('filename = \"' + this.filename + '\"');
-	var s = src.findSrc(this.filename);
-	var x = s.x, y = s.y, w = s.w, h = s.h;
-	var pstr = '';
-	pstr += x + ', ' + y + ', ';
-	pstr += (x+w) + ', ' + y + ', ';
-	pstr += (x+w) + ', ' + (y+h) + ', ';
-	pstr += x + ', ' + (y+h) + ', ';
-	var screenStr = '0, 0, ';
-	screenStr += w*16 + ', ' + 0 + ', ';
-	screenStr += w*16 + ', ' + h*16 + ', ';
-	screenStr += 0 + ', ' + h*16 + ', ';
-	lua.inline('{ tex = 1, src = {' + pstr + '}, screen = {'  + screenStr + '} }');
-	lua.inline('id = ' + this.index);
-	lua.end();
-}
 
 function Flash(document, dest, path, luafile, imgCounter, index) {
     this.timelines = [];
@@ -81,9 +62,14 @@ function Flash(document, dest, path, luafile, imgCounter, index) {
 Flash.prototype.autoInsertKeyframe = function (item){
     var d = fl.getDocumentDOM();
     function convertLayer(l){
+            var f_vec = []
             each (l.frames, function (f){
-                    f.convertToFrameByFrameAnimation(); 
+                    if (f.tweenType != "none"){ f_vec.push(f); }
+                    // f.convertToFrameByFrameAnimation(); 
                 });
+            each (f_vec, function(f){
+                f.convertToFrameByFrameAnimation(); 
+            });
         }
 
     each (d.library.items, function (item){
@@ -107,12 +93,10 @@ Flash.prototype.loadLibrary = function (library) {
         if (item.itemType == 'movie clip' || item.itemType == 'graphic') {
             itemwrap.movieclip = true;
             itemwrap.directRefer = true;
-            // item.timeline.convertToKeyframes(0, 9);
             var timeline = new Timeline(this, item.timeline).setName(item.name);
             this.timelines.push(timeline);
             itemwrap.setContent(timeline);
         } else if (item.itemType == 'bitmap') {
-            // var filename = this.genBitmapName();
             var filename = item.name;
             itemwrap.setContent(new BitmapItem(filename));
         } else if (item.itemType == 'folder') {
@@ -282,16 +266,8 @@ Frame.prototype.parseInstance = function (element) {
     return instance;
 }
 Frame.prototype.parseFrame = function (element) {
-	this.mat = element.matrix;
-	this.tmat = element.getTransformationPoint();
-    // fl.trace(element.firstFrame)
-    // if (element.instanceType == "symbol"){
-    //     fl.trace("aaaa");
-    //     fl.trace("Found Loop Frame @ " + element.firstFrame + " , " + this.startFrame + ", " + this.frame.name);
-    // }
-    // if (element.instanceType == "symbol" && element.firstFrame != 1 && this.startFrame == 1){
-    // if (element.instanceType == "symbol" && element.firstFrame != this.startFrame){
-        // fl.trace("Found Loop Frame @ " + element.firstFrame + " , " + this.startFrame + ", " + this.frame.name);
+    this.mat = element.matrix;
+    this.tmat = element.getTransformationPoint();
     this.elementStartFrame = element.firstFrame + 1;
 
     this.elementColorAlphaAmount = element.colorAlphaAmount;
@@ -303,9 +279,6 @@ Frame.prototype.parseFrame = function (element) {
     this.elementColorRedAmount = element.colorRedAmount;
     this.elementColorRedPercent = element.colorRedPercent;
 
-    fl.trace("parse" + this.elementColorAlphaPercent);
-        // fl.trace(this + "add startFrame");
-    // }
     // console.log(element.name, this.mat.tx,this.tmat.x,",,,",element.x);
     // console.log(element.scaleX)
     // console.log(element.rotation)
@@ -333,8 +306,8 @@ function RGBToHex(rgb){
 } 
 
 function GenARGB(alphaP, rA, gA, bA){
+    if (alphaP == 100 && rA == 0 && gA == 0 && bA == 0){ return }
     if (alphaP < 0){alphaP = 0;}
-    fl.trace(alphaP + "," + rA + "," + gA + "," + bA);
     var addFlag = false;
     var add_r = 0 , add_g = 0, add_b = 0;
     if (rA > 0){ addFlag = true; add_r = rA; rA = 0;};
@@ -406,7 +379,7 @@ function fix_mat(m){
 }
 
 Frame.prototype.insertLinerKeyframe = function (nextFrame, lastFrame){
-	var res = [];
+    var res = [];
     //First frame is blank
     if (!lastFrame && this.startFrame!=1 ){
         for (var i = 0, len = this.startFrame; i < len; i ++){
@@ -415,71 +388,38 @@ Frame.prototype.insertLinerKeyframe = function (nextFrame, lastFrame){
             });
         }
     }
-	res.push({
-		'elementIndex' : this.elementIndex,
-		'mat' : {
-			'a' : this.mat.a,
-			'b' : this.mat.b,
-			'c' : this.mat.c,
-			'd' : this.mat.d,
-			'tx' : this.mat.tx,
-			'ty' : this.mat.ty,
-		},
-	});
-    if (this.frame.name == "tt"){
-        fl.trace(this.startFrame + " , "+ this.duration + "," + nextFrame.startFrame)
-        //88 , 51,139
+    res.push({
+        'elementIndex' : this.elementIndex,
+        'mat' : {
+            'a' : this.mat.a,
+            'b' : this.mat.b,
+            'c' : this.mat.c,
+            'd' : this.mat.d,
+            'tx' : this.mat.tx,
+            'ty' : this.mat.ty,
+        },
+    });
+    for (var i = 1; i < this.duration; i++){
+        res.push({
+            'elementIndex' : this.elementIndex,
+            'mat' : {
+                'a' : this.mat.a,
+                'b' : this.mat.b,
+                'c' : this.mat.c,
+                'd' : this.mat.d,
+                'tx' : this.mat.tx,
+                'ty' : this.mat.ty,
+            },
+            'text' : "<copy insert>",
+        });
     }
-	// if (nextFrame && nextFrame.startFrame == (this.startFrame+this.duration) ){ //确保是连续的，否则直接复制当前帧 x this.duration次
-        // fix_mat(this.mat);
-        // fix_mat(nextFrame.mat)
-
-  //       var mat_table = [];
-  //       if (this.duration > 1){
-  //           var t_mat = gen_trans_mat(this.mat, nextFrame.mat, this.duration);       
-  //           mat_table.push(this.mat)
-  //           for (var i = 1; i < this.duration; i++){
-  //               mat_table.push(m_mul(mat_table[i-1], t_mat))
-  //           }
-  //       }
-
-		// for (var i = 1; i < this.duration; i++){
-		// 	res.push({
-		// 		'elementIndex' : this.elementIndex,
-		// 		'mat' : {
-  //                   'a' : mat_table[i].a,
-  //                   'b' : mat_table[i].b,
-  //                   'c' : mat_table[i].c,
-  //                   'd' : mat_table[i].d,
-  //                   'tx' : mat_table[i].tx,
-  //                   'ty' : mat_table[i].ty,
-		// 		},
-		// 		'text' : "<liner insert>",
-		// 	});
-		// }
-	// }else{
-		for (var i = 1; i < this.duration; i++){
-			res.push({
-				'elementIndex' : this.elementIndex,
-				'mat' : {
-					'a' : this.mat.a,
-					'b' : this.mat.b,
-					'c' : this.mat.c,
-					'd' : this.mat.d,
-					'tx' : this.mat.tx,
-					'ty' : this.mat.ty,
-				},
-				'text' : "<copy insert>",
-			});
-		}
-		if (nextFrame){	// insert blank frame
-			for (var i = 0; i < nextFrame.startFrame - this.startFrame - this.duration; i++){
-				res.push({
-                    'type' : "blank",
-                });
-			};
-		}
-	// }
+    if (nextFrame){ // insert blank frame
+        for (var i = 0; i < nextFrame.startFrame - this.startFrame - this.duration; i++){
+            res.push({
+                'type' : "blank",
+            });
+        };
+    }
     //fill the frames till end
     if (!nextFrame && this.startFrame + this.duration < this.totalFrame ){
         for (var i = 0, len = this.totalFrame - this.startFrame - this.duration; i < len; i ++){
@@ -488,7 +428,7 @@ Frame.prototype.insertLinerKeyframe = function (nextFrame, lastFrame){
             });
         }
     }
-	return res;
+    return res;
 }
 
 function Layer(flash, layer, frameCount) {
@@ -543,17 +483,17 @@ Layer.prototype.distinctElement = function (frame) {
 }
 Layer.prototype.exportLua = function (lua, graphic) {
     if (!graphic) {
-    	lua.begin();
-    	lua.inline('type = "animation"');
-    	lua.inline('lname = \"' + this.layer.name + '\"');
-    	lua.inline('id = ' + this.index)
-    	lua.childBegin('component');
-    	this.exportLibraryLua(lua)
-    	lua.childEnd();
-    	lua.childBegin();
-    	this.exportFramesLua(lua)
-    	lua.childEnd();
-    	lua.end();
+        lua.begin();
+        lua.inline('type = "animation"');
+        lua.inline('lname = \"' + this.layer.name + '\"');
+        lua.inline('id = ' + this.index)
+        lua.childBegin('component');
+        this.exportLibraryLua(lua)
+        lua.childEnd();
+        lua.childBegin();
+        this.exportFramesLua(lua)
+        lua.childEnd();
+        lua.end();
     } else {
         this.frames[0].exportLua(lua, true);
     }
@@ -569,10 +509,10 @@ Layer.prototype.exportFramesLua = function (lua) {
     // for (var i = 0, len = this.frames.length; i < len; i ++){
     //     this.frames[i].convertToFrameByFrameAnimation()
     // }
-	for (var i = 0, len = this.frames.length; i < len; i ++){
-		this.frames[i].nextFrame = this.frames[i + 1];
+    for (var i = 0, len = this.frames.length; i < len; i ++){
+        this.frames[i].nextFrame = this.frames[i + 1];
         this.frames[i].lastFrame = this.frames[i - 1];
-	}
+    }
     each(this.frames, function (frame) {
         frame.exportLua(lua);
     });
@@ -621,26 +561,26 @@ Timeline.prototype.parseLayers = function (layer) {
 }
 Timeline.prototype.exportLua = function (lua) {
     if (!this.graphic) {
-		lua.begin();
-		lua.inline('type = "animation"');
-		lua.inline('tlname = "' + this.name + '\"');
+        lua.begin();
+        lua.inline('type = "animation"');
+        lua.inline('tlname = "' + this.name + '\"');
         if (this.bIsMain == true) {
             lua.inline('export = "' + this.name + '\"');
         }
-		lua.inline('id = ' + this.index);
-		lua.inline('framecount = ' + this.timeline.frameCount);
-		var componentCnt = 0
-		lua.childBegin('component');
-		reverseEach(this.layers, function(layer){
-			lua.inline('{ id = ' + layer.index +' }');
-			componentCnt ++ ;
-		},this);
+        lua.inline('id = ' + this.index);
+        lua.inline('framecount = ' + this.timeline.frameCount);
+        var componentCnt = 0
+        lua.childBegin('component');
+        reverseEach(this.layers, function(layer){
+            lua.inline('{ id = ' + layer.index +' }');
+            componentCnt ++ ;
+        },this);
         lua.childEnd();
         lua.childBegin();
         lua.childBegin();
         lua.content(lua.getIndentBuffer() + '');
         for (var i = 0; i < componentCnt; i ++){
-        	lua.content(i + ', ')
+            lua.content(i + ', ')
         }
         lua.content('\n');
         lua.childEnd();
@@ -654,18 +594,35 @@ Timeline.prototype.exportLua = function (lua) {
         lua.begin();
         lua.inline('type = "picture"');
         lua.inline('id = ' +  this.index);
-		var s = src.findSrc(item.content.filename);
-		var x = s.x, y = s.y, w = s.w, h = s.h;
-		var pstr = '';
-		pstr += x + ', ' + y + ', ';
-		pstr += (x+w) + ', ' + y + ', ';
-		pstr += (x+w) + ', ' + (y + h) + ', ';
-		pstr += x + ', ' + (y + h) + ', ';
-		var screenStr = '0, 0, ';
-		screenStr += w*16 + ', ' + 0 + ', ';
-		screenStr += w*16 + ', ' + h*16 + ', ';
-		screenStr += 0 + ', ' + h*16 + ', ';
-		lua.inline('{ tex = 1, src = {' + pstr + '}, screen = {'  + screenStr + '} }');
+
+
+
+        var file = src.findSrc(item.content.filename);
+        var s = file.frame;
+        var bIsRotated = file.rotated;
+        var trimSize = file.spriteSourceSize;
+
+        var x = s.x, y = s.y, w = s.w, h = s.h;
+        var tx = trimSize.x, ty = trimSize.y, tw = trimSize.w, th = trimSize.h;
+
+        var pstr = '';
+        if (!bIsRotated){
+            pstr += x + ', ' + y + ', ';
+            pstr += (x+w) + ', ' + y + ', ';
+            pstr += (x+w) + ', ' + (y+h) + ', ';
+            pstr += x + ', ' + (y+h) + ', ';
+        }else{
+            pstr += (x+h) + ', ' + y + ', ';
+            pstr += (x+h) + ', ' + (y+w) + ', ';
+            pstr += x + ', ' + (y+w) + ', ';
+            pstr += x + ', ' + y + ', ';
+        }
+        screenStr = "";
+        screenStr += tx*16 + ", " + ty*16 + ", ";
+        screenStr += (tx + tw)*16 + ', ' + ty*16 + ', ';
+        screenStr += (tx + tw)*16 + ', ' + (ty + th)*16 + ', ';
+        screenStr += tx*16 + ', ' + (ty + th)*16 + ', ';
+        lua.inline('{ tex = 1, src = {' + pstr + '}, screen = {'  + screenStr + '} }');
         lua.inline('filename = "' + item.content.filename + '\"');
         lua.end();
     }
@@ -690,56 +647,56 @@ DistinctImages.prototype.nextName = function () {
 }
 
 function Lua(indent){
-	this.buffer = '';
-	this.space = '\t';
-	this.indent = indent ? indent : 0;
+    this.buffer = '';
+    this.space = '\t';
+    this.indent = indent ? indent : 0;
 }
 
 Lua.prototype.begin = function (){
-	for (var i = this.indent; i>0; i--){
-		this.buffer += this.space;
-	}
-	this.buffer += '{\n';
-	this.indent ++ ;
+    for (var i = this.indent; i>0; i--){
+        this.buffer += this.space;
+    }
+    this.buffer += '{\n';
+    this.indent ++ ;
 }
 
 Lua.prototype.end= function (){
-	this.indent --;
-	for (var i = this.indent; i>0; i--){
-		this.buffer += this.space;
-	}
-	this.buffer += '},\n'
+    this.indent --;
+    for (var i = this.indent; i>0; i--){
+        this.buffer += this.space;
+    }
+    this.buffer += '},\n'
 }
 
 Lua.prototype.content = function(c){
-	this.buffer += c;
+    this.buffer += c;
 }
 
 Lua.prototype.getIndentBuffer = function() {
-	var buf = '';
-	for (var i = this.indent; i>0 ; i --){
-		buf += this.space;
-	}
-	return buf;
+    var buf = '';
+    for (var i = this.indent; i>0 ; i --){
+        buf += this.space;
+    }
+    return buf;
 }
 
 Lua.prototype.inline = function(c){
-	this.buffer += this.getIndentBuffer() + c + ',\n';
+    this.buffer += this.getIndentBuffer() + c + ',\n';
 }
 
 Lua.prototype.childBegin = function(name){
-	var buf = this.getIndentBuffer();
-	if (name){
-		buf += name + ' = ';
-	}
-	buf += '{\n';
-	this.buffer += buf;
-	this.indent ++ ;
+    var buf = this.getIndentBuffer();
+    if (name){
+        buf += name + ' = ';
+    }
+    buf += '{\n';
+    this.buffer += buf;
+    this.indent ++ ;
 }
 
 Lua.prototype.childEnd = function(){
-	this.indent --;
-	this.buffer += this.getIndentBuffer() + '},\n';
+    this.indent --;
+    this.buffer += this.getIndentBuffer() + '},\n';
 }
 
 function batToDo(folder)
@@ -772,6 +729,7 @@ DistinctImages.prototype.nextName = function () {
 function pub(dir, file, imgCounter, beginIndex)
 {
     fl.trace("start parse "+ file)
+    fl.showIdleMessage(false)
     var doc = fl.openDocument(dir + "/" + file);
     var outputPath = "file:///tmp/flash_parser/output/" ;
     var filename = doc.name
