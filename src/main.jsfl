@@ -74,8 +74,26 @@ function Flash(document, dest, path, luafile, imgCounter, index) {
     this.imgFolder = 'images';
     this.imgCounter = imgCounter;
 
+    this.autoInsertKeyframe();
     this.loadLibrary(document.library);
 }
+
+Flash.prototype.autoInsertKeyframe = function (item){
+    var d = fl.getDocumentDOM();
+    function convertLayer(l){
+            each (l.frames, function (f){
+                    f.convertToFrameByFrameAnimation(); 
+                });
+        }
+
+    each (d.library.items, function (item){
+        if (item.symbolType == 'graphic'){
+            var tl = item.timeline;
+            each(tl.layers, convertLayer);
+        }
+        });
+}
+
 Flash.prototype.loadLibrary = function (library) {
     var itemsmap = this.itemsmap = {};
     var items = this.items = [];
@@ -89,6 +107,7 @@ Flash.prototype.loadLibrary = function (library) {
         if (item.itemType == 'movie clip' || item.itemType == 'graphic') {
             itemwrap.movieclip = true;
             itemwrap.directRefer = true;
+            // item.timeline.convertToKeyframes(0, 9);
             var timeline = new Timeline(this, item.timeline).setName(item.name);
             this.timelines.push(timeline);
             itemwrap.setContent(timeline);
@@ -265,11 +284,76 @@ Frame.prototype.parseInstance = function (element) {
 Frame.prototype.parseFrame = function (element) {
 	this.mat = element.matrix;
 	this.tmat = element.getTransformationPoint();
+    // fl.trace(element.firstFrame)
+    // if (element.instanceType == "symbol"){
+    //     fl.trace("aaaa");
+    //     fl.trace("Found Loop Frame @ " + element.firstFrame + " , " + this.startFrame + ", " + this.frame.name);
+    // }
+    // if (element.instanceType == "symbol" && element.firstFrame != 1 && this.startFrame == 1){
+    // if (element.instanceType == "symbol" && element.firstFrame != this.startFrame){
+        // fl.trace("Found Loop Frame @ " + element.firstFrame + " , " + this.startFrame + ", " + this.frame.name);
+    this.elementStartFrame = element.firstFrame + 1;
+
+    this.elementColorAlphaAmount = element.colorAlphaAmount;
+    this.elementColorAlphaPercent = element.colorAlphaPercent;
+    this.elementColorBlueAmount = element.colorBlueAmount;
+    this.elementColorBluePercent = element.colorBluePercent;
+    this.elementColorGreenAmount = element.colorGreenAmount;
+    this.elementColorGreenPercent = element.colorGreenPercent;
+    this.elementColorRedAmount = element.colorRedAmount;
+    this.elementColorRedPercent = element.colorRedPercent;
+
+    fl.trace("parse" + this.elementColorAlphaPercent);
+        // fl.trace(this + "add startFrame");
+    // }
     // console.log(element.name, this.mat.tx,this.tmat.x,",,,",element.x);
     // console.log(element.scaleX)
     // console.log(element.rotation)
     // console.log(this.mat.a,this.mat.b,this.mat.c,this.mat.d,this.mat.tx,this.mat.ty)
 }
+
+function RGBToHex(rgb){ 
+   var regexp = /[0-9]{0,4}/g;  
+   var re = rgb.match(regexp);//利用正则表达式去掉多余的部分，将rgb中的数字提取
+   var hexColor = ""; var hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];  
+   for (var i = 0; i < re.length; i++) {
+        var r = null, c = re[i], l = c; 
+        var hexAr = [];
+        while (c > 16){  
+              r = c % 16;  
+              c = (c / 16) >> 0; 
+              hexAr.push(hex[r]);  
+         } hexAr.push(hex[c]);
+         if(l < 16&&l != ""){        
+             hexAr.push(0)
+         }
+       hexColor += hexAr.reverse().join(''); 
+    }  
+   return hexColor;  
+} 
+
+function GenARGB(alphaP, rA, gA, bA){
+    if (alphaP < 0){alphaP = 0;}
+    fl.trace(alphaP + "," + rA + "," + gA + "," + bA);
+    var addFlag = false;
+    var add_r = 0 , add_g = 0, add_b = 0;
+    if (rA > 0){ addFlag = true; add_r = rA; rA = 0;};
+    if (gA > 0){ addFlag = true; add_g = gA; gA = 0;};
+    if (bA > 0){ addFlag = true; add_b = bA; bA = 0;};
+    rA += 255;
+    gA += 255;
+    bA += 255;
+    var color,add;
+    color = "0x" + RGBToHex( parseInt(alphaP*255/100) + "," + rA + "," + gA + "bA" + bA  )
+    if(addFlag){
+        add = "0x00" + RGBToHex(add_r + "," + add_g + "," + add_b);
+    }
+    if ((addFlag || color!="0xFFFFFFFF") && color != "0x"){
+        return [color, add];
+    }
+}
+
+
 Frame.prototype.exportLua = function (lua, onlyposition) {
     if (onlyposition) {
         lua.inline('onlyposition' + this.position);
@@ -281,14 +365,44 @@ Frame.prototype.exportLua = function (lua, onlyposition) {
                 //insert blank frame
                 lua.inline(str);
             }else{
-                var str = '{ ' + ' index = ' + f.elementIndex + ', mat = {' + f.mat.a*1024 + ', ' + f.mat.b*1024 + ', ' + f.mat.c*1024 +', ' + f.mat.d*1024 + ', ' + f.mat.tx*16 + ', ' + f.mat.ty*16 + ' }}';
+                var str = '{ ';
+                if (this.elementStartFrame){
+                    str += ' startFrame = ' + this.elementStartFrame + ", "
+                    this.elementStartFrame += 1
+                }
+
+                var r= GenARGB(this.elementColorAlphaPercent,
+                                     this.elementColorRedAmount,
+                                     this.elementColorGreenAmount,
+                                     this.elementColorBlueAmount);
+                if (r){
+                    var color = r[0];
+                    var add = r[1];
+                    if (color) {
+                        str += "color = " + color + ", ";
+                    }
+                    if (add) {
+                        str += "add = " + add + ", ";
+                    }
+                }
+
+                
+
+                str += ' index = ' + f.elementIndex + ', mat = {' + f.mat.a*1024 + ', ' + f.mat.b*1024 + ', ' + f.mat.c*1024 +', ' + f.mat.d*1024 + ', ' + f.mat.tx*16 + ', ' + f.mat.ty*16 + ' }}';
                 if (f.text){ str += ", --  " + f.text}
                 lua.childBegin();
                 lua.inline(str);
                 lua.childEnd();
             }
-        });
+        }, this);
     }
+}
+
+function fix_mat(m){
+    if (m.a == 0){ m.a = 0.0001 }
+    if (m.b == 0){ m.b = 0.0001 }
+    if (m.c == 0){ m.c = 0.0001 }
+    if (m.d == 0){ m.d = 0.0001 }
 }
 
 Frame.prototype.insertLinerKeyframe = function (nextFrame, lastFrame){
@@ -312,32 +426,38 @@ Frame.prototype.insertLinerKeyframe = function (nextFrame, lastFrame){
 			'ty' : this.mat.ty,
 		},
 	});
-	if (nextFrame && nextFrame.startFrame == (this.startFrame+this.duration) ){ //确保是连续的，否则直接复制当前帧 x this.duration次
+    if (this.frame.name == "tt"){
+        fl.trace(this.startFrame + " , "+ this.duration + "," + nextFrame.startFrame)
+        //88 , 51,139
+    }
+	// if (nextFrame && nextFrame.startFrame == (this.startFrame+this.duration) ){ //确保是连续的，否则直接复制当前帧 x this.duration次
+        // fix_mat(this.mat);
+        // fix_mat(nextFrame.mat)
 
-        var mat_table = [];
-        if (this.duration > 1){
-            var t_mat = gen_trans_mat(this.mat, nextFrame.mat, this.duration);       
-            mat_table.push(this.mat)
-            for (var i = 1; i < this.duration; i++){
-                mat_table.push(m_mul(mat_table[i-1], t_mat))
-            }
-        }
+  //       var mat_table = [];
+  //       if (this.duration > 1){
+  //           var t_mat = gen_trans_mat(this.mat, nextFrame.mat, this.duration);       
+  //           mat_table.push(this.mat)
+  //           for (var i = 1; i < this.duration; i++){
+  //               mat_table.push(m_mul(mat_table[i-1], t_mat))
+  //           }
+  //       }
 
-		for (var i = 1; i < this.duration; i++){
-			res.push({
-				'elementIndex' : this.elementIndex,
-				'mat' : {
-                    'a' : mat_table[i].a,
-                    'b' : mat_table[i].b,
-                    'c' : mat_table[i].c,
-                    'd' : mat_table[i].d,
-                    'tx' : mat_table[i].tx,
-                    'ty' : mat_table[i].ty,
-				},
-				'text' : "<liner insert>",
-			});
-		}
-	}else{
+		// for (var i = 1; i < this.duration; i++){
+		// 	res.push({
+		// 		'elementIndex' : this.elementIndex,
+		// 		'mat' : {
+  //                   'a' : mat_table[i].a,
+  //                   'b' : mat_table[i].b,
+  //                   'c' : mat_table[i].c,
+  //                   'd' : mat_table[i].d,
+  //                   'tx' : mat_table[i].tx,
+  //                   'ty' : mat_table[i].ty,
+		// 		},
+		// 		'text' : "<liner insert>",
+		// 	});
+		// }
+	// }else{
 		for (var i = 1; i < this.duration; i++){
 			res.push({
 				'elementIndex' : this.elementIndex,
@@ -359,7 +479,7 @@ Frame.prototype.insertLinerKeyframe = function (nextFrame, lastFrame){
                 });
 			};
 		}
-	}
+	// }
     //fill the frames till end
     if (!nextFrame && this.startFrame + this.duration < this.totalFrame ){
         for (var i = 0, len = this.totalFrame - this.startFrame - this.duration; i < len; i ++){
@@ -657,7 +777,7 @@ function pub(dir, file, imgCounter, beginIndex)
     var filename = doc.name
     filename = filename.replace(".fla", "")
     var nextindex = exportFla(outputPath,'',filename ,new DistinctImages(), beginIndex);
-    doc.close();
+    doc.close(false);
     fl.trace(file + "trace done! max index:" + nextindex)
     return nextindex
 

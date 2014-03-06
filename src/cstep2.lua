@@ -16,14 +16,18 @@ local filelist = require(arg[1])
 local f = {}
 for k,v in pairs(filelist) do
 	local t = v:split("_")
-	assert(t[1], "file name error", v)
-	assert(t[2], "file name error", v)
-	local base_name, ani_name = t[1], t[2]
-	if f[base_name] == nil then
-		f[base_name] = {}
-	end
+	if ((not t[1]) or not t[2]) then
+		f[v] = {require(dir..v)}
+	else
+		assert(t[1], "file name error", v)
+		assert(t[2], "file name error", v)
+		local base_name, ani_name = t[1], t[2]
+		if f[base_name] == nil then
+			f[base_name] = {}
+		end
 
-	f[base_name][ani_name] = require(dir..v)
+		f[base_name][ani_name] = require(dir..v)
+	end
 end
 
 local function mark_component_name(t)
@@ -92,7 +96,11 @@ local function combine_one_ani_files(base_name, ani_files, id_table, pub_lib)
 		rebuild_component_id(pub_lib, t)
 	end
 	for ani_name, t in pairs(ani_files) do
-		rebuild_animation_id(base_name.."_"..ani_name ,t, id_table)
+		if type(ani_name) == "string" then
+			rebuild_animation_id(base_name.."_"..ani_name ,t, id_table)
+		else
+			rebuild_animation_id(base_name ,t, id_table)
+		end
 	end
 
 	if bUseAction then

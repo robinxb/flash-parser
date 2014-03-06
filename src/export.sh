@@ -40,7 +40,7 @@ fi
 convert t.png t.ppm
 convert t.png -channel A -separate t.pgm
 
-
+mkdir /tmp/flash_parser/output
 open main.jsfl
 while [ ! -f ../flash_parser.tmp ]
 do

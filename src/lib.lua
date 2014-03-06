@@ -50,7 +50,11 @@ function mt.final_dump(data, prefix, oneline)
 			str = str..(oneline_flag and "" or prefix).."},\n"
 		else
 			str = str..(oneline and "" or prefix )..(type(k)=="string" and k.." = " or "")
-			str = str ..(type(v) == "string" and "\""..v.."\"" or v)
+			if k == "color" or k == "add" then
+				str = str ..(type(v) == "string" and "\""..v.."\"" or "0x"..string.format("%04X",v))
+			else
+				str = str ..(type(v) == "string" and "\""..v.."\"" or v)
+			end
 			if oneline then
 				str = str .. ", "
 			else
@@ -110,7 +114,17 @@ function mt.build_lib(data)
 					local this_frame = {}
 					for _,v2 in ipairs(v1) do
 						if type(v2) == "table" then
-							table.insert(this_frame, {item = com[v2.index + 1].id, mat = v2.mat})
+							local r = {item = com[v2.index + 1].id, mat = v2.mat}
+							if v2.startFrame then
+								r.startFrame = v2.startFrame
+							end
+							if v2.color then
+								r.color = v2.color
+							end
+							if v2.add then
+								r.add = v2.add
+							end
+							table.insert(this_frame, r)
 						else
 							table.insert(this_frame, {item = com[v2 + 1].id, mat = {1024,0,0,1024,0,0}})
 						end
@@ -162,25 +176,30 @@ function mt.matrix_mul(m1, m2)
 end
 
 function mt.build_single_frame_tree(node, frame, lib)
-	local function build_tree(res, node, frame, stack)
+	local function build_tree(res, node, frame, stack, color, add)
 		if node.type == "animation" then
 			local thisframe = frame
 			while thisframe > #node.frames do
 				thisframe = thisframe - #node.frames
 			end
 			mt.foreach(node.frames[thisframe], 
-				function (v) 
+				function (v)
+					local color, add = (color or v.color) , ( add or v.add)
+					local frame2 = v.startFrame or frame
 					assert(lib[v.item])
 					if lib[v.item].type == "picture" then --到头了亲
 						local new_stack = mt.new_stack(stack)
 						new_stack:push(v.mat)
 						local mat = mt.export_mat_from_stack(new_stack)
-						res = build_tree(res, lib[v.item], frame, new_stack)
-						table.insert(res, {filename = lib[v.item].filename, type = "animation", mat = mat})
+						res = build_tree(res, lib[v.item], frame2, new_stack, color, add)
+						local r = {filename = lib[v.item].filename, type = "animation", mat = mat}
+						if color then r.color = color end
+						if add then r.add = add end
+						table.insert(res, r)
 					else
 						local new_stack = mt.new_stack(stack)
 						new_stack:push(v.mat)
-						res = build_tree(res, lib[v.item], frame, new_stack)
+						res = build_tree(res, lib[v.item], frame2, new_stack, color, add)
 					end
 				end)
 		elseif node.type == "picture" then
@@ -275,7 +294,7 @@ function mt.export_ani(ani)
 					index = _is_in(c.cid, total_frame.component) - 1
 				end
 			end
-			table.insert(this_frame, {index = index, mat = c.mat})
+			table.insert(this_frame, {index = index, mat = c.mat , color = c.color, add = c.add})
 		end
 		total_frame[1][t] = this_frame
 	end
