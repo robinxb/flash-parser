@@ -20,7 +20,7 @@ Make sure you are using *MAC*, because the .sh file contains *open* command whic
 8. After all images exported, select a folder to save the output
 9. The useful output-files are named output.1.pgm, output.1.ppm, output.lua
 
-For more information, read the doc named README_FLASH.doc
+For more information, read the doc named readme_flash_cn.doc
 
 Enjoy!
 _____
@@ -28,4 +28,11 @@ _____
 ##### TODO
 1. port to windows
 2. support text and shape (when need)
+3. Do not parse empty layers
+4. Set Registration Point to top left automatically
+5. Add an option to import a file for manually disable some elements's output.
 
+
+##### Known Bugs
+1. When There's a blank frame(contains no element), the lua script will run into an endless loop.
+2. Opreations (skew/scale/rotate/animation etc.) directly to Bitmap elements will(must) cause unexpected apprearance.
