@@ -16,7 +16,7 @@ local filelist = require(arg[1])
 local f = {}
 for k,v in pairs(filelist) do
 	local t = v:split("_")
-	if ((not t[1]) or not t[2]) then
+	if not bUseAction or ((not t[1]) or not t[2]) then
 		f[v] = {require(dir..v)}
 	else
 		assert(t[1], "file name error", v)
@@ -154,3 +154,4 @@ end
 local file = io.open("final_output.lua","w")
 file:write("return {\n"..lib.final_dump(output).."\n}")
 file:close()
+
