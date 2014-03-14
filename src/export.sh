@@ -72,8 +72,8 @@ mkdir $flashSrcPath/output/singlefile
 cp /tmp/flash_parser/final_output.lua $flashSrcPath/output/output.lua
 cp -R /tmp/flash_parser/output $flashSrcPath/output/singlefile
 cp -R /tmp/flash_parser/images $flashSrcPath/output/singlefile
-cp /tmp/flash_parser/t.ppm $flashSrcPath/output/output.sc.1.ppm
-cp /tmp/flash_parser/t.pgm $flashSrcPath/output/output.sc.1.pgm
+cp /tmp/flash_parser/t.ppm $flashSrcPath/output/output.1.ppm
+cp /tmp/flash_parser/t.pgm $flashSrcPath/output/output.1.pgm
 
 # cd $flashSrcPath/output
 # echo "return {" > output.lua

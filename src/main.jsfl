@@ -35,8 +35,8 @@ function reverseEach(array, fn, bind) {
         str += fn.call(bind, array[i], i) + '\n';
     }
 }
-function BitmapItem(path) {
-    this.filename = path;
+function BitmapItem(item) {
+    this.filename = item.name;
 }
 
 function Flash(document, dest, path, luafile, imgCounter, index) {
@@ -98,7 +98,7 @@ Flash.prototype.loadLibrary = function (library) {
             itemwrap.setContent(timeline);
         } else if (item.itemType == 'bitmap') {
             var filename = item.name;
-            itemwrap.setContent(new BitmapItem(filename));
+            itemwrap.setContent(new BitmapItem(item));
         } else if (item.itemType == 'folder') {
             console.log('not supported library item:' + item.itemType);
         }
@@ -549,10 +549,23 @@ Timeline.prototype.checkSprite = function () {
     }
 }
 Timeline.prototype.parseLayers = function (layer) {
+    function isEmptyLayer(l){
+        fl.trace("isEmptyLayer" + l);
+        var flag = true
+        each(l.frames, function (f){
+            each(f.elements, function (e){
+                if (e){flag = false;}
+            })
+        })
+        return flag;
+    }
+
     if (layer.layerType != 'normal'){
         console.log("Not supported layer type: " + layer.layerType + " @ " + layer.name);
     }else if (layer.visible == false){
         console.log("Invisible Layer found : " + layer.name + " , pass.")
+    }else if (isEmptyLayer(layer)){
+        console.log("Empty Layer found : " + layer.name + " , pass.")
     }else{
         var l = new Layer(this.flash, layer, this.timeline.frameCount);
         this.layers.push(l);
@@ -594,9 +607,13 @@ Timeline.prototype.exportLua = function (lua) {
         lua.begin();
         lua.inline('type = "picture"');
         lua.inline('id = ' +  this.index);
-
-
-
+        var mat = this.timeline.layers[0].frames[0].elements[0].matrix
+        var bIsNormalMat = true
+        for (var t in mat){
+            if ((mat[t] != 1) && (mat[t] != 0)){
+                bIsNormalMat = false
+            }
+        }
         var file = src.findSrc(item.content.filename);
         var s = file.frame;
         var bIsRotated = file.rotated;
@@ -624,6 +641,18 @@ Timeline.prototype.exportLua = function (lua) {
         screenStr += tx*16 + ', ' + (ty + th)*16 + ', ';
         lua.inline('{ tex = 1, src = {' + pstr + '}, screen = {'  + screenStr + '} }');
         lua.inline('filename = "' + item.content.filename + '\"');
+        if (!bIsNormalMat){
+            lua.inline(
+                'mat = {'
+                + mat.a*1024 + ', '
+                + mat.b*1024 + ', '
+                + mat.c*1024 + ', '
+                + mat.d*1024 + ', '
+                + mat.tx*16 + ', '
+                + mat.ty*16 + ', '
+                + '}'
+                )
+        }
         lua.end();
     }
 }

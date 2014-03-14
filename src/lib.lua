@@ -105,7 +105,7 @@ function mt.build_lib(data)
 	mt.foreach(data, 
 		function (d)
 			if d.type == "picture" then
-				res[d.id] = {type = d.type, filename = d.filename,  info = d[1]}
+				res[d.id] = {type = d.type, filename = d.filename,  info = d[1] , mat = d.mat}
 			elseif d.type == "animation" then
 				res[d.id] = {type = d.type, name = d.tlname or d.lname}
 				local frames = {}
@@ -190,6 +190,7 @@ function mt.build_single_frame_tree(node, frame, lib)
 					if lib[v.item].type == "picture" then --到头了亲
 						local new_stack = mt.new_stack(stack)
 						new_stack:push(v.mat)
+						if lib[v.item].mat then new_stack:push(lib[v.item].mat) end
 						local mat = mt.export_mat_from_stack(new_stack)
 						res = build_tree(res, lib[v.item], frame2, new_stack, color, add)
 						local r = {filename = lib[v.item].filename, type = "animation", mat = mat}
