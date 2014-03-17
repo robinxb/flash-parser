@@ -550,7 +550,6 @@ Timeline.prototype.checkSprite = function () {
 }
 Timeline.prototype.parseLayers = function (layer) {
     function isEmptyLayer(l){
-        fl.trace("isEmptyLayer" + l);
         var flag = true
         each(l.frames, function (f){
             each(f.elements, function (e){

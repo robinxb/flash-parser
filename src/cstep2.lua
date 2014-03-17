@@ -63,10 +63,20 @@ local function gen_pub_lib(t, pub_lib, id_table)
 end
 
 local function rebuild_component_id(pub_lib, t)
+	function _remove_ext(filename)  
+	    local idx = filename:match(".+()%.%w+$")  
+	    if(idx) then  
+	        return filename:sub(1, idx-1)  
+	    else  
+	        return filename  
+	    end  
+	end  
+
 	for k,v in pairs(t) do
 		if v.type == "animation" then
 			for k1,v1 in pairs(v.component) do 
 				v1.id = pub_lib[v1.name].id
+				v1.name = _remove_ext(v1.name)
 			end
 			v.id = -1
 		end
@@ -116,7 +126,7 @@ local function combine_one_ani_files(base_name, ani_files, id_table, pub_lib)
 		end
 		assert(#export_table >= 1)
 		for index, v in pairs(export_table) do
-			combine.component[index] = {id = v.c_id,}
+			combine.component[index] = {id = v.c_id, name = v.ac_name}
 			if not combine[index] then
 				combine[index] = {}
 			end
