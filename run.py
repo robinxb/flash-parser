@@ -5,14 +5,18 @@ import shutil
 import time
 import sys
 import codecs
-sys.path.append(os.getcwd() + '/scripts') 
+import inspect
+this_file = inspect.getfile(inspect.currentframe())
+DIR_PATH = os.path.abspath(os.path.dirname(this_file))
+SEP = os.path.sep
+
+sys.path.append(DIR_PATH + SEP + 'scripts') 
 import handleCombine as HC
 
 global sysOpen
 TMP_FOLDER_NAME = "__tmp"
-PY_PATH = os.getcwd()
-SCRIPT_PATH = PY_PATH + '/scripts'
-FLASH_ROOT = PY_PATH + '/files'
+SCRIPT_PATH = DIR_PATH + SEP + 'scripts'
+FLASH_ROOT = DIR_PATH + SEP + 'files'
 LEAVE_FILE = ['out.1.ppm', 'out.1.pgm', 'out.lua', 'combine.xml']
 
 class MainTree():
@@ -89,17 +93,20 @@ class MainTree():
 					bExist = True
 					handle = codecs.open(filepath, 'a')
 					handle.write('<root>\n')
+					handle.close()
 				src = codecs.open(root + '/' +k, 'r')
 				content = src.read()
 				handle = codecs.open(filepath, 'a')
 				handle.write(content)
 				handle.write('\n')
+				handle.close()
 			break
 		if bExist:
 			handle = codecs.open(filepath, 'a')
 			handle.write('</root>\n')
-			self.hc = HC.Handler(filepath)
-			self.hc.Export(self.tmpPath + '/out.lua')
+			handle.close()
+			self.hc = HC.Handler(filepath.replace('\\','/'))
+			self.hc.Export(self.tmpPath.replace('\\','/') + '/out.lua')
 
 	def ImageMagicka(self):
 		cmd = 'convert %s/out.png %s/out.1.ppm'%(self.tmpPath, self.tmpPath)
@@ -110,19 +117,27 @@ class MainTree():
 		os.system(cmd2.encode('cp936'))
 
 	def TexturePacker(self):
+		tpath = self.tmpPath 
+		sysType = platform.system()
+		if sysType == "Windows":
+			print "aaaa"
+			tpath = tpath.replace('/','\\')
+
 		cmd = ' '.join([
 		        'TexturePacker',
 		        '--algorithm MaxRects',
 		        '--maxrects-heuristics Best',
 		        '--pack-mode Best',
 		        '--premultiply-alpha',
-		        '--sheet %s' %(self.tmpPath + '/out.png'),
+		        '--sheet %s' %(tpath + os.path.sep + 'out.png'),
 		        '--texture-format png',
 		        '--extrude 1',
-		        '--data %s' % (self.tmpPath + '/out.json'),
+		        '--data %s' % (tpath + os.path.sep + 'out.json'),
 		        '--format json',
-		        '%s' %  (self.tmpPath + '/singleimg/*.*')
+		        '%s' %  (tpath + os.path.sep + 'singleimg')
 		        ])
+
+		print cmd
 		os.system(cmd.encode('cp936'))
 
 	def CopyScript(self, path):
@@ -130,9 +145,9 @@ class MainTree():
 		content = handle.read()
 		handle.close()
 
-		header = "var publishFolder = '%s'; \n"%(self.mainpath)
+		header = "var publishFolder = '%s'; \n"%(self.mainpath.replace('\\','/'))
 		footer = """batToDo(publishFolder);
-FLfile.write("file://%s",FLfile.uriToPlatformPath(publishFolder) + "\\n");"""%(self.mainpath + '/' + TMP_FOLDER_NAME + '/done')
+FLfile.write("file:///%s",FLfile.uriToPlatformPath(publishFolder) + "\\n");"""%(self.mainpath.replace('\\','/') + '/' + TMP_FOLDER_NAME + '/done')
 		content = header + content + footer
 		handle = open(self.mainpath + '/' + TMP_FOLDER_NAME + '/exportFiles.jsfl', 'w')
 		handle.write(content)
@@ -142,11 +157,11 @@ FLfile.write("file://%s",FLfile.uriToPlatformPath(publishFolder) + "\\n");"""%(s
 		content = handle.read()
 		handle.close()
 
-		header = 'eval("var JSONFILE = " + FLfile.read("file://%s/out.json"));\n'% self.tmpPath
-		footer = "var publishFolder = '%s'; \n"%(self.mainpath)
-		footer += "var tmpPath = '%s';\n"%(self.tmpPath)
+		header = 'eval("var JSONFILE = " + FLfile.read("file:///%s/out.json"));\n'% self.tmpPath.replace('\\','/')
+		footer = "var publishFolder = '%s'; \n"%(self.mainpath.replace('\\','/'))
+		footer += "var tmpPath = '%s';\n"%(self.tmpPath.replace('\\','/'))
 		footer += """batToDo(publishFolder, tmpPath);
-FLfile.write("file://%s",FLfile.uriToPlatformPath(publishFolder) + "\\n");"""%(self.mainpath + '/' + TMP_FOLDER_NAME + '/done')
+FLfile.write("file:///%s",FLfile.uriToPlatformPath(publishFolder) + "\\n");"""%(self.mainpath.replace('\\','/') + '/' + TMP_FOLDER_NAME + '/done')
 		content = header + content + footer
 		handle = open(self.mainpath + '/' + TMP_FOLDER_NAME + '/main.jsfl', 'w')
 		handle.write(content)
