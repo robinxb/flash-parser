@@ -1,8 +1,11 @@
 function batToDo(folder) {
+    fl.showIdleMessage(false)
+    fl.closeAll(false)
     var files = FLfile.listFolder('file:///' + folder + "/*.fla", "files");
     for (var i = 0; i < files.length; i++) {
         pub(folder, files[i]);
     }
+    fl.showIdleMessage(true)
 }
 
 function pub(dir, file) {
@@ -15,5 +18,5 @@ function pub(dir, file) {
             item.exportToFile("file:///" + dir + '/__tmp/singleimg/' + item.name, 100)
         }
     }
-    doc.close();
+    doc.close(false);
 }

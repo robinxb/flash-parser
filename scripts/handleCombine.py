@@ -22,7 +22,6 @@ class Handler():
 		handle = codecs.open(file, 'r')
 		content = handle.read()
 		handle.close()
-		print type(content)
 		self.root = ET.fromstring(content)
 		self.PreFind()
 
@@ -155,7 +154,6 @@ class Handler():
 			dp.ChildBegin('component')
 			for k in component.GetCArr():
 				cStr = "{"
-				print k
 				if k.find('@') >= 0:
 					cStr += 'name = "%s", '%k
 				cStr += 'id = %d'%(self.idTable[k])

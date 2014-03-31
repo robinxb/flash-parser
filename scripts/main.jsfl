@@ -271,10 +271,13 @@ Frame.prototype.parseXML = function () {
 }
 
 function batToDo(folder, tmpPath) {
+    fl.showIdleMessage(false)
+    fl.closeAll(false)
     var files = FLfile.listFolder('file:///' + folder + "/*.fla", "files");
     for (var i = 0; i < files.length; i++) {
         pub(folder, files[i], tmpPath);
     }
+    fl.showIdleMessage(true)
 }
 
 function pub(dir, file, tmpPath) {

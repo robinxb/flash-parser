@@ -6,6 +6,7 @@ import time
 import sys
 import codecs
 import inspect
+import getopt
 this_file = inspect.getfile(inspect.currentframe())
 DIR_PATH = os.path.abspath(os.path.dirname(this_file))
 SEP = os.path.sep
@@ -13,11 +14,25 @@ SEP = os.path.sep
 sys.path.append(DIR_PATH + SEP + 'scripts') 
 import handleCombine as HC
 
+opts, args = getopt.getopt(sys.argv[1:], "hi:o:")
+FLASH_ROOT = ""
+OUTPUT_PATH = ""
+for op, value in opts:
+	if op == "-i":
+		FLASH_ROOT = value
+	elif op == "-o":
+		OUTPUT_PATH = value
+	elif op == '-h':
+		print ('-i input folder')
+		print ('-o output folder')
+		sys.exit()
 global sysOpen
 TMP_FOLDER_NAME = "__tmp"
 SCRIPT_PATH = DIR_PATH + SEP + 'scripts'
-FLASH_ROOT = DIR_PATH + SEP + 'files'
-LEAVE_FILE = ['out.1.ppm', 'out.1.pgm', 'out.lua', 'combine.xml']
+OUTPUT_PATH = OUTPUT_PATH or DIR_PATH + SEP + 'files'
+FLASH_ROOT = FLASH_ROOT or DIR_PATH + SEP + 'files'
+OUTPUT_NAME = "flash"
+LEAVE_FILE = ['%s.1.ppm'%OUTPUT_NAME, '%s.1.pgm'%OUTPUT_NAME, '%s.lua'%OUTPUT_NAME, 'combine.xml']
 
 class MainTree():
 	def __init__(self, path):
@@ -52,7 +67,7 @@ class MainTree():
 
 			#TP
 			self.TexturePacker()
-			self.WaitJSDone('out.png')
+			self.WaitJSDone('%s.png'%OUTPUT_NAME)
 			self.ImageMagicka()
 
 			#xml
@@ -75,7 +90,7 @@ class MainTree():
 	def CopyUsefulFiles(self):
 		for filename in LEAVE_FILE:
 			if os.path.exists(self.tmpPath + '/%s'%filename):
-				shutil.copy(self.tmpPath + '/%s'%filename, self.mainpath + '/%s'%filename)
+				shutil.copy(self.tmpPath + '/%s'%filename, OUTPUT_PATH + '/%s'%filename)
 
 
 	def Clean(self):
@@ -106,13 +121,16 @@ class MainTree():
 			handle.write('</root>\n')
 			handle.close()
 			self.hc = HC.Handler(filepath.replace('\\','/'))
-			self.hc.Export(self.tmpPath.replace('\\','/') + '/out.lua')
+			self.hc.Export(self.tmpPath.replace('\\','/') + '/%s.lua'%OUTPUT_NAME)
 
 	def ImageMagicka(self):
-		cmd = 'convert %s/out.png %s/out.1.ppm'%(self.tmpPath, self.tmpPath)
-		cmd2 = 'convert %s/out.png -channel A -separate %s/out.1.pgm'%(self.tmpPath, self.tmpPath)
+		convert_path = SCRIPT_PATH + SEP + 'convert '
+		if sysType == "Windows":
+			convert_path = SCRIPT_PATH + SEP + 'convert.exe '
+		cmd = convert_path + self.tmpPath + SEP + "%s.png "%OUTPUT_NAME + self.tmpPath + SEP + "%s.1.ppm"%OUTPUT_NAME
+		cmd2 = convert_path + self.tmpPath + SEP + "%s.png "%OUTPUT_NAME  + ' -channel A -separate %s.1.pgm'%(self.tmpPath + SEP + OUTPUT_NAME)
 		os.system(cmd.encode('cp936'))
-		while(not os.path.exists(self.tmpPath + '/out.1.ppm')):
+		while(not os.path.exists(self.tmpPath + '/%s.1.ppm'%OUTPUT_NAME)):
 			time.sleep(1)
 		os.system(cmd2.encode('cp936'))
 
@@ -120,7 +138,6 @@ class MainTree():
 		tpath = self.tmpPath 
 		sysType = platform.system()
 		if sysType == "Windows":
-			print "aaaa"
 			tpath = tpath.replace('/','\\')
 
 		cmd = ' '.join([
@@ -129,15 +146,14 @@ class MainTree():
 		        '--maxrects-heuristics Best',
 		        '--pack-mode Best',
 		        '--premultiply-alpha',
-		        '--sheet %s' %(tpath + os.path.sep + 'out.png'),
+		        '--sheet %s' %(tpath + os.path.sep + '%s.png'%OUTPUT_NAME),
 		        '--texture-format png',
 		        '--extrude 1',
-		        '--data %s' % (tpath + os.path.sep + 'out.json'),
+		        '--data %s' % (tpath + os.path.sep + '%s.json'%OUTPUT_NAME),
 		        '--format json',
 		        '%s' %  (tpath + os.path.sep + 'singleimg')
 		        ])
 
-		print cmd
 		os.system(cmd.encode('cp936'))
 
 	def CopyScript(self, path):
@@ -157,7 +173,7 @@ FLfile.write("file:///%s",FLfile.uriToPlatformPath(publishFolder) + "\\n");"""%(
 		content = handle.read()
 		handle.close()
 
-		header = 'eval("var JSONFILE = " + FLfile.read("file:///%s/out.json"));\n'% self.tmpPath.replace('\\','/')
+		header = 'eval("var JSONFILE = " + FLfile.read("file:///%s/%s.json"));\n'%(self.tmpPath.replace('\\','/'), OUTPUT_NAME)
 		footer = "var publishFolder = '%s'; \n"%(self.mainpath.replace('\\','/'))
 		footer += "var tmpPath = '%s';\n"%(self.tmpPath.replace('\\','/'))
 		footer += """batToDo(publishFolder, tmpPath);
