@@ -14,14 +14,20 @@ SEP = os.path.sep
 sys.path.append(DIR_PATH + SEP + 'scripts') 
 import handleCombine as HC
 
-opts, args = getopt.getopt(sys.argv[1:], "hi:o:")
+opts, args = getopt.getopt(sys.argv[1:], "hi:o:n:x:")
 FLASH_ROOT = ""
 OUTPUT_PATH = ""
+OUTPUT_NAME = "flash"
+bLeaveXML = False
 for op, value in opts:
 	if op == "-i":
 		FLASH_ROOT = value
 	elif op == "-o":
 		OUTPUT_PATH = value
+	elif op == "-n":
+		OUTPUT_NAME = value
+	elif op == "-x":
+		bLeaveXML = true
 	elif op == '-h':
 		print ('-i input folder')
 		print ('-o output folder')
@@ -33,8 +39,9 @@ OUTPUT_PATH = OUTPUT_PATH or DIR_PATH + SEP + 'files'
 FLASH_ROOT = FLASH_ROOT or DIR_PATH + SEP + 'files'
 FLASH_ROOT = os.path.realpath(FLASH_ROOT)
 OUTPUT_PATH = os.path.realpath(OUTPUT_PATH)
-OUTPUT_NAME = "flash"
-LEAVE_FILE = ['%s.1.ppm'%OUTPUT_NAME, '%s.1.pgm'%OUTPUT_NAME, '%s.lua'%OUTPUT_NAME, 'combine.xml']
+LEAVE_FILE = ['%s.1.ppm'%OUTPUT_NAME, '%s.1.pgm'%OUTPUT_NAME, '%s.lua'%OUTPUT_NAME]
+if bLeaveXML:
+	LEAVE_FILE.append('combine.xml')
 
 if not os.path.exists(OUTPUT_PATH):
 	os.makedirs(OUTPUT_PATH)
@@ -95,7 +102,10 @@ class MainTree():
 	def CopyUsefulFiles(self):
 		for filename in LEAVE_FILE:
 			if os.path.exists(self.tmpPath + '/%s'%filename):
-				shutil.copy(self.tmpPath + '/%s'%filename, OUTPUT_PATH + '/%s'%filename)
+				path_tree = self.mainpath .replace(FLASH_ROOT, '')
+				if not os.path.exists(OUTPUT_PATH + path_tree):
+					os.makedirs(OUTPUT_PATH + path_tree)
+				shutil.copy(self.tmpPath + '/%s'%filename, OUTPUT_PATH + path_tree + '/%s'%filename)
 
 
 	def Clean(self):
