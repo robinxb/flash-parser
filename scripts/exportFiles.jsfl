@@ -6,7 +6,8 @@ function batToDo(folder) {
 }
 
 function pub(dir, file) {
-    var doc = fl.openDocument('file://' + dir + "/" + file);
+    var t = 'file:///' + dir.replace(":", "|") + "/" + file
+    var doc = fl.openDocument(t);
     var lib = fl.getDocumentDOM().library.items;
     for (var i = 0, len = lib.length; i < len; i++) {
         var item = lib[i];

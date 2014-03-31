@@ -3,8 +3,6 @@ import codecs
 import dumper
 import sys
 import stack as ST
-reload(sys)
-sys.setdefaultencoding('utf8')
 
 try:
     import xml.etree.cElementTree as ET
@@ -21,9 +19,10 @@ class Handler():
 		self.aniLib = {}
 		self.picLib = {}
 		self.actionGroup = {}
-		handle = open(file)
-		content = handle.read().encode("utf-8")
-		handle.close()		
+		handle = codecs.open(file, 'r')
+		content = handle.read()
+		handle.close()
+		print type(content)
 		self.root = ET.fromstring(content)
 		self.PreFind()
 
@@ -32,7 +31,7 @@ class Handler():
 			for tl in doc:
 				if tl.get('name') == EXPORT_NAME_CN or\
 				tl.get('name') == EXPORT_NAME_EN:
-					print ('[info]解析 %s.fla\t\t等待 ...'%doc.get('filename'))
+					print ('[info]Parsing %s.fla\t\twait ...'%doc.get('filename'))
 					self.ParseTL(doc, tl, doc.get('filename'))
 		self.CombineAction()
 		self.MarkID()
@@ -48,7 +47,7 @@ class Handler():
 			act = name[idx + 1 :]
 			if act.find('@') > -1: #a component when filename contains @
 				continue
-			print ('[info]发现待合并动作\t\t%s\t\t%s'%(ani, act))
+			print ('[info]action found\t\t%s\t\t%s'%(ani, act))
 			aniToRemove.append(name)
 			if not self.actionGroup.get(ani):
 				self.actionGroup[ani] = []
@@ -159,7 +158,6 @@ class Handler():
 				print k
 				if k.find('@') >= 0:
 					cStr += 'name = "%s", '%k
-					# k = 
 				cStr += 'id = %d'%(self.idTable[k])
 				cStr += "},"
 				dp.Append(cStr)
@@ -283,6 +281,6 @@ class Component():
 
 #just for test
 if __name__ == '__main__':
-	a = Handler('/Users/robin-mac/Projects/parser/files/__tmp/combine.xml')
-	a.Export('/Users/robin-mac/Projects/parser/files/__tmp/out.lua')
+	a = Handler('E:/hayday/resource/parser/files/combine.xml')
+	a.Export('E:/hayday/resource/parser/files/out.lua')
 

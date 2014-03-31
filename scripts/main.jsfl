@@ -271,14 +271,14 @@ Frame.prototype.parseXML = function () {
 }
 
 function batToDo(folder, tmpPath) {
-    var files = FLfile.listFolder('file://' + folder + "/*.fla", "files");
+    var files = FLfile.listFolder('file:///' + folder + "/*.fla", "files");
     for (var i = 0; i < files.length; i++) {
         pub(folder, files[i], tmpPath);
     }
 }
 
 function pub(dir, file, tmpPath) {
-    var doc = fl.openDocument('file://' + dir + "/" + file);
+    var doc = fl.openDocument('file:///' + dir.replace(":", "|") + "/" + file);
     var xml = new XML(1);
     var tl = new Timeline(fl.getDocumentDOM().getTimeline(), xml);
     tl.buildLib(fl.getDocumentDOM().library)
