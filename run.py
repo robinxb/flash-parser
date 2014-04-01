@@ -14,11 +14,12 @@ SEP = os.path.sep
 sys.path.append(DIR_PATH + SEP + 'scripts') 
 import handleCombine as HC
 
-opts, args = getopt.getopt(sys.argv[1:], "hi:o:n:x:")
+opts, args = getopt.getopt(sys.argv[1:], "hi:o:n:xt")
 FLASH_ROOT = ""
 OUTPUT_PATH = ""
 OUTPUT_NAME = "flash"
 bLeaveXML = False
+bUsePathTree = False
 for op, value in opts:
 	if op == "-i":
 		FLASH_ROOT = value
@@ -27,7 +28,9 @@ for op, value in opts:
 	elif op == "-n":
 		OUTPUT_NAME = value
 	elif op == "-x":
-		bLeaveXML = true
+		bLeaveXML = True
+	elif op == "-t":
+		bUsePathTree = True
 	elif op == '-h':
 		print ('-i input folder')
 		print ('-o output folder')
@@ -102,10 +105,17 @@ class MainTree():
 	def CopyUsefulFiles(self):
 		for filename in LEAVE_FILE:
 			if os.path.exists(self.tmpPath + '/%s'%filename):
-				path_tree = self.mainpath .replace(FLASH_ROOT, '')
-				if not os.path.exists(OUTPUT_PATH + path_tree):
-					os.makedirs(OUTPUT_PATH + path_tree)
-				shutil.copy(self.tmpPath + '/%s'%filename, OUTPUT_PATH + path_tree + '/%s'%filename)
+				name, ext = os.path.splitext(filename)
+				dirname = os.path.dirname(self.tmpPath)
+				names = dirname.split('/')
+				output_filename = names[len(names) - 1] + ext
+				if bUsePathTree:
+					path_tree = self.mainpath .replace(FLASH_ROOT, '')
+					if not os.path.exists(OUTPUT_PATH + path_tree):
+						os.makedirs(OUTPUT_PATH + path_tree)
+					shutil.copy(self.tmpPath + '/%s'%filename, OUTPUT_PATH + path_tree + '/%s'%output_filename)
+				else:
+					shutil.copy(self.tmpPath + '/%s'%filename, OUTPUT_PATH + '/%s'%output_filename)
 
 
 	def Clean(self):
