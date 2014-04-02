@@ -116,8 +116,8 @@ flash文件存放的文件夹树结构为
 
 你可以在lua文件中首先创建robot并指定其播放的动作:
 
-	local pack = require "ejoy2d.simplepackage"
-	local obj = ej.sprite('type1', 'robot')
+	local sprite = require "ejoy2d.sprite"
+	local obj = sprite.sprite('type1', 'robot')
 	obj.action = "act1"
 	--obj.action = 'act2'
 	
