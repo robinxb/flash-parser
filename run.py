@@ -38,8 +38,8 @@ for op, value in opts:
 global sysOpen
 TMP_FOLDER_NAME = "__tmp"
 SCRIPT_PATH = DIR_PATH + SEP + 'scripts'
-OUTPUT_PATH = OUTPUT_PATH or DIR_PATH + SEP + 'files'
-FLASH_ROOT = FLASH_ROOT or DIR_PATH + SEP + 'files'
+OUTPUT_PATH = OUTPUT_PATH or DIR_PATH + SEP + 'output'
+FLASH_ROOT = FLASH_ROOT or DIR_PATH + SEP + 'input'
 FLASH_ROOT = os.path.realpath(FLASH_ROOT)
 OUTPUT_PATH = os.path.realpath(OUTPUT_PATH)
 LEAVE_FILE = ['%s.1.ppm'%OUTPUT_NAME, '%s.1.pgm'%OUTPUT_NAME, '%s.lua'%OUTPUT_NAME]
