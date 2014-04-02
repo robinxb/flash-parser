@@ -1,0 +1,1213 @@
+<root>
+	<document filename="robot@act1">
+		<Timeline name="Scene 1" framecount="35">
+			<layer name="Layer 1" frameCount="35">
+				<frame startFrame="0" duration="34">
+					<element name="RobotCharacterMc" mat="1024,0,0,1024,4800.8,8721.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="34" duration="1">
+					<element name="RobotCharacterMc" mat="1024,0,0,1024,4800.8,8721.6" firstFrame="0"></element>
+				</frame>
+			</layer>
+		</Timeline>
+		<Timeline name="@HeadMc" framecount="1">
+			<layer name="Layer 1" frameCount="1">
+				<frame startFrame="0" duration="1">
+					<element name="head.png" mat="1024,0,0,1024,-256,-1001.6" desc="{ tex = 1, src = {101, 117, 101, 223, 3, 223, 3, 117, }, screen = {32, 64, 1728, 64, 1728, 1632, 32, 1632, } }"></element>
+				</frame>
+			</layer>
+		</Timeline>
+		<Timeline name="ArmRMc" framecount="1">
+			<layer name="Layer 1" frameCount="1">
+				<frame startFrame="0" duration="1">
+					<element name="armleg_piece.png" mat="0,-1024,1024,0,-930.4,224" desc="{ tex = 1, src = {71, 227, 71, 253, 3, 253, 3, 227, }, screen = {0, 32, 416, 32, 416, 1120, 0, 1120, } }"></element>
+				</frame>
+			</layer>
+		</Timeline>
+		<Timeline name="BodyMc" framecount="1">
+			<layer name="Layer 1" frameCount="1">
+				<frame startFrame="0" duration="1">
+					<element name="body.png" mat="1024,0,0,1024,-608,-1516" desc="{ tex = 1, src = {3, 3, 75, 3, 75, 113, 3, 113, }, screen = {16, 32, 1168, 32, 1168, 1792, 16, 1792, } }"></element>
+				</frame>
+			</layer>
+		</Timeline>
+		<Timeline name="ForeArmRMc" framecount="1">
+			<layer name="Layer 1" frameCount="1">
+				<frame startFrame="0" duration="1">
+					<element name="neck_bottom.png" mat="1024,0,0,1024,-208,-198.4" desc="{ tex = 1, src = {157, 227, 157, 249, 103, 249, 103, 227, }, screen = {32, 32, 384, 32, 384, 896, 32, 896, } }"></element>
+				</frame>
+			</layer>
+		</Timeline>
+		<Timeline name="HandRMc" framecount="1">
+			<layer name="Layer 1" frameCount="1">
+				<frame startFrame="0" duration="1">
+					<element name="hand.png" mat="1024,0,0,1024,-278.4,-192.8" desc="{ tex = 1, src = {79, 3, 115, 3, 115, 51, 79, 51, }, screen = {0, 32, 576, 32, 576, 800, 0, 800, } }"></element>
+				</frame>
+			</layer>
+		</Timeline>
+		<Timeline name="LegMc" framecount="1">
+			<layer name="Layer 1" frameCount="1">
+				<frame startFrame="0" duration="1">
+					<element name="armleg_piece.png" mat="1024,0,0,1024,-211.2,-208.8" desc="{ tex = 1, src = {71, 227, 71, 253, 3, 253, 3, 227, }, screen = {0, 32, 416, 32, 416, 1120, 0, 1120, } }"></element>
+				</frame>
+			</layer>
+		</Timeline>
+		<Timeline name="NeckBottomMc" framecount="1">
+			<layer name="Layer 1" frameCount="1">
+				<frame startFrame="0" duration="1">
+					<element name="neck_bottom.png" mat="1024,0,0,1024,-208,-704" desc="{ tex = 1, src = {157, 227, 157, 249, 103, 249, 103, 227, }, screen = {32, 32, 384, 32, 384, 896, 32, 896, } }"></element>
+				</frame>
+			</layer>
+		</Timeline>
+		<Timeline name="NeckTopMc" framecount="1">
+			<layer name="Layer 1" frameCount="1">
+				<frame startFrame="0" duration="1">
+					<element name="neck_top.png" mat="1024,0,0,1024,-310.4,-793.6" desc="{ tex = 1, src = {139, 81, 139, 111, 79, 111, 79, 81, }, screen = {32, 0, 512, 0, 512, 960, 32, 960, } }"></element>
+				</frame>
+			</layer>
+		</Timeline>
+		<Timeline name="RobotCharacterMc" framecount="35">
+			<layer name="Wheel" frameCount="35">
+				<frame startFrame="0" duration="10">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="10" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="11" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="12" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="13" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="14" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="15" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="16" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="17" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="18" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="19" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="20" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="21" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="22" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="23" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="24" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="25" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="26" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="27" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="28" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="29" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="30" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="31" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="32" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="33" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="34" duration="1">
+					<element name="WheelMc" mat="1024,0,0,1024,0,25.6" firstFrame="0"></element>
+				</frame>
+			</layer>
+			<layer name="ShoulderL" frameCount="35">
+				<frame startFrame="0" duration="10">
+					<element name="ShoulderMc" mat="511.984375,-886.78125,886.8125,511.984375,296,-2080" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="10" duration="1">
+					<element name="ShoulderMc" mat="511.984375,-886.78125,886.8125,511.984375,296,-2080" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="11" duration="1">
+					<element name="ShoulderMc" mat="465.234375,-910.640625,910.6875,465.234375,324,-2069.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="12" duration="1">
+					<element name="ShoulderMc" mat="417.1875,-933.75,933.796875,417.203125,351.2,-2058.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="13" duration="1">
+					<element name="ShoulderMc" mat="371.171875,-953.09375,953.15625,371.171875,377.6,-2048" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="14" duration="1">
+					<element name="ShoulderMc" mat="321.078125,-971.25,971.28125,321.09375,404.8,-2036.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="15" duration="1">
+					<element name="ShoulderMc" mat="270.109375,-986.796875,986.8125,270.125,431.2,-2026.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="16" duration="1">
+					<element name="ShoulderMc" mat="221.734375,-998.9375,998.953125,221.734375,458.4,-2016" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="17" duration="1">
+					<element name="ShoulderMc" mat="169.46875,-1009.265625,1009.296875,169.484375,485.6,-2005.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="18" duration="1">
+					<element name="ShoulderMc" mat="116.78125,-1016.890625,1016.921875,116.78125,512.8,-1994.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="19" duration="1">
+					<element name="ShoulderMc" mat="67.109375,-1021.546875,1021.578125,67.109375,540.8,-1984.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="20" duration="1">
+					<element name="ShoulderMc" mat="13.921875,-1023.8125,1023.859375,13.921875,568,-1973.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="21" duration="1">
+					<element name="ShoulderMc" mat="-35.9375,-1023.1875,1023.203125,-35.9375,594.4,-1962.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="22" duration="1">
+					<element name="ShoulderMc" mat="-85.71875,-1020.0625,1020.078125,-85.71875,620.8,-1952" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="23" duration="1">
+					<element name="ShoulderMc" mat="-138.59375,-1014.0625,1014.078125,-138.609375,648.8,-1942.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="24" duration="1">
+					<element name="ShoulderMc" mat="-191.5625,-1005.859375,1005.875,-191.5625,675.2,-1931.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="25" duration="1">
+					<element name="ShoulderMc" mat="-191.5625,-1005.859375,1005.875,-191.5625,675.2,-1931.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="26" duration="1">
+					<element name="ShoulderMc" mat="-111.46875,-1017.484375,1017.5,-111.484375,632.8,-1948.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="27" duration="1">
+					<element name="ShoulderMc" mat="-27.78125,-1023.484375,1023.5,-27.796875,591.2,-1964.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="28" duration="1">
+					<element name="ShoulderMc" mat="49.40625,-1022.578125,1022.609375,49.390625,548,-1980.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="29" duration="1">
+					<element name="ShoulderMc" mat="129.640625,-1015.28125,1015.3125,129.640625,506.4,-1997.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="30" duration="1">
+					<element name="ShoulderMc" mat="209.0625,-1001.6875,1001.71875,209.0625,464.8,-2014.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="31" duration="1">
+					<element name="ShoulderMc" mat="287.203125,-981.90625,981.921875,287.203125,422.4,-2030.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="32" duration="1">
+					<element name="ShoulderMc" mat="363.546875,-956.046875,956.09375,363.5625,380,-2048" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="33" duration="1">
+					<element name="ShoulderMc" mat="437.640625,-924.25,924.296875,437.65625,338.4,-2063.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="34" duration="1">
+					<element name="ShoulderMc" mat="511.984375,-886.78125,886.8125,511.984375,296,-2080" firstFrame="0"></element>
+				</frame>
+			</layer>
+			<layer name="ArmL" frameCount="35">
+				<frame startFrame="0" duration="10">
+					<element name="ArmRMc" mat="511.984375,-886.78125,886.8125,511.984375,145.6,-1819.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="10" duration="1">
+					<element name="ArmRMc" mat="511.984375,-886.78125,886.8125,511.984375,145.6,-1819.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="11" duration="1">
+					<element name="ArmRMc" mat="465.234375,-910.640625,910.6875,465.234375,188,-1806.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="12" duration="1">
+					<element name="ArmRMc" mat="417.1875,-933.75,933.796875,417.203125,230.4,-1792.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="13" duration="1">
+					<element name="ArmRMc" mat="371.171875,-953.09375,953.15625,371.171875,271.2,-1780.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="14" duration="1">
+					<element name="ArmRMc" mat="321.078125,-971.25,971.28125,321.09375,312.8,-1766.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="15" duration="1">
+					<element name="ArmRMc" mat="270.109375,-986.796875,986.8125,270.125,355.2,-1754.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="16" duration="1">
+					<element name="ArmRMc" mat="221.734375,-998.9375,998.953125,221.734375,396,-1740" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="17" duration="1">
+					<element name="ArmRMc" mat="169.46875,-1009.265625,1009.296875,169.484375,438.4,-1728" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="18" duration="1">
+					<element name="ArmRMc" mat="116.78125,-1016.890625,1016.921875,116.78125,480,-1713.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="19" duration="1">
+					<element name="ArmRMc" mat="67.109375,-1021.546875,1021.578125,67.109375,522.4,-1700.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="20" duration="1">
+					<element name="ArmRMc" mat="13.921875,-1023.8125,1023.859375,13.921875,564.8,-1688.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="21" duration="1">
+					<element name="ArmRMc" mat="-35.9375,-1023.1875,1023.203125,-35.9375,605.6,-1674.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="22" duration="1">
+					<element name="ArmRMc" mat="-85.71875,-1020.0625,1020.078125,-85.71875,646.4,-1662.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="23" duration="1">
+					<element name="ArmRMc" mat="-138.59375,-1014.0625,1014.078125,-138.609375,690.4,-1648" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="24" duration="1">
+					<element name="ArmRMc" mat="-191.5625,-1005.859375,1005.875,-191.5625,732,-1635.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="25" duration="1">
+					<element name="ArmRMc" mat="-191.5625,-1005.859375,1005.875,-191.5625,732,-1635.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="26" duration="1">
+					<element name="ArmRMc" mat="-111.46875,-1017.484375,1017.5,-111.484375,667.2,-1656.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="27" duration="1">
+					<element name="ArmRMc" mat="-27.78125,-1023.484375,1023.5,-27.796875,602.4,-1675.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="28" duration="1">
+					<element name="ArmRMc" mat="49.40625,-1022.578125,1022.609375,49.390625,536.8,-1696.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="29" duration="1">
+					<element name="ArmRMc" mat="129.640625,-1015.28125,1015.3125,129.640625,471.2,-1716.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="30" duration="1">
+					<element name="ArmRMc" mat="209.0625,-1001.6875,1001.71875,209.0625,406.4,-1737.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="31" duration="1">
+					<element name="ArmRMc" mat="287.203125,-981.90625,981.921875,287.203125,341.6,-1756.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="32" duration="1">
+					<element name="ArmRMc" mat="363.546875,-956.046875,956.09375,363.5625,276,-1778.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="33" duration="1">
+					<element name="ArmRMc" mat="437.640625,-924.25,924.296875,437.65625,210.4,-1798.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="34" duration="1">
+					<element name="ArmRMc" mat="511.984375,-886.78125,886.8125,511.984375,145.6,-1819.2" firstFrame="0"></element>
+				</frame>
+			</layer>
+			<layer name="ForeArmL" frameCount="35">
+				<frame startFrame="0" duration="10">
+					<element name="ForeArmRMc" mat="511.984375,-886.78125,886.8125,511.984375,-216,-1115.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="10" duration="1">
+					<element name="ForeArmRMc" mat="511.984375,-886.78125,886.8125,511.984375,-216,-1115.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="11" duration="1">
+					<element name="ForeArmRMc" mat="481.328125,-902.171875,902.234375,481.359375,-135.2,-1096.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="12" duration="1">
+					<element name="ForeArmRMc" mat="453.140625,-916.734375,916.78125,453.15625,-53.6,-1080" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="13" duration="1">
+					<element name="ForeArmRMc" mat="421.484375,-931.796875,931.84375,421.484375,28,-1060.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="14" duration="1">
+					<element name="ForeArmRMc" mat="392.40625,-944.46875,944.515625,392.390625,108.8,-1044" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="15" duration="1">
+					<element name="ForeArmRMc" mat="362.953125,-956.25,956.3125,362.953125,188.8,-1026.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="16" duration="1">
+					<element name="ForeArmRMc" mat="329.984375,-968.21875,968.28125,330.015625,269.6,-1008.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="17" duration="1">
+					<element name="ForeArmRMc" mat="299.828125,-978.09375,978.125,299.84375,351.2,-990.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="18" duration="1">
+					<element name="ForeArmRMc" mat="269.40625,-987,987.015625,269.40625,432,-972.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="19" duration="1">
+					<element name="ForeArmRMc" mat="235.453125,-995.75,995.765625,235.46875,512.8,-955.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="20" duration="1">
+					<element name="ForeArmRMc" mat="204.5,-1002.671875,1002.671875,204.515625,594.4,-937.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="21" duration="1">
+					<element name="ForeArmRMc" mat="170.0625,-1009.1875,1009.203125,170.078125,675.2,-920" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="22" duration="1">
+					<element name="ForeArmRMc" mat="138.734375,-1014.0625,1014.078125,138.75,756,-901.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="23" duration="1">
+					<element name="ForeArmRMc" mat="107.28125,-1017.96875,1017.96875,107.296875,837.6,-883.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="24" duration="1">
+					<element name="ForeArmRMc" mat="75.296875,-1021.171875,1021.1875,75.28125,917.6,-866.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="25" duration="1">
+					<element name="ForeArmRMc" mat="75.296875,-1021.171875,1021.1875,75.28125,917.6,-866.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="26" duration="1">
+					<element name="ForeArmRMc" mat="125.140625,-1015.859375,1015.875,125.140625,792,-894.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="27" duration="1">
+					<element name="ForeArmRMc" mat="174.28125,-1008.453125,1008.46875,174.28125,665.6,-921.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="28" duration="1">
+					<element name="ForeArmRMc" mat="226.265625,-997.890625,997.921875,226.25,540,-949.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="29" duration="1">
+					<element name="ForeArmRMc" mat="274.40625,-985.609375,985.625,274.40625,414.4,-977.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="30" duration="1">
+					<element name="ForeArmRMc" mat="325.078125,-969.90625,969.953125,325.09375,287.2,-1004.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="31" duration="1">
+					<element name="ForeArmRMc" mat="371.78125,-952.859375,952.890625,371.78125,161.6,-1032" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="32" duration="1">
+					<element name="ForeArmRMc" mat="420.640625,-932.171875,932.21875,420.65625,36,-1060" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="33" duration="1">
+					<element name="ForeArmRMc" mat="465.421875,-910.546875,910.578125,465.421875,-89.6,-1088" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="34" duration="1">
+					<element name="ForeArmRMc" mat="511.984375,-886.78125,886.8125,511.984375,-216,-1115.2" firstFrame="0"></element>
+				</frame>
+			</layer>
+			<layer name="HandL" frameCount="35">
+				<frame startFrame="0" duration="10">
+					<element name="HandRMc" mat="511.984375,-886.78125,886.8125,511.984375,325.6,-787.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="10" duration="1">
+					<element name="HandRMc" mat="511.984375,-886.78125,886.8125,511.984375,325.6,-787.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="11" duration="1">
+					<element name="HandRMc" mat="465.234375,-910.640625,910.6875,465.234375,413.6,-788" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="12" duration="1">
+					<element name="HandRMc" mat="417.1875,-933.75,933.796875,417.203125,500.8,-790.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="13" duration="1">
+					<element name="HandRMc" mat="371.171875,-953.09375,953.15625,371.171875,587.2,-791.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="14" duration="1">
+					<element name="HandRMc" mat="321.078125,-971.25,971.28125,321.09375,676,-792" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="15" duration="1">
+					<element name="HandRMc" mat="270.109375,-986.796875,986.8125,270.125,762.4,-793.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="16" duration="1">
+					<element name="HandRMc" mat="221.734375,-998.9375,998.953125,221.734375,850.4,-796" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="17" duration="1">
+					<element name="HandRMc" mat="169.46875,-1009.265625,1009.296875,169.484375,936.8,-796" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="18" duration="1">
+					<element name="HandRMc" mat="116.78125,-1016.875,1016.921875,116.796875,1024.8,-797.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="19" duration="1">
+					<element name="HandRMc" mat="67.109375,-1021.53125,1021.578125,67.125,1112,-799.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="20" duration="1">
+					<element name="HandRMc" mat="13.921875,-1023.8125,1023.859375,13.9375,1199.2,-801.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="21" duration="1">
+					<element name="HandRMc" mat="-35.921875,-1023.171875,1023.203125,-35.9375,1286.4,-803.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="22" duration="1">
+					<element name="HandRMc" mat="-85.71875,-1020.0625,1020.078125,-85.703125,1373.6,-804" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="23" duration="1">
+					<element name="HandRMc" mat="-138.59375,-1014.046875,1014.078125,-138.59375,1461.6,-804.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="24" duration="1">
+					<element name="HandRMc" mat="-191.546875,-1005.859375,1005.875,-191.5625,1548,-807.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="25" duration="1">
+					<element name="HandRMc" mat="-191.546875,-1005.859375,1005.875,-191.5625,1548,-807.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="26" duration="1">
+					<element name="HandRMc" mat="-111.484375,-1017.484375,1017.515625,-111.484375,1411.2,-804" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="27" duration="1">
+					<element name="HandRMc" mat="-27.796875,-1023.46875,1023.515625,-27.796875,1276,-802.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="28" duration="1">
+					<element name="HandRMc" mat="49.40625,-1022.5625,1022.625,49.390625,1140.8,-801.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="29" duration="1">
+					<element name="HandRMc" mat="129.625,-1015.28125,1015.328125,129.640625,1004.8,-798.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="30" duration="1">
+					<element name="HandRMc" mat="209.0625,-1001.6875,1001.734375,209.046875,868.8,-796.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="31" duration="1">
+					<element name="HandRMc" mat="287.21875,-981.890625,981.9375,287.203125,732.8,-794.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="32" duration="1">
+					<element name="HandRMc" mat="363.5625,-956.046875,956.109375,363.5625,597.6,-792" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="33" duration="1">
+					<element name="HandRMc" mat="437.65625,-924.28125,924.3125,437.671875,460.8,-789.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="34" duration="1">
+					<element name="HandRMc" mat="511.984375,-886.78125,886.8125,511.984375,325.6,-787.2" firstFrame="0"></element>
+				</frame>
+			</layer>
+			<layer name="ArmL" frameCount="35">
+			</layer>
+			<layer name="Body" frameCount="35">
+				<frame startFrame="0" duration="10">
+					<element name="BodyMc" mat="1024,0,0,1024,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="10" duration="1">
+					<element name="BodyMc" mat="1024,0,0,1024,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="11" duration="1">
+					<element name="BodyMc" mat="1023.65625,22.890625,-22.890625,1023.65625,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="12" duration="1">
+					<element name="BodyMc" mat="1022.828125,45.765625,-45.765625,1022.828125,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="13" duration="1">
+					<element name="BodyMc" mat="1021.234375,71.953125,-71.953125,1021.234375,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="14" duration="1">
+					<element name="BodyMc" mat="1019.296875,94.765625,-94.765625,1019.296875,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="15" duration="1">
+					<element name="BodyMc" mat="1016.4375,120.859375,-120.859375,1016.4375,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="16" duration="1">
+					<element name="BodyMc" mat="1013.40625,143.5625,-143.5625,1013.40625,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="17" duration="1">
+					<element name="BodyMc" mat="1009.3125,169.484375,-169.484375,1009.3125,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="18" duration="1">
+					<element name="BodyMc" mat="1005.203125,192.015625,-192.015625,1005.203125,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="19" duration="1">
+					<element name="BodyMc" mat="999.859375,217.71875,-217.71875,999.859375,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="20" duration="1">
+					<element name="BodyMc" mat="994.671875,240.03125,-240.03125,994.671875,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="21" duration="1">
+					<element name="BodyMc" mat="988.125,265.453125,-265.453125,988.125,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="22" duration="1">
+					<element name="BodyMc" mat="981.859375,287.5,-287.5,981.859375,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="23" duration="1">
+					<element name="BodyMc" mat="974.09375,312.578125,-312.578125,974.09375,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="24" duration="1">
+					<element name="BodyMc" mat="966.9375,337.046875,-337.046875,966.9375,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="25" duration="1">
+					<element name="BodyMc" mat="966.9375,337.046875,-337.046875,966.9375,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="26" duration="1">
+					<element name="BodyMc" mat="978.140625,299.734375,-299.734375,978.140625,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="27" duration="1">
+					<element name="BodyMc" mat="989.171875,261.5625,-261.5625,989.171875,48,-884.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="28" duration="1">
+					<element name="BodyMc" mat="997.9375,226.25,-226.25,997.9375,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="29" duration="1">
+					<element name="BodyMc" mat="1006.078125,187.390625,-187.390625,1006.078125,48,-884.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="30" duration="1">
+					<element name="BodyMc" mat="1012.203125,151.53125,-151.53125,1012.203125,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="31" duration="1">
+					<element name="BodyMc" mat="1017.453125,112.1875,-112.1875,1017.453125,48,-884" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="32" duration="1">
+					<element name="BodyMc" mat="1020.921875,76,-76,1020.921875,48,-883.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="33" duration="1">
+					<element name="BodyMc" mat="1023.234375,36.34375,-36.34375,1023.234375,48,-884.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="34" duration="1">
+					<element name="BodyMc" mat="1024,0,0,1024,48,-884" firstFrame="0"></element>
+				</frame>
+			</layer>
+			<layer name="Leg" frameCount="35">
+				<frame startFrame="0" duration="10">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="10" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="11" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="12" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="13" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="14" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="15" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="16" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="17" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="18" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="19" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="20" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="21" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="22" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="23" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="24" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="25" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="26" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="27" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="28" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="29" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="30" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="31" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="32" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="33" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="34" duration="1">
+					<element name="LegMc" mat="1024,0,0,1024,16,-704.8" firstFrame="0"></element>
+				</frame>
+			</layer>
+			<layer name="ShoulderR" frameCount="35">
+				<frame startFrame="0" duration="10">
+					<element name="ShoulderMc" mat="724.0625,-724.0625,724.0625,724.0625,-144,-2080" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="10" duration="1">
+					<element name="ShoulderMc" mat="724.0625,-724.0625,724.0625,724.0625,-144,-2080" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="11" duration="1">
+					<element name="ShoulderMc" mat="772.9375,-669.0625,669.0625,772.9375,-115.2,-2080.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="12" duration="1">
+					<element name="ShoulderMc" mat="818.046875,-613.203125,613.203125,818.046875,-86.4,-2079.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="13" duration="1">
+					<element name="ShoulderMc" mat="859.140625,-554.328125,554.328125,859.140625,-58.4,-2080" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="14" duration="1">
+					<element name="ShoulderMc" mat="896.03125,-492.6875,492.6875,896.03125,-28.8,-2080" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="15" duration="1">
+					<element name="ShoulderMc" mat="929.90625,-425.625,425.625,929.90625,0,-2080" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="16" duration="1">
+					<element name="ShoulderMc" mat="957.625,-359.40625,359.40625,957.625,28.8,-2078.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="17" duration="1">
+					<element name="ShoulderMc" mat="980.65625,-291.4375,291.4375,980.65625,57.6,-2079.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="18" duration="1">
+					<element name="ShoulderMc" mat="998.859375,-222.015625,222.015625,998.859375,87.2,-2079.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="19" duration="1">
+					<element name="ShoulderMc" mat="1012.1875,-151.53125,151.53125,1012.1875,116,-2078.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="20" duration="1">
+					<element name="ShoulderMc" mat="1020.796875,-76.953125,76.953125,1020.796875,145.6,-2077.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="21" duration="1">
+					<element name="ShoulderMc" mat="1023.953125,-5.296875,5.296875,1023.953125,173.6,-2078.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="22" duration="1">
+					<element name="ShoulderMc" mat="1021.8125,63,-63,1021.8125,203.2,-2077.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="23" duration="1">
+					<element name="ShoulderMc" mat="1014.6875,134.375,-134.375,1014.6875,232,-2078.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="24" duration="1">
+					<element name="ShoulderMc" mat="1002.671875,207.859375,-207.859375,1002.671875,260,-2076.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="25" duration="1">
+					<element name="ShoulderMc" mat="1002.671875,207.859375,-207.859375,1002.671875,260,-2076.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="26" duration="1">
+					<element name="ShoulderMc" mat="1019.3125,94.421875,-94.421875,1019.3125,216,-2076.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="27" duration="1">
+					<element name="ShoulderMc" mat="1023.828125,-14.03125,14.03125,1023.828125,170.4,-2076.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="28" duration="1">
+					<element name="ShoulderMc" mat="1015.828125,-125.640625,125.640625,1015.828125,125.6,-2077.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="29" duration="1">
+					<element name="ShoulderMc" mat="995.703125,-235.78125,235.78125,995.703125,80,-2077.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="30" duration="1">
+					<element name="ShoulderMc" mat="962.53125,-346.21875,346.21875,962.53125,35.2,-2078.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="31" duration="1">
+					<element name="ShoulderMc" mat="918.671875,-449.265625,449.265625,918.671875,-8.8,-2079.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="32" duration="1">
+					<element name="ShoulderMc" mat="863.84375,-546.9375,546.9375,863.84375,-54.4,-2080" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="33" duration="1">
+					<element name="ShoulderMc" mat="798.71875,-638.125,638.125,798.71875,-99.2,-2080" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="34" duration="1">
+					<element name="ShoulderMc" mat="724.0625,-724.0625,724.0625,724.0625,-144,-2080" firstFrame="0"></element>
+				</frame>
+			</layer>
+			<layer name="ArmR" frameCount="35">
+				<frame startFrame="0" duration="10">
+					<element name="ArmRMc" mat="724.0625,-724.0625,724.0625,724.0625,-356.8,-1867.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="10" duration="1">
+					<element name="ArmRMc" mat="724.0625,-724.0625,724.0625,724.0625,-356.8,-1867.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="11" duration="1">
+					<element name="ArmRMc" mat="772.9375,-669.0625,669.0625,772.9375,-334.4,-1887.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="12" duration="1">
+					<element name="ArmRMc" mat="818.046875,-613.203125,613.203125,818.046875,-311.2,-1906.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="13" duration="1">
+					<element name="ArmRMc" mat="859.140625,-554.328125,554.328125,859.140625,-288,-1925.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="14" duration="1">
+					<element name="ArmRMc" mat="896.03125,-492.6875,492.6875,896.03125,-264.8,-1945.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="15" duration="1">
+					<element name="ArmRMc" mat="929.90625,-425.625,425.625,929.90625,-240.8,-1964" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="16" duration="1">
+					<element name="ArmRMc" mat="957.625,-359.40625,359.40625,957.625,-219.2,-1983.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="17" duration="1">
+					<element name="ArmRMc" mat="980.65625,-291.4375,291.4375,980.65625,-196,-2002.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="18" duration="1">
+					<element name="ArmRMc" mat="998.859375,-222.015625,222.015625,998.859375,-172.8,-2023.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="19" duration="1">
+					<element name="ArmRMc" mat="1012.1875,-151.53125,151.53125,1012.1875,-149.6,-2042.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="20" duration="1">
+					<element name="ArmRMc" mat="1020.796875,-76.953125,76.953125,1020.796875,-126.4,-2061.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="21" duration="1">
+					<element name="ArmRMc" mat="1023.953125,-5.296875,5.296875,1023.953125,-103.2,-2080.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="22" duration="1">
+					<element name="ArmRMc" mat="1021.8125,63,-63,1021.8125,-80.8,-2100" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="23" duration="1">
+					<element name="ArmRMc" mat="1014.6875,134.375,-134.375,1014.6875,-57.6,-2120" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="24" duration="1">
+					<element name="ArmRMc" mat="1002.671875,207.859375,-207.859375,1002.671875,-34.4,-2138.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="25" duration="1">
+					<element name="ArmRMc" mat="1002.671875,207.859375,-207.859375,1002.671875,-34.4,-2138.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="26" duration="1">
+					<element name="ArmRMc" mat="1019.3125,94.421875,-94.421875,1019.3125,-70.4,-2108" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="27" duration="1">
+					<element name="ArmRMc" mat="1023.828125,-14.03125,14.03125,1023.828125,-105.6,-2079.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="28" duration="1">
+					<element name="ArmRMc" mat="1015.828125,-125.640625,125.640625,1015.828125,-141.6,-2048.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="29" duration="1">
+					<element name="ArmRMc" mat="995.703125,-235.78125,235.78125,995.703125,-177.6,-2018.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="30" duration="1">
+					<element name="ArmRMc" mat="962.53125,-346.21875,346.21875,962.53125,-213.6,-1988.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="31" duration="1">
+					<element name="ArmRMc" mat="918.671875,-449.265625,449.265625,918.671875,-249.6,-1958.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="32" duration="1">
+					<element name="ArmRMc" mat="863.84375,-546.9375,546.9375,863.84375,-284.8,-1927.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="33" duration="1">
+					<element name="ArmRMc" mat="798.71875,-638.125,638.125,798.71875,-320.8,-1898.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="34" duration="1">
+					<element name="ArmRMc" mat="724.0625,-724.0625,724.0625,724.0625,-356.8,-1867.2" firstFrame="0"></element>
+				</frame>
+			</layer>
+			<layer name="ForeArmR" frameCount="35">
+				<frame startFrame="0" duration="10">
+					<element name="ForeArmRMc" mat="724.0625,-724.0625,724.0625,724.0625,-888.8,-1281.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="10" duration="1">
+					<element name="ForeArmRMc" mat="724.0625,-724.0625,724.0625,724.0625,-888.8,-1281.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="11" duration="1">
+					<element name="ForeArmRMc" mat="758.640625,-685.234375,685.234375,758.640625,-883.2,-1350.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="12" duration="1">
+					<element name="ForeArmRMc" mat="793.53125,-644.53125,644.53125,793.53125,-877.6,-1421.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="13" duration="1">
+					<element name="ForeArmRMc" mat="826.25,-602.09375,602.09375,826.25,-872.8,-1491.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="14" duration="1">
+					<element name="ForeArmRMc" mat="856.734375,-557.984375,557.984375,856.734375,-867.2,-1560.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="15" duration="1">
+					<element name="ForeArmRMc" mat="884.859375,-512.390625,512.390625,884.859375,-862.4,-1632" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="16" duration="1">
+					<element name="ForeArmRMc" mat="910.578125,-465.359375,465.359375,910.578125,-857.6,-1700.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="17" duration="1">
+					<element name="ForeArmRMc" mat="933.828125,-417.078125,417.078125,933.828125,-850.4,-1770.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="18" duration="1">
+					<element name="ForeArmRMc" mat="954.484375,-367.640625,367.640625,954.484375,-846.4,-1840.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="19" duration="1">
+					<element name="ForeArmRMc" mat="972.5625,-317.21875,317.21875,972.5625,-842.4,-1911.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="20" duration="1">
+					<element name="ForeArmRMc" mat="987.984375,-265.921875,265.921875,987.984375,-836.8,-1980.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="21" duration="1">
+					<element name="ForeArmRMc" mat="1000.6875,-213.90625,213.90625,1000.6875,-831.2,-2052.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="22" duration="1">
+					<element name="ForeArmRMc" mat="1010.6875,-161.28125,161.28125,1010.6875,-825.6,-2121.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="23" duration="1">
+					<element name="ForeArmRMc" mat="1017.515625,-111.546875,111.546875,1017.515625,-820.8,-2190.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="24" duration="1">
+					<element name="ForeArmRMc" mat="1022.3125,-58.71875,58.71875,1022.3125,-816,-2261.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="25" duration="1">
+					<element name="ForeArmRMc" mat="1022.3125,-58.71875,58.71875,1022.3125,-816,-2261.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="26" duration="1">
+					<element name="ForeArmRMc" mat="1014.09375,-138.84375,138.84375,1014.09375,-824,-2153.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="27" duration="1">
+					<element name="ForeArmRMc" mat="998.921875,-221.890625,221.890625,998.921875,-832,-2043.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="28" duration="1">
+					<element name="ForeArmRMc" mat="978.015625,-300.203125,300.203125,978.015625,-840.8,-1935.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="29" duration="1">
+					<element name="ForeArmRMc" mat="949.71875,-379.78125,379.78125,949.71875,-848,-1827.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="30" duration="1">
+					<element name="ForeArmRMc" mat="916.453125,-453.75,453.75,916.453125,-857.6,-1716.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="31" duration="1">
+					<element name="ForeArmRMc" mat="875.78125,-527.765625,527.765625,875.78125,-865.6,-1608" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="32" duration="1">
+					<element name="ForeArmRMc" mat="831.09375,-595.453125,595.453125,831.09375,-873.6,-1500" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="33" duration="1">
+					<element name="ForeArmRMc" mat="779.015625,-662,662,779.015625,-881.6,-1390.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="34" duration="1">
+					<element name="ForeArmRMc" mat="724.0625,-724.0625,724.0625,724.0625,-888.8,-1281.6" firstFrame="0"></element>
+				</frame>
+			</layer>
+			<layer name="HandR" frameCount="35">
+				<frame startFrame="0" duration="10">
+					<element name="HandRMc" mat="724.0625,-724.0625,724.0625,724.0625,-450.4,-824.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="10" duration="1">
+					<element name="HandRMc" mat="724.0625,-724.0625,724.0625,724.0625,-450.4,-824.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="11" duration="1">
+					<element name="HandRMc" mat="746.28125,-698.65625,698.65625,746.28125,-475.2,-883.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="12" duration="1">
+					<element name="HandRMc" mat="770.046875,-672.390625,672.390625,770.046875,-499.2,-940" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="13" duration="1">
+					<element name="HandRMc" mat="790.75,-647.96875,647.96875,790.75,-524,-997.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="14" duration="1">
+					<element name="HandRMc" mat="812.71875,-620.21875,620.21875,812.71875,-548.8,-1054.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="15" duration="1">
+					<element name="HandRMc" mat="833.71875,-591.75,591.75,833.71875,-573.6,-1112" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="16" duration="1">
+					<element name="HandRMc" mat="851.890625,-565.328125,565.328125,851.890625,-597.6,-1168.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="17" duration="1">
+					<element name="HandRMc" mat="870.984375,-535.546875,535.546875,870.984375,-622.4,-1225.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="18" duration="1">
+					<element name="HandRMc" mat="889.03125,-505.125,505.125,889.03125,-646.4,-1284.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="19" duration="1">
+					<element name="HandRMc" mat="904.46875,-477.0625,477.0625,904.46875,-671.2,-1342.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="20" duration="1">
+					<element name="HandRMc" mat="920.46875,-445.53125,445.53125,920.46875,-696,-1400" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="21" duration="1">
+					<element name="HandRMc" mat="934.078125,-416.546875,416.546875,934.078125,-720.8,-1456.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="22" duration="1">
+					<element name="HandRMc" mat="947.984375,-384.015625,384.015625,947.984375,-744,-1513.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="23" duration="1">
+					<element name="HandRMc" mat="960.796875,-351.046875,351.046875,960.796875,-769.6,-1572" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="24" duration="1">
+					<element name="HandRMc" mat="972.28125,-321.296875,321.296875,972.28125,-793.6,-1628.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="25" duration="1">
+					<element name="HandRMc" mat="972.28125,-321.296875,321.296875,972.28125,-793.6,-1628.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="26" duration="1">
+					<element name="HandRMc" mat="953.125,-371.15625,371.15625,953.125,-756,-1539.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="27" duration="1">
+					<element name="HandRMc" mat="933.671875,-417.40625,417.40625,933.671875,-718.4,-1451.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="28" duration="1">
+					<element name="HandRMc" mat="910.453125,-465.609375,465.609375,910.453125,-680,-1360.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="29" duration="1">
+					<element name="HandRMc" mat="884.75,-512.59375,512.59375,884.75,-641.6,-1271.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="30" duration="1">
+					<element name="HandRMc" mat="856.640625,-558.15625,558.15625,856.640625,-604,-1182.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="31" duration="1">
+					<element name="HandRMc" mat="826.1875,-602.234375,602.234375,826.1875,-564.8,-1092" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="32" duration="1">
+					<element name="HandRMc" mat="793.46875,-644.609375,644.609375,793.46875,-526.4,-1003.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="33" duration="1">
+					<element name="HandRMc" mat="758.609375,-685.25,685.25,758.609375,-488.8,-915.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="34" duration="1">
+					<element name="HandRMc" mat="724.0625,-724.0625,724.0625,724.0625,-450.4,-824.8" firstFrame="0"></element>
+				</frame>
+			</layer>
+			<layer name="ArmR" frameCount="35">
+			</layer>
+			<layer name="NeckBottom" frameCount="35">
+				<frame startFrame="0" duration="10">
+					<element name="NeckBottomMc" mat="961.03125,353.53125,-353.53125,961.03125,160,-2323.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="10" duration="1">
+					<element name="NeckBottomMc" mat="961.03125,353.53125,-353.53125,961.03125,160,-2323.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="11" duration="1">
+					<element name="NeckBottomMc" mat="948.140625,383.65625,-383.65625,948.140625,194.4,-2316" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="12" duration="1">
+					<element name="NeckBottomMc" mat="935.765625,412.78125,-412.78125,935.765625,226.4,-2306.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="13" duration="1">
+					<element name="NeckBottomMc" mat="922.5,441.484375,-441.484375,922.5,260,-2299.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="14" duration="1">
+					<element name="NeckBottomMc" mat="908.34375,469.78125,-469.78125,908.34375,293.6,-2290.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="15" duration="1">
+					<element name="NeckBottomMc" mat="891.6875,500.5625,-500.5625,891.6875,327.2,-2281.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="16" duration="1">
+					<element name="NeckBottomMc" mat="875.71875,527.84375,-527.84375,875.71875,360,-2273.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="17" duration="1">
+					<element name="NeckBottomMc" mat="858.953125,554.671875,-554.671875,858.953125,394.4,-2264.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="18" duration="1">
+					<element name="NeckBottomMc" mat="839.40625,583.703125,-583.703125,839.40625,427.2,-2257.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="19" duration="1">
+					<element name="NeckBottomMc" mat="820.953125,609.375,-609.375,820.953125,460,-2248.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="20" duration="1">
+					<element name="NeckBottomMc" mat="801.6875,634.453125,-634.453125,801.6875,494.4,-2240.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="21" duration="1">
+					<element name="NeckBottomMc" mat="781.65625,658.953125,-658.953125,781.65625,528,-2232" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="22" duration="1">
+					<element name="NeckBottomMc" mat="758.609375,685.3125,-685.3125,758.609375,560.8,-2224" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="23" duration="1">
+					<element name="NeckBottomMc" mat="737.03125,708.4375,-708.4375,737.03125,594.4,-2214.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="24" duration="1">
+					<element name="NeckBottomMc" mat="715.5,732.546875,-732.546875,715.5,627.2,-2206.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="25" duration="1">
+					<element name="NeckBottomMc" mat="715.5,732.546875,-732.546875,715.5,627.2,-2206.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="26" duration="1">
+					<element name="NeckBottomMc" mat="749.375,695.375,-695.375,749.375,575.2,-2218.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="27" duration="1">
+					<element name="NeckBottomMc" mat="782.234375,658.234375,-658.234375,782.234375,524,-2231.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="28" duration="1">
+					<element name="NeckBottomMc" mat="815.296875,616.90625,-616.90625,815.296875,471.2,-2246.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="29" duration="1">
+					<element name="NeckBottomMc" mat="844.265625,576.671875,-576.671875,844.265625,420,-2258.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="30" duration="1">
+					<element name="NeckBottomMc" mat="871.296875,535.125,-535.125,871.296875,367.2,-2271.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="31" duration="1">
+					<element name="NeckBottomMc" mat="897.890625,489.359375,-489.359375,897.890625,316,-2284" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="32" duration="1">
+					<element name="NeckBottomMc" mat="920.671875,445.328125,-445.328125,920.671875,263.2,-2297.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="33" duration="1">
+					<element name="NeckBottomMc" mat="941.25,400.21875,-400.21875,941.25,212.8,-2310.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="34" duration="1">
+					<element name="NeckBottomMc" mat="961.03125,353.53125,-353.53125,961.03125,160,-2323.2" firstFrame="0"></element>
+				</frame>
+			</layer>
+			<layer name="NeckTop" frameCount="35">
+				<frame startFrame="0" duration="10">
+					<element name="NeckTopMc" mat="866.5625,545.5625,-545.5625,866.5625,321.6,-2781.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="10" duration="1">
+					<element name="NeckTopMc" mat="866.5625,545.5625,-545.5625,866.5625,321.6,-2781.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="11" duration="1">
+					<element name="NeckTopMc" mat="863.984375,546.796875,-546.796875,863.984375,368,-2765.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="12" duration="1">
+					<element name="NeckTopMc" mat="861.78125,550.25,-550.25,861.78125,413.6,-2749.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="13" duration="1">
+					<element name="NeckTopMc" mat="861.390625,550.84375,-550.84375,861.390625,460.8,-2732.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="14" duration="1">
+					<element name="NeckTopMc" mat="859.1875,554.265625,-554.265625,859.1875,506.4,-2717.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="15" duration="1">
+					<element name="NeckTopMc" mat="858.78125,554.875,-554.875,858.78125,552.8,-2699.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="16" duration="1">
+					<element name="NeckTopMc" mat="856.5625,558.28125,-558.28125,856.5625,599.2,-2684" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="17" duration="1">
+					<element name="NeckTopMc" mat="854.328125,561.6875,-561.6875,854.328125,645.6,-2667.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="18" duration="1">
+					<element name="NeckTopMc" mat="853.921875,562.28125,-562.28125,853.921875,692,-2650.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="19" duration="1">
+					<element name="NeckTopMc" mat="851.671875,565.671875,-565.671875,851.671875,739.2,-2634.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="20" duration="1">
+					<element name="NeckTopMc" mat="849.421875,569.0625,-569.0625,849.421875,784.8,-2617.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="21" duration="1">
+					<element name="NeckTopMc" mat="849.03125,569.640625,-569.640625,849.03125,830.4,-2600.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="22" duration="1">
+					<element name="NeckTopMc" mat="846.734375,573,-573,846.734375,876.8,-2584.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="23" duration="1">
+					<element name="NeckTopMc" mat="844.453125,576.375,-576.375,844.453125,923.2,-2568" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="24" duration="1">
+					<element name="NeckTopMc" mat="844.5,579.0625,-579.0625,844.5,969.6,-2551.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="25" duration="1">
+					<element name="NeckTopMc" mat="844.5,579.0625,-579.0625,844.5,985.6,-2551.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="26" duration="1">
+					<element name="NeckTopMc" mat="846.546875,573.28125,-573.28125,846.546875,912,-2576" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="27" duration="1">
+					<element name="NeckTopMc" mat="849.0625,569.59375,-569.59375,849.0625,838.4,-2602.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="28" duration="1">
+					<element name="NeckTopMc" mat="851.546875,565.890625,-565.890625,851.546875,763.2,-2628" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="29" duration="1">
+					<element name="NeckTopMc" mat="854.015625,562.15625,-562.15625,854.015625,690.4,-2653.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="30" duration="1">
+					<element name="NeckTopMc" mat="856.46875,558.421875,-558.421875,856.46875,616.8,-2679.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="31" duration="1">
+					<element name="NeckTopMc" mat="858.90625,554.65625,-554.65625,858.90625,543.2,-2704.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="32" duration="1">
+					<element name="NeckTopMc" mat="861.359375,550.921875,-550.921875,861.359375,468.8,-2730.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="33" duration="1">
+					<element name="NeckTopMc" mat="863.734375,547.140625,-547.140625,863.734375,394.4,-2756" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="34" duration="1">
+					<element name="NeckTopMc" mat="866.5625,545.5625,-545.5625,866.5625,321.6,-2781.6" firstFrame="0"></element>
+				</frame>
+			</layer>
+			<layer name="Head" frameCount="35">
+				<frame startFrame="0" duration="10">
+					<element name="@HeadMc" mat="1023.234375,39.203125,-39.203125,1023.234375,605.6,-3311.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="10" duration="1">
+					<element name="@HeadMc" mat="1023.234375,39.203125,-39.203125,1023.234375,605.6,-3311.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="11" duration="1">
+					<element name="@HeadMc" mat="1023.046875,40.671875,-40.671875,1023.046875,654.4,-3293.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="12" duration="1">
+					<element name="@HeadMc" mat="1022.875,44.75,-44.75,1022.875,700.8,-3276.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="13" duration="1">
+					<element name="@HeadMc" mat="1022.828125,45.453125,-45.453125,1022.828125,748.8,-3259.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="14" duration="1">
+					<element name="@HeadMc" mat="1022.625,49.5,-49.5,1022.625,797.6,-3242.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="15" duration="1">
+					<element name="@HeadMc" mat="1022.578125,50.203125,-50.203125,1022.578125,845.6,-3224.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="16" duration="1">
+					<element name="@HeadMc" mat="1022.359375,54.265625,-54.265625,1022.359375,892,-3208.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="17" duration="1">
+					<element name="@HeadMc" mat="1022.125,58.34375,-58.34375,1022.125,940,-3190.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="18" duration="1">
+					<element name="@HeadMc" mat="1022.0625,59.0625,-59.0625,1022.0625,988,-3172" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="19" duration="1">
+					<element name="@HeadMc" mat="1021.8125,63.109375,-63.109375,1021.8125,1035.2,-3156" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="20" duration="1">
+					<element name="@HeadMc" mat="1021.53125,67.171875,-67.171875,1021.53125,1083.2,-3137.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="21" duration="1">
+					<element name="@HeadMc" mat="1021.484375,67.890625,-67.890625,1021.484375,1131.2,-3121.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="22" duration="1">
+					<element name="@HeadMc" mat="1021.1875,71.9375,-71.9375,1021.1875,1179.2,-3104" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="23" duration="1">
+					<element name="@HeadMc" mat="1020.875,76,-76,1020.875,1226.4,-3087.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="24" duration="1">
+					<element name="@HeadMc" mat="1020.90625,79.203125,-79.203125,1020.90625,1274.4,-3069.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="25" duration="1">
+					<element name="@HeadMc" mat="1020.90625,79.203125,-79.203125,1020.90625,1274.4,-3069.6" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="26" duration="1">
+					<element name="@HeadMc" mat="1021.171875,72.265625,-72.265625,1021.171875,1200.8,-3096.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="27" duration="1">
+					<element name="@HeadMc" mat="1021.5,67.8125,-67.8125,1021.5,1125.6,-3123.2" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="28" duration="1">
+					<element name="@HeadMc" mat="1021.8125,63.359375,-63.359375,1021.8125,1052,-3150.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="29" duration="1">
+					<element name="@HeadMc" mat="1022.09375,58.90625,-58.90625,1022.09375,976.8,-3176.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="30" duration="1">
+					<element name="@HeadMc" mat="1022.359375,54.453125,-54.453125,1022.359375,903.2,-3204" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="31" duration="1">
+					<element name="@HeadMc" mat="1022.59375,49.984375,-49.984375,1022.59375,828.8,-3230.4" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="32" duration="1">
+					<element name="@HeadMc" mat="1022.8125,45.546875,-45.546875,1022.8125,754.4,-3256.8" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="33" duration="1">
+					<element name="@HeadMc" mat="1023.03125,41.0625,-41.0625,1023.03125,680.8,-3284" firstFrame="0"></element>
+				</frame>
+				<frame startFrame="34" duration="1">
+					<element name="@HeadMc" mat="1023.234375,39.203125,-39.203125,1023.234375,605.6,-3311.2" firstFrame="0"></element>
+				</frame>
+			</layer>
+			<layer name="Head" frameCount="35">
+			</layer>
+		</Timeline>
+		<Timeline name="ShoulderMc" framecount="1">
+			<layer name="Layer 1" frameCount="1">
+				<frame startFrame="0" duration="1">
+					<element name="shoulder.png" mat="1024,0,0,1024,-224,-224" desc="{ tex = 1, src = {99, 227, 99, 253, 75, 253, 75, 227, }, screen = {0, 32, 416, 32, 416, 416, 0, 416, } }"></element>
+				</frame>
+			</layer>
+		</Timeline>
+		<Timeline name="WheelMc" framecount="1">
+			<layer name="Layer 1" frameCount="1">
+				<frame startFrame="0" duration="1">
+					<element name="wheel.png" mat="1024,0,0,1024,-672,-672" desc="{ tex = 1, src = {161, 3, 235, 3, 235, 77, 161, 77, }, screen = {80, 80, 1264, 80, 1264, 1264, 80, 1264, } }"></element>
+				</frame>
+			</layer>
+		</Timeline>
+	</document>
+
+</root>

@@ -9,7 +9,7 @@ Flash-Parser 中文使用手册
 
 * 生成[EJOY 2D 使用的texture格式](https://github.com/cloudwu/ejoy2d/blob/master/doc/apicn.md#texture)  [Example](https://github.com/robinxb/flash-parser/tree/master/output)
 
-* 生成XML文件 [Example1](https://github.com/robinxb/flash-parser/blob/master/output/type1.xml) [Example2](https://github.com/robinxb/flash-parser/blob/master/output/type2.xml)
+* 生成XML文件 [Example1](https://github.com/robinxb/flash-parser/blob/master/output/type1/type1.xml) [Example2](https://github.com/robinxb/flash-parser/blob/master/output/type2/type2.xml)
 
 
 准备工作
