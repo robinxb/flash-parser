@@ -30,7 +30,7 @@ Arguments
 	
 		
 
-Plantform
+Platform
 ====
 
 MacOS X 10.9 & Windows 7 x64/x32
