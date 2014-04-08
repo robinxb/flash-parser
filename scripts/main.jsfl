@@ -240,8 +240,8 @@ Frame.prototype.parseXML = function () {
         // both graphic and movie clip are symbol
         // but movie clip does not have the firstFrame
         if (e.instanceType == 'symbol') {
-            var aa = e.colorAlphaAmount,
-                ab = e.colorAlphaPercent,
+            var aa = e.colorAlphaPercent,
+                ab = e.colorAlphaAmount,
                 ra = e.colorRedPercent,
                 rb = e.colorRedAmount,
                 ga = e.colorGreenPercent,
@@ -249,7 +249,7 @@ Frame.prototype.parseXML = function () {
                 ba = e.colorBluePercent,
                 bb = e.colorBlueAmount;
             var bIsNormalColor = true
-            if (("" + aa + ab + ra + rb + ga + gb + ba + bb) == "0100100010001000") {
+            if (("" + aa + ab + ra + rb + ga + gb + ba + bb) == "1000100010001000") {
                 bIsNormalColor = false
             }
             this.xml.oneline('element', {

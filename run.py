@@ -108,7 +108,7 @@ class MainTree():
 				name, ext = os.path.splitext(filename)
 				if ext == ".ppm" or ext == ".pgm":
 					ext = ".1" + ext
-				dirname = os.path.dirname(self.tmpPath)
+				dirname = os.path.dirname(self.tmpPath.replace('\\', '/'))
 				names = dirname.split('/')
 				output_filename = names[len(names) - 1] + ext
 				if bUsePathTree:

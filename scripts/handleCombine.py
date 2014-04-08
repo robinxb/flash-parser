@@ -59,12 +59,13 @@ class Handler():
 			tlname = tl.get('name')
 		frames = []
 		for i in xrange(int(tl.get('framecount'))):
-			stack = ST.Stack()
+			matStack = ST.Stack()
+			colorStack = ST.Stack()
 			frames.append([])
-			self.ParseFrame(doc, tl, frames[i], i, stack)
+			self.ParseFrame(doc, tl, frames[i], i, matStack, colorStack)
 		self.aniLib[tlname] = frames
 
-	def ParseFrame(self, doc, tl, db, iFrame, stack):
+	def ParseFrame(self, doc, tl, db, iFrame, ms, cs):
 		bIsEmpty = True
 		for layer in tl:
 			tmpFrame = iFrame
@@ -81,14 +82,20 @@ class Handler():
 				for element in frame:
 					bIsEmpty = False
 					if element.get('desc'): #pic
-						thisST = stack.Clone()
-						thisST.Push(element.get('mat'))
-						db.append((element, thisST.CalAllMat()))
+						thisMS = ms.Clone()
+						thisMS.Push(element.get('mat'))
+						thisCS = cs.Clone()
+						if element.get('color'):
+							thisCS.Push(element.get('color'))
+						db.append((element, thisMS.CalAllMat(), thisCS.CalAllColor()))
 						self.AddPic(element)
 					elif element.get('name')[:1] == '@':
-						thisST = stack.Clone()
-						thisST.Push(element.get('mat'))
-						db.append((element, thisST.CalAllMat()))
+						thisMS = ms.Clone()
+						thisMS.Push(element.get('mat'))
+						thisCS = cs.Clone()
+						if element.get('color'):
+							thisCS.Push(element.get('color'))
+						db.append((element, thisMS.CalAllMat(), thisCS.CalAllColor()))
 						timeline = doc.find("Timeline[@name='%s']"%element.get('name'))
 						if not timeline:
 							timeline = doc.find("Timeline[@name='%s']"%(doc.get('filename') + element.get('name')))
@@ -100,12 +107,15 @@ class Handler():
 					else:
 						timeline = doc.find("Timeline[@name='%s']"%element.get('name'))
 						assert(timeline)
-						thisST = stack.Clone()
-						thisST.Push(element.get('mat'))
+						thisMS = ms.Clone()
+						thisMS.Push(element.get('mat'))
+						thisCS = cs.Clone()
+						if element.get('color'):
+							thisCS.Push(element.get('color'))
 						iFrameNext = tmpFrame
 						if iFrame == int(element.get('firstFrame')):
 							iFrameNext = int(element.get('firstFrame'))
-						self.ParseFrame(doc, timeline, db, iFrameNext, thisST)
+						self.ParseFrame(doc, timeline, db, iFrameNext, thisMS, thisCS)
 				break
 		if bIsEmpty:
 			db = []
@@ -169,9 +179,14 @@ class Handler():
 						e = v[0]
 						if e != None:
 							mat = v[1]
+							color, add = v[2][0],v[2][1]
 							matStr = "mat = {%d, %d, %d, %d, %d, %d}"%(mat[0],mat[1],mat[2],mat[3],mat[4],mat[5])
+							colorStr = "color = %s"%(hex(color[0]<<24 | color[1]<<16 | color[2]<<8 | color[3]))
 							idx = component.GetIndex(e)
-							str += "{index = %d, %s},"%(idx, matStr)
+							str += "{index = %d, %s"%(idx, matStr)
+							if colorStr != "color = 0xffffffff":
+								str += ", %s"%colorStr
+							str += "},"
 						else:
 							continue
 					str += "},"
