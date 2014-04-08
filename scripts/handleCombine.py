@@ -181,7 +181,7 @@ class Handler():
 							mat = v[1]
 							color, add = v[2][0],v[2][1]
 							matStr = "mat = {%d, %d, %d, %d, %d, %d}"%(mat[0],mat[1],mat[2],mat[3],mat[4],mat[5])
-							colorStr = "color = %s"%(hex(color[0]<<24 | color[1]<<16 | color[2]<<8 | color[3]))
+							colorStr = "color = %s"%(hex(color[0]<<24 | color[1]<<16 | color[2]<<8 | color[3]).rstrip("L"))
 							idx = component.GetIndex(e)
 							str += "{index = %d, %s"%(idx, matStr)
 							if colorStr != "color = 0xffffffff":
@@ -227,8 +227,13 @@ class Handler():
 					e = v[0]
 					if e != None:
 						mat = v[1]
+						color, add = v[2][0],v[2][1]
 						matStr = "mat = {%d, %d, %d, %d, %d, %d}"%(mat[0],mat[1],mat[2],mat[3],mat[4],mat[5])
-						str += "{index = %d, %s},"%(component.GetIndex(e), matStr)
+						colorStr = "color = %s"%(hex(color[0]<<24 | color[1]<<16 | color[2]<<8 | color[3]).rstrip("L"))
+						str += "{index = %d, %s"%(component.GetIndex(e), matStr)
+						if colorStr != "color = 0xffffffff":
+							str += ", %s"%colorStr
+						str += "},"
 					else:
 						continue
 				str += "},"
