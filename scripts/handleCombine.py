@@ -39,6 +39,8 @@ class Handler():
 	def CombineAction(self):
 		aniToRemove = []
 		for name, frames in self.aniLib.items():
+			if name.find('|') > -1:
+				name = name[name.find('|')+1 :]
 			idx = name.find('@')
 			if idx < 1 or idx == len(name) - 1:
 				continue
@@ -98,9 +100,9 @@ class Handler():
 						db.append((element, thisMS.CalAllMat(), thisCS.CalAllColor()))
 						timeline = doc.find("Timeline[@name='%s']"%element.get('name'))
 						if not timeline:
-							timeline = doc.find("Timeline[@name='%s']"%(doc.get('filename') + element.get('name')))
+							timeline = doc.find("Timeline[@name='%s']"%(doc.get('filename') + "|" + element.get('name')))
 						assert(timeline)
-						tlName = doc.get('filename') + element.get('name')						
+						tlName = doc.get('filename') + "|" + element.get('name')						
 						timeline.set('name', tlName)
 						element.set('nickname', tlName)
 						self.ParseTL(doc, timeline)
