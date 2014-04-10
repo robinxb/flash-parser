@@ -182,13 +182,6 @@ Timeline.prototype.parseXML = function () {
         l.parseXML();
     }, this);
     this.xml.end();
-    // each(this.textItems, function (obj){
-    //     var t = obj.obj
-    //     this.xml.oneline('Label', {
-    //         "name" : t.getTextString(),
-    //         "idStr" : obj.idStr,
-    //     })
-    // }, this);
 }
 
 Timeline.prototype.addText = function (item, layerName){
@@ -289,7 +282,6 @@ Frame.prototype.parseXML = function () {
                 'desc': desc
             });
         } else if (e.elementType == "text"){
-            fl.trace("text " + e.length + '|' + e.height + '|' + e.width + '|' + e.getTextAttr('alignment') )
             var idStr = this.layer.timeline.addText(e, this.layer.layer.name)
             this.xml.oneline('element', {
                 'idStr' : idStr,

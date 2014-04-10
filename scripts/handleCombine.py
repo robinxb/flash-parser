@@ -196,12 +196,12 @@ class Handler():
 			dp.ChildBegin('component')
 			for k in component.GetCArr():
 				cStr = "{"
-				if k.find('@') >= 0:
-					(fileName, subName) = k.split('|')
-					cStr += 'name = "%s", '%(fileName.split('@')[-1] + subName)
 				if k.find('[') >= 0 and k.find(']') >= 0 :
 					cName = k[ k.find('[') + 1: k.find(']') ]
 					cStr += 'name = "%s", '%cName
+				elif k.find('@') >= 0:
+					(fileName, subName) = k.split('|')
+					cStr += 'name = "%s", '%(fileName.split('@')[-1] + subName)
 				cStr += 'id = %d'%(self.idTable[k])
 				cStr += "},"
 				dp.Append(cStr)
@@ -260,11 +260,11 @@ class Handler():
 			dp.ChildBegin('component')
 			for k in component.GetCArr():
 				cStr = "{"
-				if k[:1] == "@":
-					cStr += 'name = "%s", '%(k.split('@')[-1])
 				if k.find('[') >= 0 and k.find(']') >= 0 :
 					cName = k[ k.find('[') + 1 : k.find(']') ]
 					cStr += 'name = "%s", '%cName
+				elif k[:1] == "@":
+					cStr += 'name = "%s", '%(k.split('@')[-1])
 				cStr += 'id = %d'%(self.idTable[k])
 				cStr += "},"
 				dp.Append(cStr)
