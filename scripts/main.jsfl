@@ -130,6 +130,7 @@ function Timeline(timeline, xml) {
     this.timeline = timeline;
     this.xml = xml;
     this.layers = [];
+    this.textItems = []
 }
 
 Timeline.prototype.parse = function () {
@@ -181,8 +182,31 @@ Timeline.prototype.parseXML = function () {
         l.parseXML();
     }, this);
     this.xml.end();
+    // each(this.textItems, function (obj){
+    //     var t = obj.obj
+    //     this.xml.oneline('Label', {
+    //         "name" : t.getTextString(),
+    //         "idStr" : obj.idStr,
+    //     })
+    // }, this);
 }
 
+Timeline.prototype.addText = function (item, layerName){
+    for (var i in this.textItems) {
+        if (item == this.textItems[i].obj) {
+            fl.trace("return " + i)
+            return i
+        }
+    }
+    var idStr = this.timeline.name + '|' + layerName
+    this.textItems.push(new TextObj(item, idStr))
+    return idStr
+}
+
+function TextObj(item, idStr){
+    this.obj = item
+    this.idStr = idStr
+}
 
 function Layer(timeline, layer) {
     this.timeline = timeline;
@@ -227,7 +251,6 @@ function Frame(layer, frame) {
     this.layer = layer;
     this.frame = frame;
     this.xml = layer.xml;
-    this.elemets = []
 }
 
 Frame.prototype.parseXML = function () {
@@ -264,6 +287,20 @@ Frame.prototype.parseXML = function () {
                 'name': e.libraryItem.name,
                 'mat': mat,
                 'desc': desc
+            });
+        } else if (e.elementType == "text"){
+            fl.trace("text " + e.length + '|' + e.height + '|' + e.width + '|' + e.getTextAttr('alignment') )
+            var idStr = this.layer.timeline.addText(e, this.layer.layer.name)
+            this.xml.oneline('element', {
+                'idStr' : idStr,
+                'mat': mat,
+                'string': e.getTextString(),
+                'length' : e.length,
+                'height' : e.height,
+                'width' : e.width,
+                'align' : e.getTextAttr('alignment'),
+                'size' : e.getTextAttr('size'),
+                'textcolor' : e.getTextAttr('fillColor')
             });
         }
     }, this);

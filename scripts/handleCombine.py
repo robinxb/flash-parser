@@ -18,6 +18,7 @@ class Handler():
 		self.dumper = dumper.Dumper()
 		self.aniLib = {}
 		self.picLib = {}
+		self.labelLib = {}
 		self.actionGroup = {}
 		handle = codecs.open(file, 'r')
 		content = handle.read()
@@ -83,14 +84,19 @@ class Handler():
 					break
 				for element in frame:
 					bIsEmpty = False
-					if element.get('desc'): #pic
+					if element.get('desc') or element.get('idStr'): #pic or label
 						thisMS = ms.Clone()
 						thisMS.Push(element.get('mat'))
 						thisCS = cs.Clone()
 						if element.get('color'):
 							thisCS.Push(element.get('color'))
 						db.append((element, thisMS.CalAllMat(), thisCS.CalAllColor()))
-						self.AddPic(element)
+						if element.get('desc'):
+							self.AddPic(element)
+						else:
+							element.set('name', doc.get('filename') + '|' + element.get('idStr') + '[%s]'%element.get('string'))
+							element.set('forceCName', element.get('string'))
+							self.AddLabel(element)
 					elif element.get('name')[:1] == '@':
 						thisMS = ms.Clone()
 						thisMS.Push(element.get('mat'))
@@ -129,10 +135,33 @@ class Handler():
 			return
 		self.picLib[eName] = e.get('desc')
 
+	def AddLabel(self, e):
+		eName = e.get('name')
+		assert(eName)
+		if self.labelLib.get(eName):
+			return
+		alignType = e.get('align')
+		align = None
+		if alignType == "left":
+			align = 0
+		elif alignType == "right":
+			align = 1
+		else:
+			align = 2
+		color = e.get('textcolor').replace('#', '')
+		color = '0xff' + color
+		desc = 'align = %s, size = %s, width = %s, height = %s, color = %s'%(align, e.get('size'), e.get('width'), e.get('height'), color)
+		self.labelLib[eName] = desc
+
 	def MarkID(self):
 		id = 0
 		idtable = {}
 		for name in self.picLib.keys():
+			if idtable.get(name):
+				continue
+			idtable[name] = id
+			id += 1
+		for name in self.labelLib.keys():
 			if idtable.get(name):
 				continue
 			idtable[name] = id
@@ -151,6 +180,7 @@ class Handler():
 
 	def ExportDoc(self):
 		self.ExportPng(self.dumper)
+		self.ExportLabel(self.dumper)
 		self.ExportNormalAni(self.dumper)
 		self.ExportActionGroup(self.dumper)
 
@@ -169,6 +199,9 @@ class Handler():
 				if k.find('@') >= 0:
 					(fileName, subName) = k.split('|')
 					cStr += 'name = "%s", '%(fileName.split('@')[-1] + subName)
+				if k.find('[') >= 0 and k.find(']') >= 0 :
+					cName = k[ k.find('[') + 1: k.find(']') ]
+					cStr += 'name = "%s", '%cName
 				cStr += 'id = %d'%(self.idTable[k])
 				cStr += "},"
 				dp.Append(cStr)
@@ -207,6 +240,16 @@ class Handler():
 			dp.Oneline('type', 'picture')
 			dp.ChildEnd()
 
+	def ExportLabel(self, dp):
+		for name, desc in self.labelLib.items():
+			dp.ChildBegin()
+			string = "type = 'label', id = %d, "%self.idTable[name]
+			string += desc
+			dp.Append(string)
+			# dp.Oneline('name', name)
+			# dp.Append(desc + ',')
+			dp.ChildEnd()
+
 	def ExportNormalAni(self, dp):
 		for name, frames in self.aniLib.items():
 			dp.ChildBegin()
@@ -219,6 +262,9 @@ class Handler():
 				cStr = "{"
 				if k[:1] == "@":
 					cStr += 'name = "%s", '%(k.split('@')[-1])
+				if k.find('[') >= 0 and k.find(']') >= 0 :
+					cName = k[ k.find('[') + 1 : k.find(']') ]
+					cStr += 'name = "%s", '%cName
 				cStr += 'id = %d'%(self.idTable[k])
 				cStr += "},"
 				dp.Append(cStr)
