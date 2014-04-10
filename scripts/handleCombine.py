@@ -167,7 +167,8 @@ class Handler():
 			for k in component.GetCArr():
 				cStr = "{"
 				if k.find('@') >= 0:
-					cStr += 'name = "%s", '%k
+					(fileName, subName) = k.split('|')
+					cStr += 'name = "%s", '%(fileName.split('@')[-1] + subName)
 				cStr += 'id = %d'%(self.idTable[k])
 				cStr += "},"
 				dp.Append(cStr)
@@ -217,7 +218,7 @@ class Handler():
 			for k in component.GetCArr():
 				cStr = "{"
 				if k[:1] == "@":
-					cStr += 'name = "%s", '%k[1:]
+					cStr += 'name = "%s", '%(k.split('@')[-1])
 				cStr += 'id = %d'%(self.idTable[k])
 				cStr += "},"
 				dp.Append(cStr)
