@@ -95,7 +95,6 @@ class Handler():
 							self.AddPic(element)
 						else:
 							element.set('name', doc.get('filename') + '|' + element.get('idStr') + '[%s]'%element.get('string'))
-							element.set('forceCName', element.get('string'))
 							self.AddLabel(element)
 					elif element.get('name')[:1] == '@':
 						thisMS = ms.Clone()
@@ -197,8 +196,9 @@ class Handler():
 			for k in component.GetCArr():
 				cStr = "{"
 				if k.find('[') >= 0 and k.find(']') >= 0 :
+					fileName = k.split('|')[0]
 					cName = k[ k.find('[') + 1: k.find(']') ]
-					cStr += 'name = "%s", '%cName
+					cStr += 'name = "%s", '%(fileName.split('@')[-1] + '@' + cName)
 				elif k.find('@') >= 0:
 					(fileName, subName) = k.split('|')
 					cStr += 'name = "%s", '%(fileName.split('@')[-1] + subName)
