@@ -36,7 +36,7 @@ class Stack():
 	def CalAllColor(self):
 		#only alpha now
 		color = [255, 255, 255, 255]
-		add = [0, 0, 0, 0]
+		add = self.CallAdditiveColor()
 		color[0] = self.CallAlpha()
 		return (color, add)
 
@@ -46,7 +46,18 @@ class Stack():
 			t = self.ParseColor(self.stack[i])
 			a = a * (int(t[0]) / 100.0)
 		return int(a)
-
+	
+	def CallAdditiveColor(self):
+		add = [255, 0, 0, 0]
+		for i in xrange(len(self.stack)):
+			t = self.ParseColor(self.stack[i])
+			add[1] += int(t[3])
+			add[2] += int(t[5])
+			add[3] += int(t[7])
+		for i in xrange(4):
+			if add[i] > 255:
+				add[i] = 255
+		return add
 
 	#"100,0,100,164,100,164,100,0"
 	def ParseColor(self, str):
@@ -70,4 +81,5 @@ class Stack():
 		for i in xrange(6):
 			matF.append(float(mat[i]))
 		return matF
+
 

@@ -73,12 +73,12 @@ class Handler():
 		for layer in tl:
 			tmpFrame = iFrame
 			fcount = int(layer.get('frameCount'))
-			while tmpFrame > fcount:
-				tmpFrame -= (tmpFrame - fcount)
+			while tmpFrame > fcount - 1:
+				tmpFrame -= (tmpFrame - fcount + 1)
 			for frame in layer:
 				startFrame = int(frame.get('startFrame'))
 				duration = int(frame.get('duration'))
-				if startFrame + duration < tmpFrame:
+				if startFrame + duration <= tmpFrame:
 					continue
 				if frame.find('element') == None:
 					break
@@ -218,10 +218,13 @@ class Handler():
 							color, add = v[2][0],v[2][1]
 							matStr = "mat = {%d, %d, %d, %d, %d, %d}"%(mat[0],mat[1],mat[2],mat[3],mat[4],mat[5])
 							colorStr = "color = %s"%(hex(color[0]<<24 | color[1]<<16 | color[2]<<8 | color[3]).rstrip("L"))
+							additiveStr = "add = %s"%(hex(add[0]<<24 | add[1]<<16 | add[2]<<8 | add[3]).rstrip("L"))
 							idx = component.GetIndex(e)
 							str += "{index = %d, %s"%(idx, matStr)
 							if colorStr != "color = 0xffffffff":
 								str += ", %s"%colorStr
+							if additiveStr != "color = 0xff000000":
+								str += ", %s"%additiveStr
 							str += "},"
 						else:
 							continue
@@ -279,9 +282,12 @@ class Handler():
 						color, add = v[2][0],v[2][1]
 						matStr = "mat = {%d, %d, %d, %d, %d, %d}"%(mat[0],mat[1],mat[2],mat[3],mat[4],mat[5])
 						colorStr = "color = %s"%(hex(color[0]<<24 | color[1]<<16 | color[2]<<8 | color[3]).rstrip("L"))
+						additiveStr = "add = %s"%(hex(add[0]<<24 | add[1]<<16 | add[2]<<8 | add[3]).rstrip("L"))
 						str += "{index = %d, %s"%(component.GetIndex(e), matStr)
 						if colorStr != "color = 0xffffffff":
 							str += ", %s"%colorStr
+						if additiveStr != "color = 0xff000000":
+							str += ", %s"%additiveStr
 						str += "},"
 					else:
 						continue
