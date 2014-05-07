@@ -268,6 +268,8 @@ class Handler():
 					cStr += 'name = "%s", '%cName
 				elif k[:1] == "@":
 					cStr += 'name = "%s", '%(k.split('@')[-1])
+                            	elif k.find('|') and k[k.find('|') + 1] == '@':
+					cStr += 'name = "%s", '%(k.split('@')[-1])
 				cStr += 'id = %d'%(self.idTable[k])
 				cStr += "},"
 				dp.Append(cStr)
@@ -335,12 +337,13 @@ class Component():
 
 	def GetIndex(self, e):
 		eName = e.get('nickname') or e.get('name') 
-		i = -1
+		i = 0
 		for k in self.c:
-			i += 1
 			if k != eName:
+                                i += 1
 				continue
 			if self.used.get(i):
+                                i += 1
 				continue
 			self.used[i] = True
 			return i
