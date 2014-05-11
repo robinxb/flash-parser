@@ -272,7 +272,8 @@ Frame.prototype.parseXML = function () {
                 'name': e.libraryItem.name,
                 'mat': mat,
                 'firstFrame': e.firstFrame ? e.firstFrame : 0,
-                'color': bIsNormalColor ? [aa, ab, ra, rb, ga, gb, ba, bb].join(',') : undefined
+                'color': bIsNormalColor ? [aa, ab, ra, rb, ga, gb, ba, bb].join(',') : undefined,
+                'loop': e.loop
             });
         } else if (e.instanceType == 'bitmap') {
             var desc = JSONFILE.getDesc(e.libraryItem.name);

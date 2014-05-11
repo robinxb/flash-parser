@@ -65,16 +65,16 @@ class Handler():
 			matStack = ST.Stack()
 			colorStack = ST.Stack()
 			frames.append([])
-			self.ParseFrame(doc, tl, frames[i], i, matStack, colorStack)
+			self.ParseFrame(doc, tl, frames[i], i, matStack, colorStack, True)
 		self.aniLib[tlname] = frames
 
-	def ParseFrame(self, doc, tl, db, iFrame, ms, cs):
+	def ParseFrame(self, doc, tl, db, iFrame, ms, cs, bNoLoop):
 		bIsEmpty = True
 		for layer in tl:
 			tmpFrame = iFrame
 			fcount = int(layer.get('frameCount'))
-			while tmpFrame > fcount - 1:
-				tmpFrame -= (tmpFrame - fcount + 1)
+			if not bNoLoop :
+				tmpFrame = tmpFrame % fcount
 			for frame in layer:
 				startFrame = int(frame.get('startFrame'))
 				duration = int(frame.get('duration'))
@@ -120,9 +120,18 @@ class Handler():
 						if element.get('color'):
 							thisCS.Push(element.get('color'))
 						iFrameNext = tmpFrame
-						if iFrame == int(element.get('firstFrame')):
+						loopType = element.get('loop')
+						nextNoLoop = False
+						if loopType == "single frame":
 							iFrameNext = int(element.get('firstFrame'))
-						self.ParseFrame(doc, timeline, db, iFrameNext, thisMS, thisCS)
+						else:
+							if (iFrame - startFrame) == 0:
+								iFrameNext = int(element.get('firstFrame'))
+							else:
+								iFrameNext = (iFrame - startFrame)
+							if loopType == "play once":
+								nextNoLoop = True
+						self.ParseFrame(doc, timeline, db, iFrameNext, thisMS, thisCS, nextNoLoop)
 				break
 		if bIsEmpty:
 			db = []
