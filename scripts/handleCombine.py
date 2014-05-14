@@ -128,7 +128,7 @@ class Handler():
 							if (iFrame - startFrame) == 0:
 								iFrameNext = int(element.get('firstFrame'))
 							else:
-								iFrameNext = (iFrame - startFrame)
+								iFrameNext = (iFrame - startFrame) + int(element.get('firstFrame'))
 							if loopType == "play once":
 								nextNoLoop = True
 						self.ParseFrame(doc, timeline, db, iFrameNext, thisMS, thisCS, nextNoLoop)
