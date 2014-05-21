@@ -7,6 +7,7 @@ import sys
 import codecs
 import inspect
 import getopt
+import math
 this_file = inspect.getfile(inspect.currentframe())
 DIR_PATH = os.path.abspath(os.path.dirname(this_file))
 SEP = os.path.sep
@@ -81,6 +82,7 @@ class MainTree():
 			self.WaitJSDone('done', True)
 
 			#TP
+                        self.PreHandleMirror()
 			self.TexturePacker()
 			self.WaitJSDone('%s.png'%OUTPUT_NAME)
 			self.ImageMagicka()
@@ -91,7 +93,7 @@ class MainTree():
 
 			self.Combine()
 			self.CopyUsefulFiles()
-			self.Clean()
+			#self.Clean()
 
 		for (k,v) in self.folders.items():
 			v.Export()
@@ -150,6 +152,55 @@ class MainTree():
 			self.hc = HC.Handler(filepath.replace('\\','/'))
 			self.hc.Export(self.tmpPath.replace('\\','/') + '/%s.lua'%OUTPUT_NAME)
 
+        def PreHandleMirror(self):
+            tpath = self.tmpPath
+            imgpath = self.tmpPath + '/singleimg'
+            sysType = platform.system()
+            if sysType == "Windows":
+                tpath = tpath.replace('/','\\')
+                imgpath = tpath.replace('/','\\')
+            files = os.listdir(imgpath)
+            for k in files:
+                cmd = 'identify -format "%%[fx:w]x%%[fx:h]" %s'%(imgpath + '%s%s'%(os.path.sep ,k))
+                imgSizeStr = self.ExecuteCmd(cmd)
+                assert(imgSizeStr)
+                w, h = imgSizeStr.split('x')
+                w, h = int(w), int(h)
+                if k.find('_UD') >= 0:
+                    self.SetTransparent(imgpath, k, w / 2, h / 2 - 1, "southwest")
+                    self.SetTransparent(imgpath, k, w / 2, h / 2 - 1, "southeast")
+                elif k.find('_LR') >= 0:
+                    self.SetTransparent(imgpath, k, w / 2 - 1, h / 2, "northeast")
+                    self.SetTransparent(imgpath, k, w / 2 - 1, h / 2, "southeast")
+                elif k.find('_C') >= 0:
+                    self.SetTransparent(imgpath, k, w / 2 - 1, h / 2, "northeast")
+                    self.SetTransparent(imgpath, k, w / 2, h / 2, "southeast")
+                    self.SetTransparent(imgpath, k, w / 2, h / 2 - 1, "southwest")
+
+        def SetTransparent(self, imgpath, filename, w, h, gravity):
+            if w <= 0 or h <= 0:
+                return
+
+            self.CreateTransparentImg(w, h, imgpath)
+            cmd = "convert %s -compose dstout -gravity %s %s -alpha set -composite %s"
+            cmd = cmd%(
+                    imgpath + os.path.sep + filename,
+                    gravity,
+                    imgpath + os.path.sep + "__transparent_temp_img.png",
+                    imgpath + os.path.sep + filename
+                    )
+            self.ExecuteCmd(cmd)
+            os.remove(imgpath + os.path.sep + "__transparent_temp_img.png")
+
+        def CreateTransparentImg(self, w, h, path):
+            cmd = "convert -size %dx%d xc:rgba\\(255,255,255,255\\) %s__transparent_temp_img.png"
+            cmd = cmd%(w, h, path + os.path.sep)
+            self.ExecuteCmd(cmd)
+            return "__transparent_temp_img.png"
+
+        def ExecuteCmd(self, cmd):
+            return os.popen(cmd).read()
+
 	def ImageMagicka(self):
 		convert_path = SCRIPT_PATH + SEP + 'convert '
 		if sysType == "Windows":
@@ -172,10 +223,11 @@ class MainTree():
 		        '--algorithm MaxRects',
 		        '--maxrects-heuristics Best',
 		        '--pack-mode Best',
+                        #'--scale 0.5',
 		        '--premultiply-alpha',
 		        '--sheet %s' %(tpath + os.path.sep + '%s.png'%OUTPUT_NAME),
 		        '--texture-format png',
-		        '--extrude 1',
+			#'--extrude 1',
 		        '--data %s' % (tpath + os.path.sep + '%s.json'%OUTPUT_NAME),
 		        '--format json',
 		        '%s' %  (tpath + os.path.sep + 'singleimg')

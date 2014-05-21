@@ -1,3 +1,24 @@
+function Point(x, y, scale){
+	this.x = x;
+	this.y = y;
+	if (scale) {
+		this.Scale(scale)
+	}
+}
+
+Point.prototype.Scale = function (s) {
+	this.x = this.x * s;
+	this.y = this.y * s;
+	return this
+}
+
+Point.prototype.ToString = function (mul){
+	if (!mul){
+		mul = 16;
+	}
+	return this.x * mul + ', ' + this.y * mul + ', '
+}
+
 JSONFILE.findSrc = function (filename) {
     if (!JSONFILE.frames[filename]) {
         fl.trace("cant find " + filename);
@@ -12,32 +33,66 @@ JSONFILE.getDesc = function (filename) {
     var trimSize = file.spriteSourceSize;
     var x = s.x,
         y = s.y,
-        w = s.w,
-        h = s.h;
+        w = s.w - 1,
+        h = s.h - 1;
     var tx = trimSize.x,
         ty = trimSize.y,
-        tw = trimSize.w,
-        th = trimSize.h;
+        tw = trimSize.w - 1,
+        th = trimSize.h - 1;
+	var scale = (1 / Number(JSONFILE["meta"]["scale"]))
 
     var pstr = '';
     if (!bIsRotated) {
-        pstr += x + ', ' + y + ', ';
-        pstr += (x + w) + ', ' + y + ', ';
-        pstr += (x + w) + ', ' + (y + h) + ', ';
-        pstr += x + ', ' + (y + h) + ', ';
+		pstr += new Point(x, y).ToString(1)
+		pstr += new Point(x + w, y).ToString(1)
+		pstr += new Point(x + w, y + h).ToString(1)
+		pstr += new Point(x, y + h).ToString(1)
     } else {
-        pstr += (x + h) + ', ' + y + ', ';
-        pstr += (x + h) + ', ' + (y + w) + ', ';
-        pstr += x + ', ' + (y + w) + ', ';
-        pstr += x + ', ' + y + ', ';
+		pstr += new Point(x + h, y).ToString(1)
+		pstr += new Point(x + h, y + w).ToString(1)
+		pstr += new Point(x, y + w).ToString(1)
+		pstr += new Point(x, y).ToString(1)
     }
-    screenStr = "";
-    screenStr += tx * 16 + ", " + ty * 16 + ", ";
-    screenStr += (tx + tw) * 16 + ', ' + ty * 16 + ', ';
-    screenStr += (tx + tw) * 16 + ', ' + (ty + th) * 16 + ', ';
-    screenStr += tx * 16 + ', ' + (ty + th) * 16 + ', ';
+	screenStr = new Point(tx, ty).Scale(scale).ToString()
+	screenStr += new Point(tx + tw, ty).Scale(scale).ToString()
+	screenStr += new Point(tx + tw, ty + th).Scale(scale).ToString()
+	screenStr += new Point(tx, ty + th).Scale(scale).ToString()
 
     var str = '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
+	if (filename.indexOf('_LR') > 0) {
+		screenStr = new Point(tx + tw * 2, ty).Scale(scale).ToString()
+		screenStr += new Point(tx + tw, ty).Scale(scale).ToString()
+		screenStr += new Point(tx + tw, ty + th).Scale(scale).ToString()
+		screenStr += new Point(tx + tw * 2, ty + th).Scale(scale).ToString()
+		str += ','
+		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
+	}else if (filename.indexOf('_UD') > 0){
+		screenStr = new Point(tx, ty + th * 2, scale).ToString()
+		screenStr += new Point(tx + tw, ty + th * 2, scale).ToString()
+		screenStr += new Point(tx + tw, ty + th, scale).ToString()
+		screenStr += new Point(tx, ty + th, scale).ToString()
+		str += ','
+		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
+	}else if (filename.indexOf('_C') > 0){
+		screenStr = new Point(tx + tw * 2, ty, scale).ToString()
+		screenStr += new Point(tx + tw, ty, scale).ToString()
+		screenStr += new Point(tx + tw, ty + th, scale).ToString()
+		screenStr += new Point(tx + tw * 2, ty + th, scale).ToString()
+		str += ','
+		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
+		screenStr = new Point(tx, ty + th * 2, scale).ToString()
+		screenStr += new Point(tx + tw, ty + th * 2, scale).ToString()
+		screenStr += new Point(tx + tw, ty + th, scale).ToString()
+		screenStr += new Point(tx * 2, ty + th, scale).ToString()
+		str += ','
+		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
+		screenStr = new Point(tx + tw * 2, ty + th * 2, scale).ToString()
+		screenStr += new Point(tx + tw, ty + th * 2, scale).ToString()
+		screenStr += new Point(tx + tw, ty + th, scale).ToString()
+		screenStr += new Point(tx + tw * 2, ty + th, scale).ToString()
+		str += ','
+		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
+	}
     return str;
 }
 
