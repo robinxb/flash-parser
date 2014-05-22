@@ -86,6 +86,7 @@ class MainTree():
 			self.TexturePacker()
 			self.WaitJSDone('%s.png'%OUTPUT_NAME)
 			self.ImageMagicka()
+                        self.WriteOriginImgSizeInfo()
 
 			#xml
 			os.system(sysOpen + ' ' + self.tmpPath + '/main.jsfl')
@@ -153,6 +154,7 @@ class MainTree():
 			self.hc.Export(self.tmpPath.replace('\\','/') + '/%s.lua'%OUTPUT_NAME)
 
         def PreHandleMirror(self):
+            self.originImgSize = {}
             tpath = self.tmpPath
             imgpath = self.tmpPath + '/singleimg'
             sysType = platform.system()
@@ -166,16 +168,17 @@ class MainTree():
                 assert(imgSizeStr)
                 w, h = imgSizeStr.split('x')
                 w, h = int(w), int(h)
+                self.originImgSize[k] = '{"w": %s, "h":%s}'%(w, h)
                 if k.find('_UD') >= 0:
-                    self.SetTransparent(imgpath, k, w / 2, h / 2 - 1, "southwest")
-                    self.SetTransparent(imgpath, k, w / 2, h / 2 - 1, "southeast")
+                    self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0) , "southwest")
+                    self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0) , "southeast")
                 elif k.find('_LR') >= 0:
-                    self.SetTransparent(imgpath, k, w / 2 - 1, h / 2, "northeast")
-                    self.SetTransparent(imgpath, k, w / 2 - 1, h / 2, "southeast")
+                    self.SetTransparent(imgpath, k, math.ceil(w / 2.0) , math.ceil(h / 2.0), "northeast")
+                    self.SetTransparent(imgpath, k, math.ceil(w / 2.0) , math.ceil(h / 2.0), "southeast")
                 elif k.find('_C') >= 0:
-                    self.SetTransparent(imgpath, k, w / 2 - 1, h / 2, "northeast")
-                    self.SetTransparent(imgpath, k, w / 2, h / 2, "southeast")
-                    self.SetTransparent(imgpath, k, w / 2, h / 2 - 1, "southwest")
+                    self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0), "northeast")
+                    self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0), "southeast")
+                    self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0), "southwest")
 
         def SetTransparent(self, imgpath, filename, w, h, gravity):
             if w <= 0 or h <= 0:
@@ -223,6 +226,7 @@ class MainTree():
 		        '--algorithm MaxRects',
 		        '--maxrects-heuristics Best',
 		        '--pack-mode Best',
+                        #'--variant 0.5:',
                         #'--scale 0.5',
 		        '--premultiply-alpha',
 		        '--sheet %s' %(tpath + os.path.sep + '%s.png'%OUTPUT_NAME),
@@ -230,10 +234,22 @@ class MainTree():
 			#'--extrude 1',
 		        '--data %s' % (tpath + os.path.sep + '%s.json'%OUTPUT_NAME),
 		        '--format json',
+                        '--trim-mode Trim',
+                        '--size-constraints AnySize',
+                        #'--shape-debug',
 		        '%s' %  (tpath + os.path.sep + 'singleimg')
 		        ])
 
 		os.system(cmd.encode('cp936'))
+
+        def WriteOriginImgSizeInfo(self):
+            content = "{"
+            for k,v in self.originImgSize.items():
+                content += '"%s" : %s,\n'%(k, v)
+            content += "}"
+            handle = open(self.mainpath + '/' + TMP_FOLDER_NAME + '/originsize.json', 'w')
+            handle.write(content)
+            handle.close()
 
 	def CopyScript(self, path):
 		handle = open(SCRIPT_PATH + '/exportFiles.jsfl')
@@ -253,6 +269,7 @@ FLfile.write("file:///%s",FLfile.uriToPlatformPath(publishFolder) + "\\n");"""%(
 		handle.close()
 
 		header = 'eval("var JSONFILE = " + FLfile.read("file:///%s/%s.json"));\n'%(self.tmpPath.replace('\\','/'), OUTPUT_NAME)
+		header += 'eval("var ORIGIN_SIZE = " + FLfile.read("file:///%s/%s.json"));\n'%(self.tmpPath.replace('\\','/'), "originsize")
 		footer = "var publishFolder = '%s'; \n"%(self.mainpath.replace('\\','/'))
 		footer += "var tmpPath = '%s';\n"%(self.tmpPath.replace('\\','/'))
 		footer += """batToDo(publishFolder, tmpPath);

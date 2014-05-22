@@ -6,6 +6,14 @@ function Point(x, y, scale){
 	}
 }
 
+ORIGIN_SIZE.getSize = function (filename){
+	if (!ORIGIN_SIZE[filename]) {
+        fl.trace("cant find orgin size" + filename);
+		return
+	}
+	return ORIGIN_SIZE[filename]
+}
+
 Point.prototype.Scale = function (s) {
 	this.x = this.x * s;
 	this.y = this.y * s;
@@ -22,12 +30,14 @@ Point.prototype.ToString = function (mul){
 JSONFILE.findSrc = function (filename) {
     if (!JSONFILE.frames[filename]) {
         fl.trace("cant find " + filename);
+		return
     }
     return JSONFILE.frames[filename];
 }
 
 JSONFILE.getDesc = function (filename) {
     var file = JSONFILE.findSrc(filename);
+	var originSize = ORIGIN_SIZE.getSize(filename)
     var s = file.frame;
     var bIsRotated = file.rotated;
     var trimSize = file.spriteSourceSize;
@@ -36,10 +46,28 @@ JSONFILE.getDesc = function (filename) {
         w = s.w - 1,
         h = s.h - 1;
     var tx = trimSize.x,
-        ty = trimSize.y,
-        tw = trimSize.w - 1,
-        th = trimSize.h - 1;
-	var scale = (1 / Number(JSONFILE["meta"]["scale"]))
+        ty = trimSize.y;
+	var scale = Number(JSONFILE.meta.scale)
+	//var sh = file.sourceSize.h,
+		//sw = file.sourceSize.w;
+	
+	var sh = originSize.h - 1,
+		sw = originSize.w - 1;
+
+	if (filename.indexOf('_C') > 0){
+		sh = (sh + 1) * scale - 1;
+		sw = (sw + 1) * scale - 1;
+	}else if (filename.indexOf('_LR') > 0){
+		sw = (sw + 1) * scale - 1;
+	}else if (filename.indexOf('_UD') > 0){
+		sh = (sh + 1) * scale - 1;
+	}
+
+	if (bIsRotated){
+		t = w;
+		w = h;
+		h = t;
+	}
 
     var pstr = '';
     if (!bIsRotated) {
@@ -48,48 +76,48 @@ JSONFILE.getDesc = function (filename) {
 		pstr += new Point(x + w, y + h).ToString(1)
 		pstr += new Point(x, y + h).ToString(1)
     } else {
-		pstr += new Point(x + h, y).ToString(1)
-		pstr += new Point(x + h, y + w).ToString(1)
-		pstr += new Point(x, y + w).ToString(1)
+		pstr += new Point(x + w, y).ToString(1)
+		pstr += new Point(x + w, y + h).ToString(1)
+		pstr += new Point(x, y + h).ToString(1)
 		pstr += new Point(x, y).ToString(1)
     }
-	screenStr = new Point(tx, ty).Scale(scale).ToString()
-	screenStr += new Point(tx + tw, ty).Scale(scale).ToString()
-	screenStr += new Point(tx + tw, ty + th).Scale(scale).ToString()
-	screenStr += new Point(tx, ty + th).Scale(scale).ToString()
+	screenStr = new Point(tx, ty).ToString()
+	screenStr += new Point(tx + sw , ty).ToString()
+	screenStr += new Point(tx + sw, ty + sh).ToString()
+	screenStr += new Point(tx, ty + sh).ToString()
 
     var str = '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
 	if (filename.indexOf('_LR') > 0) {
-		screenStr = new Point(tx + tw * 2, ty).Scale(scale).ToString()
-		screenStr += new Point(tx + tw, ty).Scale(scale).ToString()
-		screenStr += new Point(tx + tw, ty + th).Scale(scale).ToString()
-		screenStr += new Point(tx + tw * 2, ty + th).Scale(scale).ToString()
+		screenStr = new Point(tx + sw * 2, ty).ToString()
+		screenStr += new Point(tx + sw, ty).ToString()
+		screenStr += new Point(tx + sw, ty + sh).ToString()
+		screenStr += new Point(tx + sw * 2, ty + sh).ToString()
 		str += ','
 		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
 	}else if (filename.indexOf('_UD') > 0){
-		screenStr = new Point(tx, ty + th * 2, scale).ToString()
-		screenStr += new Point(tx + tw, ty + th * 2, scale).ToString()
-		screenStr += new Point(tx + tw, ty + th, scale).ToString()
-		screenStr += new Point(tx, ty + th, scale).ToString()
+		screenStr = new Point(tx, ty + sh * 2).ToString()
+		screenStr += new Point(tx + sw, ty + sh * 2).ToString()
+		screenStr += new Point(tx + sw, ty + sh).ToString()
+		screenStr += new Point(tx, ty + sh).ToString()
 		str += ','
 		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
 	}else if (filename.indexOf('_C') > 0){
-		screenStr = new Point(tx + tw * 2, ty, scale).ToString()
-		screenStr += new Point(tx + tw, ty, scale).ToString()
-		screenStr += new Point(tx + tw, ty + th, scale).ToString()
-		screenStr += new Point(tx + tw * 2, ty + th, scale).ToString()
+		screenStr = new Point(tx + sw * 2, ty).ToString()
+		screenStr += new Point(tx + sw, ty).ToString()
+		screenStr += new Point(tx + sw, ty + sh).ToString()
+		screenStr += new Point(tx + sw * 2, ty + sh).ToString()
 		str += ','
 		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
-		screenStr = new Point(tx, ty + th * 2, scale).ToString()
-		screenStr += new Point(tx + tw, ty + th * 2, scale).ToString()
-		screenStr += new Point(tx + tw, ty + th, scale).ToString()
-		screenStr += new Point(tx * 2, ty + th, scale).ToString()
+		screenStr = new Point(tx, ty + sh * 2).ToString()
+		screenStr += new Point(tx + sw, ty + sh * 2).ToString()
+		screenStr += new Point(tx + sw, ty + sh).ToString()
+		screenStr += new Point(tx, ty + sh).ToString()
 		str += ','
 		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
-		screenStr = new Point(tx + tw * 2, ty + th * 2, scale).ToString()
-		screenStr += new Point(tx + tw, ty + th * 2, scale).ToString()
-		screenStr += new Point(tx + tw, ty + th, scale).ToString()
-		screenStr += new Point(tx + tw * 2, ty + th, scale).ToString()
+		screenStr = new Point(tx + sw * 2, ty + sh * 2).ToString()
+		screenStr += new Point(tx + sw, ty + sh * 2).ToString()
+		screenStr += new Point(tx + sw, ty + sh).ToString()
+		screenStr += new Point(tx + sw * 2, ty + sh).ToString()
 		str += ','
 		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
 	}
