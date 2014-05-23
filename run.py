@@ -15,13 +15,14 @@ SEP = os.path.sep
 sys.path.append(DIR_PATH + SEP + 'scripts') 
 import handleCombine as HC
 
-opts, args = getopt.getopt(sys.argv[1:], "hi:o:n:xts:")
+opts, args = getopt.getopt(sys.argv[1:], "i:o:n:xts:", ["help", "extend-name="])
 FLASH_ROOT = ""
 OUTPUT_PATH = ""
 OUTPUT_NAME = "flash"
 bLeaveXML = False
 bUsePathTree = False
 SCALE = 1
+EXTEND_NAME = ""
 for op, value in opts:
 	if op == "-i":
 		FLASH_ROOT = value
@@ -35,10 +36,13 @@ for op, value in opts:
 		bUsePathTree = True
         elif op == '-s':
                 SCALE = value
-	elif op == '-h':
+	elif op == '--help':
 		print ('-i input folder')
 		print ('-o output folder')
 		sys.exit()
+        elif op == "--extend-name":
+            EXTEND_NAME = value
+
 global sysOpen
 TMP_FOLDER_NAME = "__tmp"
 SCRIPT_PATH = DIR_PATH + SEP + 'scripts'
@@ -114,6 +118,7 @@ class MainTree():
 				name, ext = os.path.splitext(filename)
 				if ext == ".ppm" or ext == ".pgm":
 					ext = ".1" + ext
+                                ext = EXTEND_NAME + ext
 				dirname = os.path.dirname(self.tmpPath.replace('\\', '/'))
 				names = dirname.split('/')
 				output_filename = names[len(names) - 1] + ext

@@ -232,7 +232,7 @@ class Handler():
 							str += "{index = %d, %s"%(idx, matStr)
 							if colorStr != "color = 0xffffffff":
 								str += ", %s"%colorStr
-							if additiveStr != "color = 0xff000000":
+							if additiveStr != "add = 0xff000000":
 								str += ", %s"%additiveStr
 							str += "},"
 						else:

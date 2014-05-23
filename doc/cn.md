@@ -112,12 +112,18 @@ flash文件存放的文件夹树结构为
 
 例如想输出原图一半大小的资源：```-s 0.5```
 
+#### [--extend-name=string]
+
+自定义生成文件后缀名。
+
+例 ```--extend-name=_hd``` 则生成```filename_hd.lua```, ```filename_hd.1.ppm```等。
+
 
 #### Flash文件名称及元件名的特殊含义
 
 ##### 文件名
 
-在```input/type2```文件夹下，可以看到```robot@act1.fla```和```robot@act2.fla```
+在```input/type2```文件夹下，可以看到```robot@act1.fla```和```robot@act2.fla```。
 
 ***文件名中的```@```表明 ： 从```@```到后缀的```.```中间的内容为robot动作的action名。***
 
