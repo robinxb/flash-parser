@@ -168,10 +168,13 @@ class MainTree():
             sysType = platform.system()
             if sysType == "Windows":
                 tpath = tpath.replace('/','\\')
-                imgpath = tpath.replace('/','\\')
+                imgpath = imgpath.replace('/','\\')
             files = os.listdir(imgpath)
             for k in files:
                 cmd = 'identify -format "%%[fx:w]x%%[fx:h]" %s'%(imgpath + '%s%s'%(os.path.sep ,k))
+		if sysType == "Windows":
+                    cmd = 'identify.exe -format "%%[fx:w]x%%[fx:h]" %s'%(imgpath + '%s%s'%(os.path.sep ,k))
+
                 imgSizeStr = self.ExecuteCmd(cmd)
                 assert(imgSizeStr)
                 w, h = imgSizeStr.split('x')
