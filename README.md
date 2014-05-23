@@ -28,6 +28,9 @@ Arguments
 	-t
 		Dump tree structure of folders
 	
+	-s number
+		Scale
+	
 		
 
 Platform
