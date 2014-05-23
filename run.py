@@ -15,12 +15,13 @@ SEP = os.path.sep
 sys.path.append(DIR_PATH + SEP + 'scripts') 
 import handleCombine as HC
 
-opts, args = getopt.getopt(sys.argv[1:], "hi:o:n:xt")
+opts, args = getopt.getopt(sys.argv[1:], "hi:o:n:xts:")
 FLASH_ROOT = ""
 OUTPUT_PATH = ""
 OUTPUT_NAME = "flash"
 bLeaveXML = False
 bUsePathTree = False
+SCALE = 1
 for op, value in opts:
 	if op == "-i":
 		FLASH_ROOT = value
@@ -32,6 +33,8 @@ for op, value in opts:
 		bLeaveXML = True
 	elif op == "-t":
 		bUsePathTree = True
+        elif op == '-s':
+                SCALE = value
 	elif op == '-h':
 		print ('-i input folder')
 		print ('-o output folder')
@@ -94,7 +97,7 @@ class MainTree():
 
 			self.Combine()
 			self.CopyUsefulFiles()
-			#self.Clean()
+                        self.Clean()
 
 		for (k,v) in self.folders.items():
 			v.Export()
@@ -226,12 +229,11 @@ class MainTree():
 		        '--algorithm MaxRects',
 		        '--maxrects-heuristics Best',
 		        '--pack-mode Best',
-                        #'--variant 0.5:',
-                        #'--scale 0.5',
+                        '--scale %s'%SCALE,
 		        '--premultiply-alpha',
 		        '--sheet %s' %(tpath + os.path.sep + '%s.png'%OUTPUT_NAME),
 		        '--texture-format png',
-			#'--extrude 1',
+                        '--extrude 1',
 		        '--data %s' % (tpath + os.path.sep + '%s.json'%OUTPUT_NAME),
 		        '--format json',
                         '--trim-mode Trim',
@@ -298,3 +300,4 @@ if __name__ == '__main__':
 
 	root = loadFiles()
 	root.Run()
+
