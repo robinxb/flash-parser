@@ -181,13 +181,14 @@ class MainTree():
             w, h = imgSizeStr.split('x')
             w, h = int(w), int(h)
             self.originImgSize[k] = '{"w": %s, "h":%s}'%(w, h)
-            if k.find('_UD') >= 0:
+            main_name, ext = os.path.splitext(k)
+            if main_name[-2:] == '_UD':
                 self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0) , "southwest")
                 self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0) , "southeast")
-            elif k.find('_LR') >= 0:
+            elif main_name[-2:] == '_LR':
                 self.SetTransparent(imgpath, k, math.ceil(w / 2.0) , math.ceil(h / 2.0), "northeast")
                 self.SetTransparent(imgpath, k, math.ceil(w / 2.0) , math.ceil(h / 2.0), "southeast")
-            elif k.find('_C') >= 0:
+            elif main_name[-2:] == '_C':
                 self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0), "northeast")
                 self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0), "southeast")
                 self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0), "southwest")

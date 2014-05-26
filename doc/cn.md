@@ -208,12 +208,12 @@ flash文件存放的文件夹树结构为
 
 组件名为下划线前的所有字符。若无，则默认名为```anchor```。
 
-例:  将```boss.png```更名为```boss__anchor.png```，最终的输出资源则不包含boss__anchor.png。Animation的component中，原```{id = xx}```将被替换为```{id = "boss"}```。
+例:  将```boss.png```更名为```boss__anchor.png```，最终的输出资源则不包含boss__anchor.png。Animation的component中，原```{id = xx}```将被替换为```{name = "boss"}```。
 
 镜像图片裁剪
 ----
 
-Flash中，若图片名称包含```_UD```,```_LR```,```_C```则表明，该图片支持镜像。
+Flash中，若图片去掉后缀名后以```_UD```,```_LR```,```_C```结尾，则表明，该图片支持镜像。
 
 + ```_UD```： 水平对称轴，即上下对称。
 + ```_LR```： 垂直对称轴，即左右对称。

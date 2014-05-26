@@ -6,9 +6,28 @@ function Point(x, y, scale){
 	}
 }
 
+function endWith(s1,s2){  
+	if(s1.length<s2.length)
+		return false;
+	if(s1==s2)
+		return true;  
+	if(s1.substring(s1.length-s2.length)==s2)  
+		return true;  
+	return false;
+}
+
+function getFileName(s){
+	arr = s.split(".");
+	len = arr.length;
+	if (len > 1){
+		arr.length = len - 1;
+	}
+	return arr.join('');
+}
+
 ORIGIN_SIZE.getSize = function (filename){
 	if (!ORIGIN_SIZE[filename]) {
-        fl.trace("cant find orgin size" + filename);
+        fl.trace("cant find orgin size ," + filename);
 		return
 	}
 	return ORIGIN_SIZE[filename]
@@ -56,13 +75,15 @@ JSONFILE.getDesc = function (filename) {
 	
 	var sh = originSize.h - 1,
 		sw = originSize.w - 1;
+	
+	main_name = getFileName(filename);
 
-	if (filename.indexOf('_C') > 0){
+	if (endWith(main_name, '_C')){
 		sh = (sh + 1) * scale - 1;
 		sw = (sw + 1) * scale - 1;
-	}else if (filename.indexOf('_LR') > 0){
+	}else if (endWith(main_name, '_LR')){
 		sw = (sw + 1) * scale - 1;
-	}else if (filename.indexOf('_UD') > 0){
+	}else if (endWith(main_name, '_UD')){
 		sh = (sh + 1) * scale - 1;
 	}
 
@@ -90,21 +111,21 @@ JSONFILE.getDesc = function (filename) {
 	screenStr += new Point(tx, ty + sh).ToString()
 
     var str = '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
-	if (filename.indexOf('_LR') > 0) {
+	if (endWith(main_name, '_LR')){
 		screenStr = new Point(tx + sw * 2, ty).ToString()
 		screenStr += new Point(tx + sw, ty).ToString()
 		screenStr += new Point(tx + sw, ty + sh).ToString()
 		screenStr += new Point(tx + sw * 2, ty + sh).ToString()
 		str += ','
 		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
-	}else if (filename.indexOf('_UD') > 0){
+	}else if (endWith(main_name, '_UD')){
 		screenStr = new Point(tx, ty + sh * 2).ToString()
 		screenStr += new Point(tx + sw, ty + sh * 2).ToString()
 		screenStr += new Point(tx + sw, ty + sh).ToString()
 		screenStr += new Point(tx, ty + sh).ToString()
 		str += ','
 		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
-	}else if (filename.indexOf('_C') > 0){
+	}else if (endWith(main_name, '_C')){
 		screenStr = new Point(tx + sw * 2, ty).ToString()
 		screenStr += new Point(tx + sw, ty).ToString()
 		screenStr += new Point(tx + sw, ty + sh).ToString()
@@ -370,7 +391,7 @@ Frame.prototype.parseXML = function () {
             });
         } else if (e.elementType == "text"){
             var idStr = this.layer.timeline.addText(e, this.layer.layer.name)
-            var mat = [e.matrix.a * 1024, e.matrix.b * 1024, e.matrix.c * 1024, e.matrix.d * 1024, (e.matrix.tx - (e.matrix.tx - e.left)) * 16, e.matrix.ty * 16].join(',');
+            var mat = [e.matrix.a * 1024, e.matrix.b * 1024, e.matrix.c * 1024, e.matrix.d * 1024, (e.matrix.tx - (e.matrix.tx - e.left)) * 16, e.matrix.ty - (e.matrix.ty - e.top) * 16].join(',');
             this.xml.oneline('element', {
                 'idStr' : idStr,
                 'mat': mat,
