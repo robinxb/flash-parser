@@ -36,6 +36,9 @@ JSONFILE.findSrc = function (filename) {
 }
 
 JSONFILE.getDesc = function (filename) {
+	if (filename.indexOf('__anchor') >= 0){
+		return "anchor"
+	}
     var file = JSONFILE.findSrc(filename);
 	var originSize = ORIGIN_SIZE.getSize(filename)
     var s = file.frame;
