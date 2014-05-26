@@ -199,6 +199,17 @@ flash文件存放的文件夹树结构为
 
 由于我们有两个动画(act1和act2)，所以就有两个部件(robot@act2@HeadMc 和 robot@act1@HeadMc)
 
+锚点
+----
+
+锚点目前只支持位图(bitmap)元件来定义。
+
+关键字为```__anchor```(双下划线)
+
+组件名为下划线前的所有字符。若无，则默认名为```anchor```。
+
+例:  将```boss.png```更名为```boss__anchor.png```，最终的输出资源则不包含boss__anchor.png。Animation的component中，原```{id = xx}```将被替换为```{id = "boss"}```。
+
 镜像图片裁剪
 ----
 
