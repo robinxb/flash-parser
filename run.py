@@ -8,21 +8,32 @@ import codecs
 import inspect
 import getopt
 import math
+import subprocess
+
+def show_exception_and_exit(exc_type, exc_value, tb):
+    import traceback
+    traceback.print_exception(exc_type, exc_value, tb)
+    raw_input("run failed.")
+    sys.exit(-1)
+
+sys.excepthook = show_exception_and_exit
+
 this_file = inspect.getfile(inspect.currentframe())
 DIR_PATH = os.path.abspath(os.path.dirname(this_file))
 SEP = os.path.sep
 
-sys.path.append(DIR_PATH + SEP + 'scripts') 
+sys.path.append(DIR_PATH + SEP + 'scripts')
 import handleCombine as HC
 
-opts, args = getopt.getopt(sys.argv[1:], "i:o:n:xts:", ["help", "extend-name="])
+opts, args = getopt.getopt(sys.argv[1:], "i:o:n:xts:", ["help", "extend-name=", "with-png"])
 FLASH_ROOT = ""
 OUTPUT_PATH = ""
 OUTPUT_NAME = "flash"
-bLeaveXML = False
 bUsePathTree = False
 SCALE = 1
 EXTEND_NAME = ""
+LEAVE_FILE = ['%s.1.ppm'%OUTPUT_NAME, '%s.1.pgm'%OUTPUT_NAME, '%s.lua'%OUTPUT_NAME]
+WITH_PNG = False
 for op, value in opts:
     if op == "-i":
         FLASH_ROOT = value
@@ -31,7 +42,7 @@ for op, value in opts:
     elif op == "-n":
         OUTPUT_NAME = value
     elif op == "-x":
-        bLeaveXML = True
+        LEAVE_FILE.append('combine.xml')
     elif op == "-t":
         bUsePathTree = True
     elif op == '-s':
@@ -42,6 +53,9 @@ for op, value in opts:
         sys.exit()
     elif op == "--extend-name":
         EXTEND_NAME = value
+    elif op == "--with-png":
+        WITH_PNG = True
+        LEAVE_FILE.append('%s.1.png'%OUTPUT_NAME)
 
 global sysOpen
 TMP_FOLDER_NAME = "__tmp"
@@ -50,12 +64,16 @@ OUTPUT_PATH = OUTPUT_PATH or DIR_PATH + SEP + 'output'
 FLASH_ROOT = FLASH_ROOT or DIR_PATH + SEP + 'input'
 FLASH_ROOT = os.path.realpath(FLASH_ROOT)
 OUTPUT_PATH = os.path.realpath(OUTPUT_PATH)
-LEAVE_FILE = ['%s.1.ppm'%OUTPUT_NAME, '%s.1.pgm'%OUTPUT_NAME, '%s.lua'%OUTPUT_NAME]
-if bLeaveXML:
-    LEAVE_FILE.append('combine.xml')
 
 if not os.path.exists(OUTPUT_PATH):
     os.makedirs(OUTPUT_PATH)
+
+class CmdError(Exception):
+    def __init__(self, string):
+        self.string = string 
+
+    def __str__(self):
+        return repr(self.string)
 
 class MainTree():
     def __init__(self, path):
@@ -78,13 +96,16 @@ class MainTree():
             self.folders[k] = MainTree(self.mainpath + '/' + k)
 
     def Export(self):
-        for k in self.files:
-            if os.path.exists(self.tmpPath):
-                shutil.rmtree(self.tmpPath)
+        if os.path.exists(self.tmpPath):
+            shutil.rmtree(self.tmpPath)
+
+        if len(self.files) > 0:
+            print('[info]Walking into %s'%self.mainpath)
             os.mkdir(self.tmpPath)
             self.CopyScript(self.tmpPath)
-        if len(self.files) > 0:
+
             # pngs
+            print ('[info]Export png')
             os.system(sysOpen + ' ' + self.tmpPath + '/exportFiles.jsfl')
             self.WaitJSDone('done', True)
 
@@ -92,7 +113,6 @@ class MainTree():
             self.PreHandleMirror()
             self.RemoveAnchorPng()
             self.TexturePacker()
-            self.WaitJSDone('%s.png'%OUTPUT_NAME)
             self.ImageMagicka()
             self.WriteOriginImgSizeInfo()
 
@@ -114,10 +134,12 @@ class MainTree():
             os.remove(self.tmpPath + '/%s'%filename)
 
     def CopyUsefulFiles(self):
+        if WITH_PNG:
+            os.rename(self.tmpPath + SEP + "%s.png"%OUTPUT_NAME, self.tmpPath + SEP + "%s.1.png"%OUTPUT_NAME)
         for filename in LEAVE_FILE:
             if os.path.exists(self.tmpPath + '/%s'%filename):
                 name, ext = os.path.splitext(filename)
-            if ext == ".ppm" or ext == ".pgm":
+            if ext == ".ppm" or ext == ".pgm" or ext == ".png":
                 ext = ".1" + ext
             ext = EXTEND_NAME + ext
             dirname = os.path.dirname(self.tmpPath.replace('\\', '/'))
@@ -176,7 +198,7 @@ class MainTree():
             identify_path = SCRIPT_PATH + SEP + 'identify.exe '
         for k in files:
             cmd = '%s -format "%%[fx:w]x%%[fx:h]" "%s"'%(identify_path, imgpath + '%s%s'%(os.path.sep ,k))
-            imgSizeStr = self.ExecuteCmd(cmd)
+            sts, imgSizeStr = self.ExecuteCmd(cmd)
             assert(imgSizeStr)
             w, h = imgSizeStr.split('x')
             w, h = int(w), int(h)
@@ -222,7 +244,15 @@ class MainTree():
         return "__transparent_temp_img.png"
 
     def ExecuteCmd(self, cmd):
-        return os.popen(cmd).read()
+        pipe = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, universal_newlines=True)  
+        output = "".join(pipe.stdout.readlines()) 
+        sts = pipe.returncode
+        if sts is None: sts = 0
+        if not sts == 0:
+            self.Clean()
+            raise CmdError, output
+            sys.exit(-1)
+        return sts, output
 
     def ImageMagicka(self):
         convert_path = SCRIPT_PATH + SEP + 'convert '
@@ -230,10 +260,8 @@ class MainTree():
             convert_path = SCRIPT_PATH + SEP + 'convert.exe '
         cmd = convert_path + self.tmpPath + SEP + "%s.png "%OUTPUT_NAME + self.tmpPath + SEP + "%s.1.ppm"%OUTPUT_NAME
         cmd2 = convert_path + self.tmpPath + SEP + "%s.png "%OUTPUT_NAME  + ' -channel A -separate %s.1.pgm'%(self.tmpPath + SEP + OUTPUT_NAME)
-        os.system(cmd.encode('cp936'))
-        while(not os.path.exists(self.tmpPath + '/%s.1.ppm'%OUTPUT_NAME)):
-            time.sleep(1)
-        os.system(cmd2.encode('cp936'))
+        self.ExecuteCmd(cmd)
+        self.ExecuteCmd(cmd2)
 
     def TexturePacker(self):
         tpath = self.tmpPath 
@@ -259,7 +287,9 @@ class MainTree():
                 '%s' %  (tpath + os.path.sep + 'singleimg')
                 ])
 
-        os.system(cmd.encode('cp936'))
+        sts, out = self.ExecuteCmd(cmd)
+        if sts == 0:
+            print('[info]TP success')
 
     def WriteOriginImgSizeInfo(self):
         content = "{"
@@ -313,7 +343,7 @@ if __name__ == '__main__':
     elif sysType == "Windows":
         sysOpen = "start"
     else:
-        raise("System not support: ", sysType )
+        raise CmdError, 'System not support: %s'%sysType
 
     root = loadFiles()
     root.Run()
