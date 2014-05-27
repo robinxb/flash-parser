@@ -22,7 +22,7 @@ Flash-Parser 中文使用手册
 ----
 
 
-	python run.py [-i folder] [-o folder] [-x] [-t]
+	python run.py [-i folder] [-o folder] [-x] [-t] [-s number] [--extend-name=string] [--with-png]
 	
 	
 #### [-i folder]
@@ -118,6 +118,9 @@ flash文件存放的文件夹树结构为
 
 例 ```--extend-name=_hd``` 则生成```filename_hd.lua```, ```filename_hd.1.ppm```等。
 
+#### [--with-png]
+
+生成png图片至output目录。带有与ppm/pgn文件相同的文件名。
 
 #### Flash文件名称及元件名的特殊含义
 
