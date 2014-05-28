@@ -73,18 +73,18 @@ JSONFILE.getDesc = function (filename) {
 	//var sh = file.sourceSize.h,
 		//sw = file.sourceSize.w;
 	
-	var sh = originSize.h - 1,
-		sw = originSize.w - 1;
+	var sh = originSize.h,
+		sw = originSize.w;
 	
 	main_name = getFileName(filename);
 
 	if (endWith(main_name, '_C')){
-		sh = (sh + 1) * scale - 1;
-		sw = (sw + 1) * scale - 1;
+		sh = sh * scale;
+		sw = sw * scale;
 	}else if (endWith(main_name, '_LR')){
-		sw = (sw + 1) * scale - 1;
+		sw = sw * scale;
 	}else if (endWith(main_name, '_UD')){
-		sh = (sh + 1) * scale - 1;
+		sh = sh * scale;
 	}
 
 	if (bIsRotated){
