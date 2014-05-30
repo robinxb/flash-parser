@@ -106,9 +106,9 @@ JSONFILE.getDesc = function (filename) {
 		pstr += new Point(x, y).ToString(1)
     }
 	screenStr = new Point(tx, ty).ToString()
-	screenStr += new Point(tx + sw , ty).ToString()
-	screenStr += new Point(tx + sw, ty + sh).ToString()
-	screenStr += new Point(tx, ty + sh).ToString()
+	screenStr += new Point(sw - tx, ty).ToString()
+	screenStr += new Point(sw - tx, sh - ty).ToString()
+	screenStr += new Point(tx, sh - ty).ToString()
 
     var str = '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
 	if (endWith(main_name, '_LR')){
