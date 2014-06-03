@@ -204,10 +204,10 @@ class MainTree():
             w, h = int(w), int(h)
             self.originImgSize[k] = '{"w": %s, "h":%s}'%(w, h)
             main_name, ext = os.path.splitext(k)
-            if main_name[-2:] == '_UD':
+            if main_name[-3:] == '_UD':
                 self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0) , "southwest")
                 self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0) , "southeast")
-            elif main_name[-2:] == '_LR':
+            elif main_name[-3:] == '_LR':
                 self.SetTransparent(imgpath, k, math.ceil(w / 2.0) , math.ceil(h / 2.0), "northeast")
                 self.SetTransparent(imgpath, k, math.ceil(w / 2.0) , math.ceil(h / 2.0), "southeast")
             elif main_name[-2:] == '_C':
@@ -239,6 +239,8 @@ class MainTree():
 
     def CreateTransparentImg(self, w, h, path):
         cmd = "convert -size %dx%d xc:rgba\\(255,255,255,255\\) %s__transparent_temp_img.png"
+        if sysType == "Windows":
+            cmd = "convert -size %dx%d xc:rgba(255,255,255,255) %s__transparent_temp_img.png"
         cmd = cmd%(w, h, path + os.path.sep)
         self.ExecuteCmd(cmd)
         return "__transparent_temp_img.png"

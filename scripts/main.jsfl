@@ -79,12 +79,12 @@ JSONFILE.getDesc = function (filename) {
 	main_name = getFileName(filename);
 
 	if (endWith(main_name, '_C')){
-		sh = sh * scale;
-		sw = sw * scale;
+		sh = sh * scale / 2;
+		sw = sw * scale / 2;
 	}else if (endWith(main_name, '_LR')){
-		sw = sw * scale;
+		sw = sw * scale / 2;
 	}else if (endWith(main_name, '_UD')){
-		sh = sh * scale;
+		sh = sh * scale / 2;
 	}
 
 	if (bIsRotated){
@@ -105,43 +105,43 @@ JSONFILE.getDesc = function (filename) {
 		pstr += new Point(x, y + h).ToString(1)
 		pstr += new Point(x, y).ToString(1)
     }
-	screenStr = new Point(tx, ty).ToString()
-	screenStr += new Point(sw - tx, ty).ToString()
-	screenStr += new Point(sw - tx, sh - ty).ToString()
-	screenStr += new Point(tx, sh - ty).ToString()
+    screenStr = new Point(tx, ty).ToString()
+    screenStr += new Point(sw - tx, ty).ToString()
+    screenStr += new Point(sw - tx, sh - ty).ToString()
+    screenStr += new Point(tx, sh - ty).ToString()
 
     var str = '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
 	if (endWith(main_name, '_LR')){
-		screenStr = new Point(tx + sw * 2, ty).ToString()
-		screenStr += new Point(tx + sw, ty).ToString()
-		screenStr += new Point(tx + sw, ty + sh).ToString()
-		screenStr += new Point(tx + sw * 2, ty + sh).ToString()
+		screenStr = new Point(2 * sw - tx, ty).ToString()
+		screenStr += new Point(sw - tx, ty).ToString()
+		screenStr += new Point(sw - tx, sh - ty).ToString()
+		screenStr += new Point(2 * sw - tx, sh - ty).ToString()
 		str += ','
 		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
 	}else if (endWith(main_name, '_UD')){
-		screenStr = new Point(tx, ty + sh * 2).ToString()
-		screenStr += new Point(tx + sw, ty + sh * 2).ToString()
-		screenStr += new Point(tx + sw, ty + sh).ToString()
-		screenStr += new Point(tx, ty + sh).ToString()
+		screenStr = new Point(tx, 2 * sh - ty).ToString()
+		screenStr += new Point(sw - tx, 2 * sh - ty).ToString()
+		screenStr += new Point(sw - tx, sh - ty).ToString()
+		screenStr += new Point(tx, sh - ty).ToString()
 		str += ','
 		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
 	}else if (endWith(main_name, '_C')){
-		screenStr = new Point(tx + sw * 2, ty).ToString()
-		screenStr += new Point(tx + sw, ty).ToString()
-		screenStr += new Point(tx + sw, ty + sh).ToString()
-		screenStr += new Point(tx + sw * 2, ty + sh).ToString()
+		screenStr = new Point(2 * sw - tx, ty).ToString()
+		screenStr += new Point(sw - tx, ty).ToString()
+		screenStr += new Point(sw - tx, sh - ty).ToString()
+		screenStr += new Point(2 * sw - tx, sh - ty).ToString()
 		str += ','
 		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
-		screenStr = new Point(tx, ty + sh * 2).ToString()
-		screenStr += new Point(tx + sw, ty + sh * 2).ToString()
-		screenStr += new Point(tx + sw, ty + sh).ToString()
-		screenStr += new Point(tx, ty + sh).ToString()
+		screenStr = new Point(tx, 2 * sh - ty).ToString()
+		screenStr += new Point(sw - tx, 2 * sh - ty).ToString()
+		screenStr += new Point(sw - tx, sh - ty).ToString()
+		screenStr += new Point(tx, sh - ty).ToString()
 		str += ','
 		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
-		screenStr = new Point(tx + sw * 2, ty + sh * 2).ToString()
-		screenStr += new Point(tx + sw, ty + sh * 2).ToString()
-		screenStr += new Point(tx + sw, ty + sh).ToString()
-		screenStr += new Point(tx + sw * 2, ty + sh).ToString()
+		screenStr = new Point(2 * sw - tx, 2 * sh - ty).ToString()
+		screenStr += new Point(sw - tx, 2 * sh - ty).ToString()
+		screenStr += new Point(sw - tx, sh - ty).ToString()
+		screenStr += new Point(2 * sw - tx, sh - ty).ToString()
 		str += ','
 		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
 	}
