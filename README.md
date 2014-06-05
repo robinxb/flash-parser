@@ -44,3 +44,8 @@ More information
 [Readme CN](https://github.com/robinxb/flash-parser/blob/master/doc/cn.md)
 
 If you have any questions, please submit [issues](https://github.com/robinxb/flash-parser/issues)
+
+Licence
+====
+
+[WTFPL](http://en.wikipedia.org/wiki/WTFPL) 
