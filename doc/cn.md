@@ -22,7 +22,7 @@ Flash-Parser 中文使用手册
 ----
 
 
-	python run.py [-i <folder>] [-o <folder>] [-x] [-t] [-s <number>] [--extend-name=string] [--with-png]
+	python run.py [-i <folder>] [-o <folder>] [-x] [-t] [-s <number>] [--extend-name=<string>] [--with-png]
 	
 	
 #### [-i \<folder>]
