@@ -22,10 +22,10 @@ Flash-Parser 中文使用手册
 ----
 
 
-	python run.py [-i folder] [-o folder] [-x] [-t] [-s number] [--extend-name=string] [--with-png]
+	python run.py [-i <folder>] [-o <folder>] [-x] [-t] [-s <number>] [--extend-name=string] [--with-png]
 	
 	
-#### [-i folder]
+#### [-i \<folder>]
 
 **input**
 
@@ -41,7 +41,7 @@ Flash-Parser 中文使用手册
 	python run.py -i E:\Files
 	python run.py -i E:/Files\Flash/
 
-#### [-o folder]
+#### [-o \<folder>]
 
 **output**
 
@@ -104,7 +104,7 @@ flash文件存放的文件夹树结构为
 
 
 
-#### [-s number]
+#### [-s \<number>]
 
 ***scale***
 
@@ -112,7 +112,7 @@ flash文件存放的文件夹树结构为
 
 例如想输出原图一半大小的资源：```-s 0.5```
 
-#### [--extend-name=string]
+#### [--extend-name=\<string>]
 
 自定义生成文件后缀名。
 
@@ -232,7 +232,7 @@ Flash中的元件类型若为影片剪辑(Movie clip)，在输出的时候会将
 其他
 ====
 
-这个工具还有一些不完善的地方，例如Flash中的Alpha通道、色彩效果暂未能支持。
+这个工具还有一些不完善的地方，例如Flash中的叠加颜色效果暂未能完全支持。（Alpha已支持）
 
 如果需要帮助请在[Issues](https://github.com/robinxb/flash-parser/issues)提出。
 
