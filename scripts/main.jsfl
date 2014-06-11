@@ -25,6 +25,16 @@ function getFileName(s){
 	return arr.join('');
 }
 
+function isUnused(item){
+    var arr = fl.getDocumentDOM().library.unusedItems;
+    for (var i in arr){
+        if (item == arr[i]){
+            return true
+        }
+    }
+    return false
+}
+
 ORIGIN_SIZE.getSize = function (filename){
 	if (!ORIGIN_SIZE[filename]) {
         fl.trace("cant find orgin size ," + filename);
@@ -70,8 +80,6 @@ JSONFILE.getDesc = function (filename) {
     var tx = trimSize.x,
         ty = trimSize.y;
 	var scale = Number(JSONFILE.meta.scale)
-	//var sh = file.sourceSize.h,
-		//sw = file.sourceSize.w;
 	
 	var sh = originSize.h,
 		sw = originSize.w;
@@ -255,6 +263,9 @@ Timeline.prototype.buildLib = function (library) {
     this.libItems = {};
     this.itemTimelines = {};
     each(library.items, function (item) {
+		if (isUnused(item)) {
+			return
+		}
         if (item.itemType == 'bitmap') {
             this.libItems[item.name] = item;
         } else if (item.itemType == 'graphic') {

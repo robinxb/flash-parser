@@ -64,6 +64,7 @@ OUTPUT_PATH = OUTPUT_PATH or DIR_PATH + SEP + 'output'
 FLASH_ROOT = FLASH_ROOT or DIR_PATH + SEP + 'input'
 FLASH_ROOT = os.path.realpath(FLASH_ROOT)
 OUTPUT_PATH = os.path.realpath(OUTPUT_PATH)
+CONVERT_PATH = SCRIPT_PATH + SEP + 'convert '
 
 if not os.path.exists(OUTPUT_PATH):
     os.makedirs(OUTPUT_PATH)
@@ -204,16 +205,33 @@ class MainTree():
             w, h = int(w), int(h)
             self.originImgSize[k] = '{"w": %s, "h":%s}'%(w, h)
             main_name, ext = os.path.splitext(k)
+            bCrop = False
             if main_name[-3:] == '_UD':
-                self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0) , "southwest")
-                self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0) , "southeast")
+                bCrop = True
+                s_w, s_h = w, h / 2
             elif main_name[-3:] == '_LR':
-                self.SetTransparent(imgpath, k, math.ceil(w / 2.0) , math.ceil(h / 2.0), "northeast")
-                self.SetTransparent(imgpath, k, math.ceil(w / 2.0) , math.ceil(h / 2.0), "southeast")
+                bCrop = True
+                s_w, s_h = w / 2, h
             elif main_name[-2:] == '_C':
-                self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0), "northeast")
-                self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0), "southeast")
-                self.SetTransparent(imgpath, k, math.ceil(w / 2.0), math.ceil(h / 2.0), "southwest")
+                bCrop = True
+                s_w, s_h = w / 2, h / 2
+            if bCrop:
+                if not w % 2 == 0:
+                    s_w = s_w + 1
+                if not h % 2 == 0:
+                    s_h = s_h + 1
+                self.CropImage(imgpath, k, s_w, s_h)
+
+    def CropImage(self, imgpath, filename, w, h):
+        cmd = "%s %s -crop %sx%s+0+0 %s"
+        cmd = cmd%(
+                CONVERT_PATH,
+                imgpath + os.path.sep + filename,
+                w,
+                h,
+                imgpath + os.path.sep + filename,
+                )
+        self.ExecuteCmd(cmd)
 
     def RemoveAnchorPng(self):
         imgpath = self.tmpPath + os.path.sep + 'singleimg'
@@ -221,29 +239,6 @@ class MainTree():
         for k in files:
             if k.find('__anchor') >= 0:
                 os.remove(imgpath + os.path.sep + k)
-
-    def SetTransparent(self, imgpath, filename, w, h, gravity):
-        if w <= 0 or h <= 0:
-            return
-
-        self.CreateTransparentImg(w, h, imgpath)
-        cmd = "convert %s -compose dstout -gravity %s %s -alpha set -composite %s"
-        cmd = cmd%(
-                imgpath + os.path.sep + filename,
-                gravity,
-                imgpath + os.path.sep + "__transparent_temp_img.png",
-                imgpath + os.path.sep + filename
-                )
-        self.ExecuteCmd(cmd)
-        os.remove(imgpath + os.path.sep + "__transparent_temp_img.png")
-
-    def CreateTransparentImg(self, w, h, path):
-        cmd = "convert -size %dx%d xc:rgba\\(255,255,255,255\\) %s__transparent_temp_img.png"
-        if sysType == "Windows":
-            cmd = "convert -size %dx%d xc:rgba(255,255,255,255) %s__transparent_temp_img.png"
-        cmd = cmd%(w, h, path + os.path.sep)
-        self.ExecuteCmd(cmd)
-        return "__transparent_temp_img.png"
 
     def ExecuteCmd(self, cmd):
         pipe = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, universal_newlines=True)  
@@ -257,11 +252,8 @@ class MainTree():
         return sts, output
 
     def ImageMagicka(self):
-        convert_path = SCRIPT_PATH + SEP + 'convert '
-        if sysType == "Windows":
-            convert_path = SCRIPT_PATH + SEP + 'convert.exe '
-        cmd = convert_path + self.tmpPath + SEP + "%s.png "%OUTPUT_NAME + self.tmpPath + SEP + "%s.1.ppm"%OUTPUT_NAME
-        cmd2 = convert_path + self.tmpPath + SEP + "%s.png "%OUTPUT_NAME  + ' -channel A -separate %s.1.pgm'%(self.tmpPath + SEP + OUTPUT_NAME)
+        cmd = CONVERT_PATH + self.tmpPath + SEP + "%s.png "%OUTPUT_NAME + self.tmpPath + SEP + "%s.1.ppm"%OUTPUT_NAME
+        cmd2 = CONVERT_PATH + self.tmpPath + SEP + "%s.png "%OUTPUT_NAME  + ' -channel A -separate %s.1.pgm'%(self.tmpPath + SEP + OUTPUT_NAME)
         self.ExecuteCmd(cmd)
         self.ExecuteCmd(cmd2)
 
@@ -344,9 +336,10 @@ if __name__ == '__main__':
         sysOpen = "open"
     elif sysType == "Windows":
         sysOpen = "start"
+        CONVERT_PATH = SCRIPT_PATH + SEP + 'convert.exe '
     else:
         raise CmdError, 'System not support: %s'%sysType
-
+    
     root = loadFiles()
     root.Run()
 
