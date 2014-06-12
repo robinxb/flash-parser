@@ -6,20 +6,21 @@ Convert Flash files to [EJOY 2D](https://github.com/cloudwu/ejoy2d/) texture for
 
 Simple Start
 ======
-* Install Flash CC first.
+* Install Flash CC.
+* Install TexturePacker and install its command line tool.
 * ```python run.py```
 
 
 Arguments
 ====
 
-	python run.py [-i folder] [-o folder] [-x] [-t]
+	python run.py [-i <folder>] [-o <folder>] [-x] [-t]
 	
 	
-	-i folder
+	-i <folder>
 		Input folder
 	
-	-o folder
+	-o <folder>
 		Output folder
 	
 	-x
@@ -28,7 +29,7 @@ Arguments
 	-t
 		Dump tree structure of folders
 	
-	-s number
+	-s <number>
 		Scale
 	
 		

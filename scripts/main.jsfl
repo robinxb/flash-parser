@@ -2,8 +2,63 @@ function Point(x, y, scale){
 	this.x = x;
 	this.y = y;
 	if (scale) {
+		this.scale = scale
 		this.Scale(scale)
 	}
+}
+
+Point.prototype.Scale = function (s) {
+	this.x = this.x * s;
+	this.y = this.y * s;
+	return this
+}
+
+Point.prototype.ToString = function (mul){
+	if (!mul){
+		mul = 16;
+	}
+	return this.x * mul + ', ' + this.y * mul + ', '
+}
+
+Point.prototype.ChangePoint = function (x, y){
+	this.x = x;
+	this.y = y;
+	if (this.scale) {
+		this.Scale(this.scale)
+	}
+}
+
+Point.prototype.DeltaChangeX = function (dx){
+	this.ChangePoint(this.x + dx, this.y);
+}
+
+Point.prototype.DeltaChangeY = function (dy){
+	this.ChangePoint(this.x, this.y + dy);
+}
+
+function Square(x1, y1, x2, y2, x3, y3, x4, y4, scale){
+	this.p1 = new Point(x1, y1, scale);
+	this.p2 = new Point(x2, y2, scale);
+	this.p3 = new Point(x3, y3, scale);
+	this.p4 = new Point(x4, y4, scale);
+}
+
+Square.prototype.ToString = function (mul){
+	return this.p1.ToString(mul) + this.p2.ToString(mul) + this.p3.ToString(mul) + this.p4.ToString(mul)
+}
+
+Square.prototype.Clone = function (){
+	return new Square(
+			this.p1.x,
+			this.p1.y,
+			this.p2.x,
+			this.p2.y,
+			this.p3.x,
+			this.p3.y,
+			this.p4.x,
+			this.p4.y,
+			this.p1.scale
+			)
 }
 
 function endWith(s1,s2){  
@@ -43,19 +98,6 @@ ORIGIN_SIZE.getSize = function (filename){
 	return ORIGIN_SIZE[filename]
 }
 
-Point.prototype.Scale = function (s) {
-	this.x = this.x * s;
-	this.y = this.y * s;
-	return this
-}
-
-Point.prototype.ToString = function (mul){
-	if (!mul){
-		mul = 16;
-	}
-	return this.x * mul + ', ' + this.y * mul + ', '
-}
-
 JSONFILE.findSrc = function (filename) {
     if (!JSONFILE.frames[filename]) {
         fl.trace("cant find " + filename);
@@ -73,6 +115,7 @@ JSONFILE.getDesc = function (filename) {
     var s = file.frame;
     var bIsRotated = file.rotated;
     var trimSize = file.spriteSourceSize;
+	var sourceSize = file.sourceSize;
     var x = s.x,
         y = s.y,
         w = s.w - 1,
@@ -84,7 +127,19 @@ JSONFILE.getDesc = function (filename) {
 	var sh = originSize.h,
 		sw = originSize.w;
 	
+	var offset_w = sourceSize.w - trimSize.w,
+		offset_h = sourceSize.h - trimSize.h;
+
 	main_name = getFileName(filename);
+
+	var odd_h = false,
+		odd_w = false;
+	if (sh % 2 != 0) {
+		odd_h = true;
+	}
+	if (sw % 2 != 0) {
+		odd_w = true;
+	}
 
 	if (endWith(main_name, '_C')){
 		sh = sh * scale / 2;
@@ -94,6 +149,8 @@ JSONFILE.getDesc = function (filename) {
 	}else if (endWith(main_name, '_UD')){
 		sh = sh * scale / 2;
 	}
+	sh = Math.floor(sh);
+	sw = Math.floor(sw);
 
 	if (bIsRotated){
 		t = w;
@@ -101,57 +158,69 @@ JSONFILE.getDesc = function (filename) {
 		h = t;
 	}
 
-    var pstr = '';
-    if (!bIsRotated) {
-		pstr += new Point(x, y).ToString(1)
-		pstr += new Point(x + w, y).ToString(1)
-		pstr += new Point(x + w, y + h).ToString(1)
-		pstr += new Point(x, y + h).ToString(1)
-    } else {
-		pstr += new Point(x + w, y).ToString(1)
-		pstr += new Point(x + w, y + h).ToString(1)
-		pstr += new Point(x, y + h).ToString(1)
-		pstr += new Point(x, y).ToString(1)
-    }
-    screenStr = new Point(tx, ty).ToString()
-    screenStr += new Point(sw - tx, ty).ToString()
-    screenStr += new Point(sw - tx, sh - ty).ToString()
-    screenStr += new Point(tx, sh - ty).ToString()
+	var sq_src, sq_screen;
+	if (!bIsRotated) {
+		sq_src = new Square(x, y, x + w, y, x + w, y + h, x, y + h);
+	} else {
+		sq_src = new Square(x + w, y, x + w, y + h, x, y + h, x, y);
+	}
+	sq_screen = new Square(tx, ty, sw - tx - offset_w, ty, sw - tx - offset_w, sh - ty - offset_h, tx, sh - ty - offset_h);
 
-    var str = '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
+    var pstr = '';
+	
+    var str = '{ tex = 1, src = {' + sq_src.ToString(1) + '}, screen = {' + sq_screen.ToString()+ '} }';
 	if (endWith(main_name, '_LR')){
-		screenStr = new Point(2 * sw - tx, ty).ToString()
-		screenStr += new Point(sw - tx, ty).ToString()
-		screenStr += new Point(sw - tx, sh - ty).ToString()
-		screenStr += new Point(2 * sw - tx, sh - ty).ToString()
-		str += ','
-		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
+		var sq_screen = new Square(2 * sw - tx, ty, sw - tx, ty, sw - tx, sh - ty, 2 * sw - tx, sh - ty);
+		if (odd_w) {
+			sq_src.p2.DeltaChangeX(-1);
+			sq_src.p3.DeltaChangeX(-1);
+		}
+		str += ',{ tex = 1, src = {' + sq_src.ToString(1) + '}, screen = {' + sq_screen.ToString() + '} }';
 	}else if (endWith(main_name, '_UD')){
-		screenStr = new Point(tx, 2 * sh - ty).ToString()
-		screenStr += new Point(sw - tx, 2 * sh - ty).ToString()
-		screenStr += new Point(sw - tx, sh - ty).ToString()
-		screenStr += new Point(tx, sh - ty).ToString()
-		str += ','
-		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
+		var sq_screen = new Square(tx, 2 * sh - ty, sw - tx, 2 * sh - ty, sw - tx, sh - ty, tx, sh - ty);
+		if (odd_h) {
+			sq_src.p3.DeltaChangeY(-1);
+			sq_src.p4.DeltaChangeY(-1);
+		}
+		str += ',{ tex = 1, src = {' + sq_src.ToString(1) + '}, screen = {' + sq_screen.ToString() + '} }';
 	}else if (endWith(main_name, '_C')){
-		screenStr = new Point(2 * sw - tx, ty).ToString()
-		screenStr += new Point(sw - tx, ty).ToString()
-		screenStr += new Point(sw - tx, sh - ty).ToString()
-		screenStr += new Point(2 * sw - tx, sh - ty).ToString()
-		str += ','
-		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
-		screenStr = new Point(tx, 2 * sh - ty).ToString()
-		screenStr += new Point(sw - tx, 2 * sh - ty).ToString()
-		screenStr += new Point(sw - tx, sh - ty).ToString()
-		screenStr += new Point(tx, sh - ty).ToString()
-		str += ','
-		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
-		screenStr = new Point(2 * sw - tx, 2 * sh - ty).ToString()
-		screenStr += new Point(sw - tx, 2 * sh - ty).ToString()
-		screenStr += new Point(sw - tx, sh - ty).ToString()
-		screenStr += new Point(2 * sw - tx, sh - ty).ToString()
-		str += ','
-		str += '{ tex = 1, src = {' + pstr + '}, screen = {' + screenStr + '} }';
+		var sq_screen = new Square(2 * sw - tx, ty, sw - tx, ty, sw - tx, sh - ty, 2 * sw - tx, sh - ty);
+		if (odd_w) {
+			var new_sq_src = sq_src.Clone(),
+				new_sq_screen = sq_screen.Clone();
+			new_sq_src.p2.DeltaChangeX(-1);
+			new_sq_src.p3.DeltaChangeX(-1);
+			str += ',{ tex = 1, src = {' +new_sq_src.ToString(1) + '}, screen = {' + new_sq_screen.ToString() + '} }';
+		}else {
+			str += ',{ tex = 1, src = {' + sq_src.ToString(1) + '}, screen = {' + sq_screen.ToString() + '} }';
+		}
+
+		sq_screen = new Square(tx, 2 * sh - ty, sw - tx, 2 * sh - ty, sw - tx, sh - ty, tx, sh - ty);
+		if (odd_h) {
+			var new_sq_src = sq_src.Clone(),
+				new_sq_screen = sq_screen.Clone();
+			new_sq_src.p3.DeltaChangeY(-1);
+			new_sq_src.p4.DeltaChangeY(-1);
+			str += ',{ tex = 1, src = {' +new_sq_src.ToString(1) + '}, screen = {' + new_sq_screen.ToString() + '} }';
+		}else {
+			str += ',{ tex = 1, src = {' + sq_src.ToString(1) + '}, screen = {' + sq_screen.ToString() + '} }';
+		}
+		sq_screen = new Square(2 * sw - tx, 2 * sh - ty, sw - tx, 2 * sh - ty, sw - tx, sh - ty, 2 * sw - tx, sh - ty);
+		if (odd_w || odd_h) {
+			var new_sq_src = sq_src.Clone(),
+				new_sq_screen = sq_screen.Clone();
+			if (odd_w) {
+				new_sq_src.p2.DeltaChangeX(-1);
+				new_sq_src.p3.DeltaChangeX(-1);
+			}
+			if (odd_h) {
+				new_sq_src.p3.DeltaChangeY(-1);
+				new_sq_src.p4.DeltaChangeY(-1);
+			}
+			str += ',{ tex = 1, src = {' +new_sq_src.ToString(1) + '}, screen = {' + new_sq_screen.ToString() + '} }';
+		}else {
+			str += ',{ tex = 1, src = {' + sq_src.ToString(1) + '}, screen = {' + sq_screen.ToString() + '} }';
+		}
 	}
     return str;
 }
