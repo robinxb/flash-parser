@@ -164,10 +164,10 @@ JSONFILE.getDesc = function (filename) {
 	} else {
 		sq_src = new Square(x + w, y, x + w, y + h, x, y + h, x, y);
 	}
-	sq_screen = new Square(tx, ty, sw - tx - offset_w, ty, sw - tx - offset_w, sh - ty - offset_h, tx, sh - ty - offset_h);
+	sw = sw - offset_w;
+	sh = sh - offset_h;
+	sq_screen = new Square( tx, ty, tx + sw, ty, tx + sw, ty + sh, tx, ty + sh);
 
-    var pstr = '';
-	
     var str = '{ tex = 1, src = {' + sq_src.ToString(1) + '}, screen = {' + sq_screen.ToString()+ '} }';
 	if (endWith(main_name, '_LR')){
 		var sq_screen = new Square(2 * sw - tx, ty, sw - tx, ty, sw - tx, sh - ty, 2 * sw - tx, sh - ty);
