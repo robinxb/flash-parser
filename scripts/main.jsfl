@@ -177,7 +177,7 @@ JSONFILE.getDesc = function (filename) {
 		}
 		str += ',{ tex = 1, src = {' + sq_src.ToString(1) + '}, screen = {' + sq_screen.ToString() + '} }';
 	}else if (endWith(main_name, '_UD')){
-		var sq_screen = new Square(tx, 2 * sh + ty - offset_w, sw + tx, 2 * sh + ty - offset_h, sw + tx, sh + ty, tx, sh + ty);
+		var sq_screen = new Square(tx, 2 * sh + ty - offset_h, sw + tx, 2 * sh + ty - offset_h, sw + tx, sh + ty, tx, sh + ty);
 		if (odd_h) {
 			sq_src.p3.DeltaChangeY(-1);
 			sq_src.p4.DeltaChangeY(-1);
