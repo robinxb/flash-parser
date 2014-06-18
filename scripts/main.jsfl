@@ -471,7 +471,7 @@ Frame.prototype.parseXML = function () {
             });
         } else if (e.elementType == "text"){
             var idStr = this.layer.timeline.addText(e, this.layer.layer.name)
-            var mat = [e.matrix.a * 1024, e.matrix.b * 1024, e.matrix.c * 1024, e.matrix.d * 1024, (e.matrix.tx - (e.matrix.tx - e.left)) * 16, e.matrix.ty - (e.matrix.ty - e.top) * 16].join(',');
+            var mat = [e.matrix.a * 1024, e.matrix.b * 1024, e.matrix.c * 1024, e.matrix.d * 1024, (e.matrix.tx - (e.matrix.tx - e.left)) * 16, e.matrix.ty * 16].join(',');
             this.xml.oneline('element', {
                 'idStr' : idStr,
                 'mat': mat,
