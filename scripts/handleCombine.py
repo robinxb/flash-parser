@@ -376,9 +376,3 @@ class Component():
     def NextFrame(self):
         self.used = {}
 
-
-#just for test
-if __name__ == '__main__':
-    a = Handler('E:/hayday/resource/parser/files/combine.xml')
-    a.Export('E:/hayday/resource/parser/files/out.lua')
-
