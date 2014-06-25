@@ -195,7 +195,7 @@ JSONFILE.getDesc = function (filename) {
 			str += ',{ tex = 1, src = {' + sq_src.ToString(1) + '}, screen = {' + sq_screen.ToString() + '} }';
 		}
 
-		sq_screen = new Square(tx, 2 * sh + ty - offset_h, sw + tx, 2 * sh + ty - offset_h, sw + tx - offset_w, sh + ty, tx, sh + ty);
+		sq_screen = new Square(tx, 2 * sh + ty - offset_h, sw + tx, 2 * sh + ty - offset_h, sw + tx, sh + ty, tx, sh + ty);
 		if (odd_h) {
 			var new_sq_src = sq_src.Clone(),
 				new_sq_screen = sq_screen.Clone();
