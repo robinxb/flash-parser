@@ -272,11 +272,12 @@ class MainTree():
                 '--premultiply-alpha',
                 '--sheet %s' %(tpath + os.path.sep + '%s.png'%OUTPUT_NAME),
                 '--texture-format png',
-                '--extrude 1',
+                '--extrude 2',
                 '--data %s' % (tpath + os.path.sep + '%s.json'%OUTPUT_NAME),
                 '--format json',
                 '--trim-mode Trim',
-                '--size-constraints AnySize',
+				'--disable-rotation',
+                '--size-constraints POT',
                 #'--shape-debug',
                 '%s' %  (tpath + os.path.sep + 'singleimg')
                 ])

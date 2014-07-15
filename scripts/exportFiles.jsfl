@@ -18,6 +18,7 @@ function pub(dir, file) {
             item.exportToFile("file:///" + dir + '/__tmp/singleimg/' + item.name, 100)
         }
     }
+    fl.trace(file);
     doc.close(false);
 }
 
