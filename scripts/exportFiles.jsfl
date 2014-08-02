@@ -15,10 +15,16 @@ function pub(dir, file) {
     for (var i = 0, len = lib.length; i < len; i++) {
         var item = lib[i];
         if (item.itemType == 'bitmap' && !isUnused(item)) {
+            var name = item.name,
+                fixed_name = item.name.replace(/^\s+|\s+$/g, "");
+            if (fixed_name != name){
+                fl.trace("changing " + file + ':'+ item.name + '->' + fixed_name);
+                item.name = fixed_name
+            }
             item.exportToFile("file:///" + dir + '/__tmp/singleimg/' + item.name, 100)
         }
     }
-    fl.trace(file);
+	doc.save(true);
     doc.close(false);
 }
 
