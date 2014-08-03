@@ -16,7 +16,11 @@ function pub(dir, file) {
         var item = lib[i];
         if (item.itemType == 'bitmap' && !isUnused(item)) {
             var name = item.name,
-                fixed_name = item.name.replace(/^\s+|\s+$/g, "");
+                fixed_name = item.name.replace(/^\s+|\s+$/g, ""),
+                ext_name = fixed_name.split('.').pop()
+                if (ext_name != "png"){
+                    fixed_name = fixed_name + ".png";
+                }
             if (fixed_name != name){
                 fl.trace("changing " + file + ':'+ item.name + '->' + fixed_name);
                 item.name = fixed_name
