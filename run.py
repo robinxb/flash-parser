@@ -202,7 +202,7 @@ class MainTree():
             sts, imgSizeStr = self.ExecuteCmd(cmd)
             assert(imgSizeStr)
             w, h = imgSizeStr.split('x')
-            w, h = int(w) / float(SCALE), int(h) / float(SCALE)
+            w, h = int(w), int(h)
             self.originImgSize[k] = '{"w": %s, "h":%s}'%(w, h)
             main_name, ext = os.path.splitext(k)
             bCrop = False

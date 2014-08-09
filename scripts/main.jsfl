@@ -142,12 +142,12 @@ JSONFILE.getDesc = function (filename) {
 	}
 
 	if (endWith(main_name, '_C')){
-		sh = sh * scale / 2;
-		sw = sw * scale / 2;
+		sh = sh / 2;
+		sw = sw / 2;
 	}else if (endWith(main_name, '_LR')){
-		sw = sw * scale / 2;
+		sw = sw / 2;
 	}else if (endWith(main_name, '_UD')){
-		sh = sh * scale / 2;
+		sh = sh / 2;
 	}
 	sh = Math.floor(sh);
 	sw = Math.floor(sw);
