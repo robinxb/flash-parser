@@ -9,6 +9,18 @@ import inspect
 import getopt
 import math
 import subprocess
+import argparse
+
+argParser = argparse.ArgumentParser()
+argParser.add_argument("-i", "--input", help="input folder", type=str, default=None)
+argParser.add_argument("-o", "--output", help="output folder", type=str, default=None)
+argParser.add_argument("-x", "--xml", help="export xml", action="store_true", default=False)
+argParser.add_argument("-s", "--scale", help="scale the source images", type=int, default=1)
+argParser.add_argument("--with-png", help="output with the combined png", action="store_true", default=False)
+group = argParser.add_mutually_exclusive_group()
+group.add_argument("--tree", help="dump tree structure", action="store_true",default=False)
+group.add_argument("--single", help="export flash one by one", action="store_true", default=False)
+args = argParser.parse_args()
 
 def show_exception_and_exit(exc_type, exc_value, tb):
     import traceback
@@ -25,37 +37,18 @@ SEP = os.path.sep
 sys.path.append(DIR_PATH + SEP + 'scripts')
 import handleCombine as HC
 
-opts, args = getopt.getopt(sys.argv[1:], "i:o:n:xts:", ["help", "extend-name=", "with-png"])
-FLASH_ROOT = ""
-OUTPUT_PATH = ""
+FLASH_ROOT = args.input
+OUTPUT_PATH = args.output
+
+print(args)
+
 OUTPUT_NAME = "flash"
-bUsePathTree = False
-SCALE = 1
-EXTEND_NAME = ""
 LEAVE_FILE = ['%s.1.ppm'%OUTPUT_NAME, '%s.1.pgm'%OUTPUT_NAME, '%s.lua'%OUTPUT_NAME]
-WITH_PNG = False
-for op, value in opts:
-    if op == "-i":
-        FLASH_ROOT = value
-    elif op == "-o":
-        OUTPUT_PATH = value
-    elif op == "-n":
-        OUTPUT_NAME = value
-    elif op == "-x":
-        LEAVE_FILE.append('combine.xml')
-    elif op == "-t":
-        bUsePathTree = True
-    elif op == '-s':
-        SCALE = value
-    elif op == '--help':
-        print ('-i input folder')
-        print ('-o output folder')
-        sys.exit()
-    elif op == "--extend-name":
-        EXTEND_NAME = value
-    elif op == "--with-png":
-        WITH_PNG = True
-        LEAVE_FILE.append('%s.1.png'%OUTPUT_NAME)
+if args.with_png:
+    LEAVE_FILE.append('%s.1.png'%OUTPUT_NAME)
+
+if args.xml:
+    LEAVE_FILE.append('combine.xml')
 
 global sysOpen
 TMP_FOLDER_NAME = "__tmp"
@@ -97,36 +90,49 @@ class MainTree():
             self.folders[k] = MainTree(self.mainpath + '/' + k)
 
     def Export(self):
-        if os.path.exists(self.tmpPath):
-            shutil.rmtree(self.tmpPath)
+        self.Clean()
 
         if len(self.files) > 0:
-            print('[info]Walking into %s'%self.mainpath)
-            os.mkdir(self.tmpPath)
-            self.CopyScript(self.tmpPath)
-
-            # pngs
-            print ('[info]Export png')
-            os.system(sysOpen + ' ' + self.tmpPath + '/exportFiles.jsfl')
-            self.WaitJSDone('done', True)
-
-            #TP
-            self.PreHandleMirror()
-            self.RemoveAnchorPng()
-            self.TexturePacker()
-            self.ImageMagicka()
-            self.WriteOriginImgSizeInfo()
-
-            #xml
-            os.system(sysOpen + ' ' + self.tmpPath + '/main.jsfl')
-            self.WaitJSDone('done', True)
-
-            self.Combine()
-            self.CopyUsefulFiles()
-            self.Clean()
+            if args.single:
+                self.SingleExport()
+            else:
+                self.BatchExport()
 
         for (k,v) in self.folders.items():
             v.Export()
+
+    def BatchExport(self):
+        print('[info]Walking into %s'%self.mainpath)
+        os.mkdir(self.tmpPath)
+        self.CopyScript(self.tmpPath)
+
+        # pngs
+        print ('[info]Export png')
+        os.system(sysOpen + ' ' + self.tmpPath + '/exportFiles.jsfl')
+        self.WaitJSDone('done', True)
+
+        #TP
+        self.PreHandleMirror()
+        self.RemoveAnchorPng()
+        self.TexturePacker()
+        self.ImageMagicka()
+        self.WriteOriginImgSizeInfo()
+
+        #xml
+        os.system(sysOpen + ' ' + self.tmpPath + '/main.jsfl')
+        self.WaitJSDone('done', True)
+
+        self.Combine()
+        self.CopyUsefulFiles()
+        self.Clean()
+
+    def SingleExport(self):
+        for fpath in self.files:
+            os.mkdir(self.tmpPath)
+            fname = os.path.basename(fpath)
+            this_dir_path = self.tmpPath + SEP + fname[:-4]
+            os.mkdir(this_dir_path)
+            self.Clean()
 
     def WaitJSDone(self, filename, bRemove = False):
         while(not os.path.exists(self.tmpPath + '/%s'%filename)):
@@ -135,18 +141,17 @@ class MainTree():
             os.remove(self.tmpPath + '/%s'%filename)
 
     def CopyUsefulFiles(self):
-        if WITH_PNG:
+        if args.with_png:
             os.rename(self.tmpPath + SEP + "%s.png"%OUTPUT_NAME, self.tmpPath + SEP + "%s.1.png"%OUTPUT_NAME)
         for filename in LEAVE_FILE:
             if os.path.exists(self.tmpPath + '/%s'%filename):
                 name, ext = os.path.splitext(filename)
             if ext == ".ppm" or ext == ".pgm" or ext == ".png":
                 ext = ".1" + ext
-            ext = EXTEND_NAME + ext
             dirname = os.path.dirname(self.tmpPath.replace('\\', '/'))
             names = dirname.split('/')
             output_filename = names[len(names) - 1] + ext
-            if bUsePathTree:
+            if args.tree:
                 path_tree = self.mainpath .replace(FLASH_ROOT, '')
                 if not os.path.exists(OUTPUT_PATH + path_tree):
                     os.makedirs(OUTPUT_PATH + path_tree)
@@ -268,7 +273,7 @@ class MainTree():
                 '--algorithm MaxRects',
                 '--maxrects-heuristics Best',
                 '--pack-mode Best',
-                '--scale %s'%SCALE,
+                '--scale %s'%args.scale,
                 '--premultiply-alpha',
                 '--sheet %s' %(tpath + os.path.sep + '%s.png'%OUTPUT_NAME),
                 '--texture-format png',
