@@ -89,11 +89,14 @@ class MainTree():
         for k in dirs:
             self.folders[k] = MainTree(self.mainpath + '/' + k)
 
-    def Export(self):
+    def SetSingleExport(self):
+        self.single_export = True
+
+    def Export(self, forceBatch=False):
         self.Clean()
 
         if len(self.files) > 0:
-            if args.single:
+            if args.single and not forceBatch:
                 self.SingleExport()
             else:
                 self.BatchExport()
@@ -108,8 +111,8 @@ class MainTree():
 
         # pngs
         print ('[info]Export png')
-        os.system(sysOpen + ' ' + self.tmpPath + '/exportFiles.jsfl')
-        self.WaitJSDone('done', True)
+        os.system(sysOpen + ' ' + self.tmpPath + SEP + 'exportFiles.jsfl')
+        self.WaitJSDone(self.tmpPath + SEP + 'done', True)
 
         #TP
         self.PreHandleMirror()
@@ -119,26 +122,44 @@ class MainTree():
         self.WriteOriginImgSizeInfo()
 
         #xml
-        os.system(sysOpen + ' ' + self.tmpPath + '/main.jsfl')
-        self.WaitJSDone('done', True)
+        os.system(sysOpen + ' ' + self.tmpPath + SEP + '/main.jsfl')
+        self.WaitJSDone(self.tmpPath + SEP + 'done', True)
 
         self.Combine()
         self.CopyUsefulFiles()
-        self.Clean()
+        #self.Clean()
 
     def SingleExport(self):
+        groupFiles = []
+        os.mkdir(self.tmpPath)
         for fpath in self.files:
-            os.mkdir(self.tmpPath)
             fname = os.path.basename(fpath)
-            this_dir_path = self.tmpPath + SEP + fname[:-4]
-            os.mkdir(this_dir_path)
-            self.Clean()
+            file_dir_path = self.tmpPath + SEP + fname[:-4]
+            if "@" in fname:
+                groupName = fname.split('@')[0]
+                if groupName not in groupFiles:
+                    groupFiles.append(groupName)
+                groupDir = self.tmpPath + SEP + groupName
+                if not os.path.isdir(groupDir):
+                    os.mkdir(groupDir)
+                shutil.copy(fpath, self.tmpPath + SEP + groupName + SEP + fname)
+            else:
+                os.mkdir(file_dir_path)
+                shutil.copy(fpath, file_dir_path + SEP + fname)
+                tree = MainTree(file_dir_path)
+                tree.SetSingleExport()
+                tree.Export(True)
+        for groupName in groupFiles:
+            tree = MainTree(self.tmpPath + SEP + groupName)
+            tree.SetSingleExport()
+            tree.Export(True)
+        #self.Clean()
 
-    def WaitJSDone(self, filename, bRemove = False):
-        while(not os.path.exists(self.tmpPath + '/%s'%filename)):
+    def WaitJSDone(self, filepath, bRemove = False):
+        while(not os.path.exists(filepath)):
             time.sleep(1)
         if bRemove:
-            os.remove(self.tmpPath + '/%s'%filename)
+            os.remove(filepath)
 
     def CopyUsefulFiles(self):
         if args.with_png:
