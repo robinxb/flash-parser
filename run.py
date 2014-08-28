@@ -15,7 +15,7 @@ argParser = argparse.ArgumentParser()
 argParser.add_argument("-i", "--input", help="input folder", type=str, default=None)
 argParser.add_argument("-o", "--output", help="output folder", type=str, default=None)
 argParser.add_argument("-x", "--xml", help="export xml", action="store_true", default=False)
-argParser.add_argument("-s", "--scale", help="scale the source images", type=int, default=1)
+argParser.add_argument("-s", "--scale", help="scale the source images", type=float, default=1)
 argParser.add_argument("--with-png", help="output with the combined png", action="store_true", default=False)
 group = argParser.add_mutually_exclusive_group()
 group.add_argument("--tree", help="dump tree structure", action="store_true",default=False)
@@ -64,7 +64,7 @@ if not os.path.exists(OUTPUT_PATH):
 
 class CmdError(Exception):
     def __init__(self, string):
-        self.string = string 
+        self.string = string
 
     def __str__(self):
         return repr(self.string)
