@@ -40,8 +40,6 @@ import handleCombine as HC
 FLASH_ROOT = args.input
 OUTPUT_PATH = args.output
 
-print(args)
-
 OUTPUT_NAME = "flash"
 LEAVE_FILE = ['%s.1.ppm'%OUTPUT_NAME, '%s.1.pgm'%OUTPUT_NAME, '%s.lua'%OUTPUT_NAME]
 if args.with_png:
