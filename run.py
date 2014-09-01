@@ -6,10 +6,9 @@ import time
 import sys
 import codecs
 import inspect
-import getopt
-import math
 import subprocess
 import argparse
+import __builtin__
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-i", "--input", help="input folder", type=str, default=None)
@@ -17,11 +16,13 @@ argParser.add_argument("-o", "--output", help="output folder", type=str, default
 argParser.add_argument("-x", "--xml", help="export xml", action="store_true", default=False)
 argParser.add_argument("-s", "--scale", help="scale the source images", type=float, default=1)
 argParser.add_argument("--with-png", help="output with the combined png", action="store_true", default=False)
-argParser.add_argument("--quiet", action="store_true", default=False)
+argParser.add_argument("-q", "--quiet", action="store_true", default=False)
 group = argParser.add_mutually_exclusive_group()
 group.add_argument("--tree", help="dump tree structure", action="store_true",default=False)
 group.add_argument("--single", help="export flash one by one", action="store_true", default=False)
 args = argParser.parse_args()
+
+__builtin__.RUN_IN_QUIET = args.quiet
 
 def show_exception_and_exit(exc_type, exc_value, tb):
     import traceback
@@ -210,7 +211,7 @@ class MainTree():
             handle = codecs.open(filepath, 'a')
             handle.write('</root>\n')
             handle.close()
-            self.hc = HC.Handler(filepath.replace('\\','/'), quiet = args.quiet)
+            self.hc = HC.Handler(filepath.replace('\\','/'))
             self.hc.Export(self.tmpPath.replace('\\','/') + '/%s.lua'%OUTPUT_NAME)
 
     def PreHandleMirror(self):
