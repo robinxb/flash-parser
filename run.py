@@ -17,6 +17,7 @@ argParser.add_argument("-o", "--output", help="output folder", type=str, default
 argParser.add_argument("-x", "--xml", help="export xml", action="store_true", default=False)
 argParser.add_argument("-s", "--scale", help="scale the source images", type=float, default=1)
 argParser.add_argument("--with-png", help="output with the combined png", action="store_true", default=False)
+argParser.add_argument("--quiet", action="store_true", default=False)
 group = argParser.add_mutually_exclusive_group()
 group.add_argument("--tree", help="dump tree structure", action="store_true",default=False)
 group.add_argument("--single", help="export flash one by one", action="store_true", default=False)
@@ -33,6 +34,7 @@ sys.excepthook = show_exception_and_exit
 this_file = inspect.getfile(inspect.currentframe())
 DIR_PATH = os.path.abspath(os.path.dirname(this_file))
 SEP = os.path.sep
+
 
 sys.path.append(DIR_PATH + SEP + 'scripts')
 import handleCombine as HC
@@ -103,12 +105,14 @@ class MainTree():
             v.Export()
 
     def BatchExport(self):
-        print('[info]Walking into %s'%self.mainpath)
+        if (not args.quiet):
+            print('[info]Walking into %s'%self.mainpath)
         os.mkdir(self.tmpPath)
         self.CopyScript(self.tmpPath)
 
         # pngs
-        print ('[info]Export png')
+        if (not args.quiet):
+            print ('[info]Export png')
         os.system(sysOpen + ' ' + self.tmpPath + SEP + 'exportFiles.jsfl')
         self.WaitJSDone(self.tmpPath + SEP + 'done', True)
 
@@ -125,7 +129,7 @@ class MainTree():
 
         self.Combine()
         self.CopyUsefulFiles()
-        #self.Clean()
+        self.Clean()
 
     def SingleExport(self):
         groupFiles = []
@@ -151,7 +155,7 @@ class MainTree():
             tree = MainTree(self.tmpPath + SEP + groupName)
             tree.SetSingleExport()
             tree.Export(True)
-        #self.Clean()
+        self.Clean()
 
     def WaitJSDone(self, filepath, bRemove = False):
         while(not os.path.exists(filepath)):
@@ -206,7 +210,7 @@ class MainTree():
             handle = codecs.open(filepath, 'a')
             handle.write('</root>\n')
             handle.close()
-            self.hc = HC.Handler(filepath.replace('\\','/'))
+            self.hc = HC.Handler(filepath.replace('\\','/'), quiet = args.quiet)
             self.hc.Export(self.tmpPath.replace('\\','/') + '/%s.lua'%OUTPUT_NAME)
 
     def PreHandleMirror(self):
@@ -308,7 +312,8 @@ class MainTree():
 
         sts, out = self.ExecuteCmd(cmd)
         if sts == 0:
-            print('[info]TP success')
+            if (not args.quiet):
+                print('[info]TP success')
 
     def WriteOriginImgSizeInfo(self):
         content = "{"

@@ -12,8 +12,13 @@ except ImportError:
 EXPORT_NAME_CN = unicode("场景 1", "utf-8")
 EXPORT_NAME_EN = "Scene 1"
 
+RUN_IN_QUIET = False
+
 class Handler():
-    def __init__(self, file):
+    def __init__(self, file, quiet = False):
+        global RUN_IN_QUIET
+        RUN_IN_QUIET = quiet
+
         self.file = file
         self.dumper = dumper.Dumper()
         self.aniLib = {}
@@ -31,7 +36,8 @@ class Handler():
             for tl in doc:
                 if tl.get('name') == EXPORT_NAME_CN or\
                 tl.get('name') == EXPORT_NAME_EN:
-                    print ('[info]Parsing %s.fla\t\twait ...'%doc.get('filename'))
+                    if not RUN_IN_QUIET:
+                        print ('[info]Parsing %s.fla\t\twait ...'%doc.get('filename'))
                     self.ParseTL(doc, tl, doc.get('filename'))
         self.CombineAction()
         self.MarkID()
@@ -49,7 +55,8 @@ class Handler():
             act = name[idx + 1 :]
             if act.find('@') > -1: #a component when filename contains @
                 continue
-            print ('[info]action found\t\t%s\t\t%s'%(ani, act))
+            if not RUN_IN_QUIET:
+                print ('[info]action found\t\t%s\t\t%s'%(ani, act))
             aniToRemove.append(name)
             if not self.actionGroup.get(ani):
                 self.actionGroup[ani] = []
