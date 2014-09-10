@@ -162,7 +162,11 @@ class MainTree():
         while(not os.path.exists(filepath)):
             time.sleep(1)
         if bRemove:
-            os.remove(filepath)
+            try:
+                os.remove(filepath)
+            except OSError:
+                time.sleep(1)
+                os.remove(filepath)
 
     def CopyUsefulFiles(self):
         if args.with_png:
