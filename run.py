@@ -8,7 +8,8 @@ import codecs
 import inspect
 import subprocess
 import argparse
-import __builtin__
+
+temp_dirs = []
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-i", "--input", help="input folder", type=str, default=None)
@@ -16,18 +17,22 @@ argParser.add_argument("-o", "--output", help="output folder", type=str, default
 argParser.add_argument("-x", "--xml", help="export xml", action="store_true", default=False)
 argParser.add_argument("-s", "--scale", help="scale the source images", type=float, default=1)
 argParser.add_argument("--with-png", help="output with the combined png", action="store_true", default=False)
-argParser.add_argument("-q", "--quiet", action="store_true", default=False)
+argParser.add_argument("--quiet", action="store_true", default=False)
 group = argParser.add_mutually_exclusive_group()
 group.add_argument("--tree", help="dump tree structure", action="store_true",default=False)
 group.add_argument("--single", help="export flash one by one", action="store_true", default=False)
 args = argParser.parse_args()
 
-__builtin__.RUN_IN_QUIET = args.quiet
+def remove_temp_dirs_when_except():
+    print("===remove temp dirs===")
+    for filepath in temp_dirs:
+        shutil.rmtree(filepath)
 
 def show_exception_and_exit(exc_type, exc_value, tb):
     import traceback
     traceback.print_exception(exc_type, exc_value, tb)
     raw_input("run failed.")
+    remove_temp_dirs_when_except();
     sys.exit(-1)
 
 sys.excepthook = show_exception_and_exit
@@ -76,6 +81,7 @@ class MainTree():
         self.folders = {}
         self.files = []
         self.tmpPath = self.mainpath + '/' + TMP_FOLDER_NAME
+        temp_dirs.append(self.tmpPath)
         for root, dirs, files in os.walk(path):
             self.SaveFiles(files)
             self.ParseDirs(dirs)
@@ -108,7 +114,7 @@ class MainTree():
     def BatchExport(self):
         if (not args.quiet):
             print('[info]Walking into %s'%self.mainpath)
-        os.mkdir(self.tmpPath)
+        os.makedirs(self.tmpPath)
         self.CopyScript(self.tmpPath)
 
         # pngs
@@ -121,8 +127,11 @@ class MainTree():
         self.PreHandleMirror()
         self.RemoveAnchorPng()
         self.TexturePacker()
-        self.ImageMagicka()
-        self.WriteOriginImgSizeInfo()
+        if os.path.isfile(self.tmpPath + SEP + "%s.png "%OUTPUT_NAME):
+            self.ImageMagicka()
+            self.WriteOriginImgSizeInfo()
+        else:
+            self.CopyScript(self.tmpPath, True)
 
         #xml
         os.system(sysOpen + ' ' + self.tmpPath + SEP + '/main.jsfl')
@@ -134,7 +143,7 @@ class MainTree():
 
     def SingleExport(self):
         groupFiles = []
-        os.mkdir(self.tmpPath)
+        os.makedirs(self.tmpPath)
         for fpath in self.files:
             fname = os.path.basename(fpath)
             file_dir_path = self.tmpPath + SEP + fname[:-4]
@@ -144,10 +153,10 @@ class MainTree():
                     groupFiles.append(groupName)
                 groupDir = self.tmpPath + SEP + groupName
                 if not os.path.isdir(groupDir):
-                    os.mkdir(groupDir)
+                    os.makedirs(groupDir)
                 shutil.copy(fpath, self.tmpPath + SEP + groupName + SEP + fname)
             else:
-                os.mkdir(file_dir_path)
+                os.makedirs(file_dir_path)
                 shutil.copy(fpath, file_dir_path + SEP + fname)
                 tree = MainTree(file_dir_path)
                 tree.SetSingleExport()
@@ -174,6 +183,8 @@ class MainTree():
         for filename in LEAVE_FILE:
             if os.path.exists(self.tmpPath + '/%s'%filename):
                 name, ext = os.path.splitext(filename)
+            else:
+                continue
             if ext == ".ppm" or ext == ".pgm" or ext == ".png":
                 ext = ".1" + ext
             dirname = os.path.dirname(self.tmpPath.replace('\\', '/'))
@@ -215,7 +226,7 @@ class MainTree():
             handle = codecs.open(filepath, 'a')
             handle.write('</root>\n')
             handle.close()
-            self.hc = HC.Handler(filepath.replace('\\','/'))
+            self.hc = HC.Handler(filepath.replace('\\','/'), quiet = args.quiet)
             self.hc.Export(self.tmpPath.replace('\\','/') + '/%s.lua'%OUTPUT_NAME)
 
     def PreHandleMirror(self):
@@ -274,8 +285,8 @@ class MainTree():
                 os.remove(imgpath + os.path.sep + k)
 
     def ExecuteCmd(self, cmd):
-        pipe = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, universal_newlines=True)  
-        output = "".join(pipe.stdout.readlines()) 
+        pipe = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, universal_newlines=True)
+        output = "".join(pipe.stdout.readlines())
         sts = pipe.returncode
         if sts is None: sts = 0
         if not sts == 0:
@@ -291,7 +302,7 @@ class MainTree():
         self.ExecuteCmd(cmd2)
 
     def TexturePacker(self):
-        tpath = self.tmpPath 
+        tpath = self.tmpPath
         sysType = platform.system()
         if sysType == "Windows":
             tpath = tpath.replace('/','\\')
@@ -329,7 +340,7 @@ class MainTree():
         handle.write(content)
         handle.close()
 
-    def CopyScript(self, path):
+    def CopyScript(self, path, no_png_out=False):
         handle = open(SCRIPT_PATH + '/exportFiles.jsfl')
         content = handle.read()
         handle.close()
@@ -346,8 +357,13 @@ FLfile.write("file:///%s",FLfile.uriToPlatformPath(publishFolder) + "\\n");"""%(
         content = handle.read()
         handle.close()
 
-        header = 'eval("var JSONFILE = " + FLfile.read("file:///%s/%s.json"));\n'%(self.tmpPath.replace('\\','/'), OUTPUT_NAME)
-        header += 'eval("var ORIGIN_SIZE = " + FLfile.read("file:///%s/%s.json"));\n'%(self.tmpPath.replace('\\','/'), "originsize")
+        header = ""
+        if not no_png_out:
+            header = 'eval("var JSONFILE = " + FLfile.read("file:///%s/%s.json"));\n'%(self.tmpPath.replace('\\','/'), OUTPUT_NAME)
+            header += 'eval("var ORIGIN_SIZE = " + FLfile.read("file:///%s/%s.json"));\n'%(self.tmpPath.replace('\\','/'), "originsize")
+        else:
+            header = 'eval("var JSONFILE = {};") \n'
+            header += 'eval("var ORIGIN_SIZE = {};") \n'
         footer = "var publishFolder = '%s'; \n"%(self.mainpath.replace('\\','/'))
         footer += "var tmpPath = '%s';\n"%(self.tmpPath.replace('\\','/'))
         footer += """batToDo(publishFolder, tmpPath);
@@ -359,7 +375,6 @@ FLfile.write("file:///%s",FLfile.uriToPlatformPath(publishFolder) + "\\n");"""%(
 
     def Run(self):
         self.Export()
-
 
 def loadFiles():
     root = MainTree(FLASH_ROOT)
@@ -374,7 +389,7 @@ if __name__ == '__main__':
         CONVERT_PATH = SCRIPT_PATH + SEP + 'convert.exe '
     else:
         raise CmdError, 'System not support: %s'%sysType
-    
+
     root = loadFiles()
     root.Run()
 
