@@ -18,6 +18,7 @@ argParser.add_argument("-x", "--xml", help="export xml", action="store_true", de
 argParser.add_argument("-s", "--scale", help="scale the source images", type=float, default=1)
 argParser.add_argument("--with-png", help="output with the combined png", action="store_true", default=False)
 argParser.add_argument("--quiet", action="store_true", default=False)
+argParser.add_argument("--extend-name", help="extra string after name", type=str, default="")
 group = argParser.add_mutually_exclusive_group()
 group.add_argument("--tree", help="dump tree structure", action="store_true",default=False)
 group.add_argument("--single", help="export flash one by one", action="store_true", default=False)
@@ -187,6 +188,7 @@ class MainTree():
                 continue
             if ext == ".ppm" or ext == ".pgm" or ext == ".png":
                 ext = ".1" + ext
+            ext = args.extend_name + ext
             dirname = os.path.dirname(self.tmpPath.replace('\\', '/'))
             names = dirname.split('/')
             output_filename = names[len(names) - 1] + ext
