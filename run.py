@@ -6,6 +6,8 @@ import time
 import sys
 import codecs
 import inspect
+import getopt
+import math
 import subprocess
 import argparse
 
@@ -172,11 +174,14 @@ class MainTree():
         while(not os.path.exists(filepath)):
             time.sleep(1)
         if bRemove:
-            try:
-                os.remove(filepath)
-            except OSError:
-                time.sleep(1)
-                os.remove(filepath)
+            while os.path.exists(filepath):
+                try:
+                    os.remove(filepath)
+                except OSError:
+                    time.sleep(1)
+                finally:
+                    return
+
 
     def CopyUsefulFiles(self):
         if args.with_png:
@@ -202,8 +207,13 @@ class MainTree():
 
 
     def Clean(self):
-        if os.path.exists(self.tmpPath):
-            shutil.rmtree(self.tmpPath)
+        while os.path.exists(self.tmpPath):
+            try:
+                shutil.rmtree(self.tmpPath)
+            except OSError:
+                time.sleep(1)
+            finally:
+                return
 
     def Combine(self):
         bExist = False
@@ -322,8 +332,10 @@ class MainTree():
                 '--data %s' % (tpath + os.path.sep + '%s.json'%OUTPUT_NAME),
                 '--format json',
                 '--trim-mode Trim',
-				'--disable-rotation',
-                '--size-constraints POT',
+                '--disable-rotation',
+                '--size-constraints AnySize',
+                '--max-width 2048',
+                '--max-height 2048',
                 #'--shape-debug',
                 '%s' %  (tpath + os.path.sep + 'singleimg')
                 ])
@@ -377,6 +389,7 @@ FLfile.write("file:///%s",FLfile.uriToPlatformPath(publishFolder) + "\\n");"""%(
 
     def Run(self):
         self.Export()
+
 
 def loadFiles():
     root = MainTree(FLASH_ROOT)

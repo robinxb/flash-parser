@@ -12,8 +12,13 @@ except ImportError:
 EXPORT_NAME_CN = unicode("场景 1", "utf-8")
 EXPORT_NAME_EN = "Scene 1"
 
+RUN_IN_QUIET = False
+
 class Handler():
-    def __init__(self, file):
+    def __init__(self, file, quiet = False):
+        global RUN_IN_QUIET
+        RUN_IN_QUIET = quiet
+
         self.file = file
         self.dumper = dumper.Dumper()
         self.aniLib = {}
