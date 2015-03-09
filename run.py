@@ -336,6 +336,8 @@ class MainTree():
                 '--size-constraints AnySize',
                 '--max-width 2048',
                 '--max-height 2048',
+                '--common-division-x 2',
+                '--common-division-y 2',
                 #'--shape-debug',
                 '%s' %  (tpath + os.path.sep + 'singleimg')
                 ])
