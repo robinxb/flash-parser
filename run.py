@@ -21,6 +21,8 @@ argParser.add_argument("-s", "--scale", help="scale the source images", type=flo
 argParser.add_argument("--with-png", help="output with the combined png", action="store_true", default=False)
 argParser.add_argument("--quiet", action="store_true", default=False)
 argParser.add_argument("--extend-name", help="extra string after name", type=str, default="")
+argParser.add_argument("--pot", help="Forces the texture to have power-of-2 size", action="store_true", default=False)
+argParser.add_argument("--squared", help="Forces the texture to have a squared size", action="store_true", default=False)
 group = argParser.add_mutually_exclusive_group()
 group.add_argument("--tree", help="dump tree structure", action="store_true",default=False)
 group.add_argument("--single", help="export flash one by one", action="store_true", default=False)
@@ -333,9 +335,10 @@ class MainTree():
                 '--format json',
                 '--trim-mode Trim',
                 '--disable-rotation',
-                '--size-constraints AnySize',
                 '--max-width 2048',
                 '--max-height 2048',
+                '%s'%(args.pot and "--size-constraints POT" or "AnySize"),
+                '%s'%(args.squared and "--force-squared"),
                 #'--shape-debug',
                 '%s' %  (tpath + os.path.sep + 'singleimg')
                 ])
