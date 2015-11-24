@@ -31,6 +31,9 @@ Arguments
 	
 	-s <number>
 		Scale
+
+	--dump-pic-usage
+		Dump picture usage info for every flash file
 	
 		
 
