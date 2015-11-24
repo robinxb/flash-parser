@@ -341,13 +341,13 @@ class MainTree():
                 '--disable-rotation',
                 '--max-width 2048',
                 '--max-height 2048',
-                '%s'%(args.pot and "--size-constraints POT" or "AnySize"),
-                '%s'%(args.squared and "--force-squared"),
+                '%s'%(args.pot and "--size-constraints POT" or "--size-constraints AnySize"),
+                '%s'%(args.squared and "--force-squared" or ""),
                 #'--shape-debug',
                 '%s' %  (tpath + os.path.sep + 'singleimg')
                 ])
-
         sts, out = self.ExecuteCmd(cmd)
+
         if sts == 0:
             if (not args.quiet):
                 print('[info]TP success')
