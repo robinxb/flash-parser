@@ -21,6 +21,7 @@ argParser.add_argument("-s", "--scale", help="scale the source images", type=flo
 argParser.add_argument("--with-png", help="output with the combined png", action="store_true", default=False)
 argParser.add_argument("--quiet", action="store_true", default=False)
 argParser.add_argument("--extend-name", help="extra string after name", type=str, default="")
+argParser.add_argument("--dump-pic-usage", help="dump png usage info to text", action="store_true", default=False)
 group = argParser.add_mutually_exclusive_group()
 group.add_argument("--tree", help="dump tree structure", action="store_true",default=False)
 group.add_argument("--single", help="export flash one by one", action="store_true", default=False)
@@ -52,7 +53,7 @@ FLASH_ROOT = args.input
 OUTPUT_PATH = args.output
 
 OUTPUT_NAME = "flash"
-LEAVE_FILE = ['%s.1.ppm'%OUTPUT_NAME, '%s.1.pgm'%OUTPUT_NAME, '%s.lua'%OUTPUT_NAME]
+LEAVE_FILE = ['%s.1.ppm'%OUTPUT_NAME, '%s.1.pgm'%OUTPUT_NAME, '%s.lua'%OUTPUT_NAME, "%s.txt"%OUTPUT_NAME]
 if args.with_png:
     LEAVE_FILE.append('%s.1.png'%OUTPUT_NAME)
 
@@ -240,6 +241,8 @@ class MainTree():
             handle.close()
             self.hc = HC.Handler(filepath.replace('\\','/'), quiet = args.quiet)
             self.hc.Export(self.tmpPath.replace('\\','/') + '/%s.lua'%OUTPUT_NAME)
+            if args.dump_pic_usage:
+                self.hc.ExportDumpinfo(self.tmpPath.replace('\\','/') + '/%s.txt'%OUTPUT_NAME)
 
     def PreHandleMirror(self):
         self.originImgSize = {}

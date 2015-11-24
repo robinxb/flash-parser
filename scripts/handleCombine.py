@@ -25,6 +25,7 @@ class Handler():
         self.picLib = {}
         self.labelLib = {}
         self.actionGroup = {}
+        self.dumpinfo = {}
         handle = codecs.open(file, 'r')
         content = handle.read()
         handle.close()
@@ -76,6 +77,7 @@ class Handler():
         self.aniLib[tlname] = frames
 
     def ParseFrame(self, doc, tl, db, iFrame, ms, cs, bNoLoop):
+        docname = doc.get("filename")
         bIsEmpty = True
         for layer in tl:
             tmpFrame = iFrame
@@ -100,6 +102,11 @@ class Handler():
                         db.append((element, thisMS.CalAllMat(), thisCS.CalAllColor()))
                         if element.get('desc'):
                             if element.get('name').find('__anchor') < 0:
+                                if not self.dumpinfo.get(docname, None):
+                                    self.dumpinfo[docname] = []
+                                ename = element.get("name")
+                                if not ename in self.dumpinfo[docname]:
+                                    self.dumpinfo[docname].append(ename)
                                 self.AddPic(element)
                         else:
                             element.set('name', doc.get('filename') + '|' + element.get('idStr') + '[%s]'%element.get('string'))
@@ -143,6 +150,11 @@ class Handler():
                 break
         if bIsEmpty:
             db = []
+    
+    def ExportDumpinfo(self, filepath):
+        import json
+        with open(filepath, 'w') as f:
+            json.dump(self.dumpinfo, f, indent=4)       
 
     def AddPic(self, e):
         eName = e.get('name')
