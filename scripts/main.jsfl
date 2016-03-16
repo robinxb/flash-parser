@@ -1,3 +1,15 @@
+
+String.prototype.repeat = function(count) {
+    if (count < 1) return '';
+    var result = '', pattern = this.valueOf();
+    while (count > 1) {
+        if (count & 1) result += pattern;
+        count >>= 1, pattern += pattern;
+    }
+    return result + pattern;
+};
+
+
 function Point(x, y, scale){
 	this.x = x;
 	this.y = y;
@@ -229,9 +241,8 @@ function each(array, fn, bind) {
     if (!bind) {
         bind = this;
     }
-    var str = '';
     for (var i = 0, len = array.length; i < len; i++) {
-        str += fn.call(bind, array[i], i) + '\n';
+        fn.call(bind, array[i], i);
     }
 }
 
@@ -239,15 +250,15 @@ function reverseEach(array, fn, bind) {
     if (!bind) {
         bind = this;
     }
-    var str = '';
     for (var i = array.length - 1; i >= 0; i--) {
-        str += fn.call(bind, array[i], i) + '\n';
+        fn.call(bind, array[i], i);
     }
 }
 
 function XML(indent) {
-    this.buffer = '';
+    this.buffer = [];
     this.space = '\t';
+	this.space_buffer = "\t"
     this.indent = indent ? indent : 0;
     this.tags = [];
 }
@@ -266,48 +277,33 @@ XML.prototype.getargs = function (args) {
 }
 
 XML.prototype.begin = function (tag, args) {
-    var space = "";
-    for (var i = this.indent; i > 0; i--) {
-        space += this.space;
-    }
-    this.buffer += space + '<' + tag + ' ' + this.getargs(args) + '>\n';
+	this.buffer.push(this.space_buffer + '<' + tag + ' ' + this.getargs(args) + '>\n')
     this.indent += 1;
+	this.space_buffer = this.space.repeat(this.indent)
     this.tags.push(tag);
 }
 
 XML.prototype.end = function () {
     this.indent -= 1;
-    var space = "";
-    for (var i = this.indent; i > 0; i--) {
-        space += this.space;
-    }
-    this.buffer += space + '</' + this.tags.pop() + '>\n'
+    this.space_buffer = this.space.repeat(this.indent)
+    this.buffer.push(this.space_buffer + '</' + this.tags.pop() + '>\n')
 }
 
 XML.prototype.content = function (buf) {
-    var space = "";
-    for (var i = this.indent; i > 0; i--) {
-        space += this.space;
-    }
-    this.buffer += space + buf
+    this.buffer.push(this.space_buffer + buf)
 }
 
 XML.prototype.oneline = function (tag, args) {
-    var space = "";
-    for (var i = this.indent; i > 0; i--) {
-        space += this.space;
-    }
-    this.buffer += space + '<' + tag + " " + this.getargs(args) + '>' + '</' + tag + '>\n';
+    this.buffer.push(this.space_buffer + '<' + tag + " " + this.getargs(args) + '>' + '</' + tag + '>\n');
 }
 
 XML.prototype.print = function () {
-    fl.trace(this.buffer);
+    fl.trace(this.buffer.join(""));
 }
 
 XML.prototype.export = function (path) {
-    FLfile.write('file:///' + path, this.buffer);
+    FLfile.write('file:///' + path, this.buffer.join(""));
 }
-
 
 
 function Timeline(timeline, xml) {
@@ -318,8 +314,8 @@ function Timeline(timeline, xml) {
 }
 
 Timeline.prototype.parse = function () {
-    reverseEach(this.timeline.layers, function (l) {
-        var layer = new Layer(this, l);
+    reverseEach(this.timeline.layers, function (l, index) {
+        var layer = new Layer(this, l, index);
         layer.parse();
         this.layers.push(layer);
     }, this);
@@ -388,25 +384,19 @@ function TextObj(item, idStr){
     this.idStr = idStr
 }
 
-function Layer(timeline, layer) {
+function Layer(timeline, layer, index) {
     this.timeline = timeline;
     this.xml = timeline.xml;
     this.layer = layer;
+	this.index = index
     this.frames = [];
 }
 
-Layer.prototype.parse = function () {
-    layerToTrans = [];
-    for (var index in this.layer.frames) {
-        var f = this.layer.frames[index];
-        if (f.tweenType != "none") {
-            layerToTrans.push(f);
-        }
-    }
+var times = 0
 
-    each(layerToTrans, function (l) {
-        l.convertToFrameByFrameAnimation();
-    }, this);
+Layer.prototype.parse = function () {
+	this.timeline.timeline.setSelectedLayers(Number(this.index));
+	this.timeline.timeline.convertToKeyframes(0, this.timeline.timeline.frameCount - 1);
 
     for (var index in this.layer.frames) {
         if (this.layer.frames[index].startFrame == index) {

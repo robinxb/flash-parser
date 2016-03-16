@@ -96,9 +96,11 @@ class Handler():
                     if element.get('desc') or element.get('idStr'): #pic or label
                         thisMS = ms.Clone()
                         thisMS.Push(element.get('mat'))
-                        thisCS = cs.Clone()
-                        if element.get('color'):
-                            thisCS.Push(element.get('color'))
+                        thisCS = cs
+                        color_mat = element.get('color')
+                        if color_mat:
+                            thisCS = cs.Clone()
+                            thisCS.Push(color_mat)
                         db.append((element, thisMS.CalAllMat(), thisCS.CalAllColor()))
                         if element.get('desc'):
                             if element.get('name').find('__anchor') < 0:
@@ -114,26 +116,32 @@ class Handler():
                     elif element.get('name')[:1] == '@':
                         thisMS = ms.Clone()
                         thisMS.Push(element.get('mat'))
-                        thisCS = cs.Clone()
-                        if element.get('color'):
-                            thisCS.Push(element.get('color'))
+                        thisCS = cs
+                        color_mat = element.get('color')
+                        if color_mat:
+                            thisCS = cs.Clone()
+                            thisCS.Push(color_mat)
                         db.append((element, thisMS.CalAllMat(), thisCS.CalAllColor()))
-                        timeline = doc.find("Timeline[@name='%s']"%element.get('name'))
+                        ename = element.get('name')
+                        timeline = doc.find("Timeline[@name='%s']"%ename)
                         if not timeline:
-                            timeline = doc.find("Timeline[@name='%s']"%(doc.get('filename') + "|" + element.get('name')))
+                            timeline = doc.find("Timeline[@name='%s']"%(doc.get('filename') + "|" + ename))
                         assert(timeline)
-                        tlName = doc.get('filename') + "|" + element.get('name')                        
+                        tlName = doc.get('filename') + "|" + ename                        
                         timeline.set('name', tlName)
                         element.set('nickname', tlName)
                         self.ParseTL(doc, timeline)
                     else:
-                        timeline = doc.find("Timeline[@name='%s']"%element.get('name'))
+                        ename = element.get('name')                       
+                        timeline = doc.find("Timeline[@name='%s']"%ename)
                         assert(timeline)
                         thisMS = ms.Clone()
                         thisMS.Push(element.get('mat'))
-                        thisCS = cs.Clone()
-                        if element.get('color'):
-                            thisCS.Push(element.get('color'))
+                        thisCS = cs
+                        color_mat = element.get('color')
+                        if color_mat:
+                            thisCS = cs.Clone()
+                            thisCS.Push(color_mat)
                         iFrameNext = tmpFrame
                         loopType = element.get('loop')
                         nextNoLoop = False
