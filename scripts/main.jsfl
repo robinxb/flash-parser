@@ -395,8 +395,10 @@ function Layer(timeline, layer, index) {
 var times = 0
 
 Layer.prototype.parse = function () {
-	this.timeline.timeline.setSelectedLayers(Number(this.index));
-	this.timeline.timeline.convertToKeyframes(0, this.timeline.timeline.frameCount - 1);
+	if (this.layer.frameCount > 1){
+		this.timeline.timeline.setSelectedLayers(Number(this.index));
+		this.timeline.timeline.convertToKeyframes(0, this.layer.frameCount - 1);
+	}
 
     for (var index in this.layer.frames) {
         if (this.layer.frames[index].startFrame == index) {
