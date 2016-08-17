@@ -169,7 +169,7 @@ class MainTree():
         self.PreHandleMirror()
         self.RemoveAnchorPng()
         self.TexturePacker()
-        if os.path.isfile(self.tmpPath + SEP + "%s.png "%OUTPUT_NAME):
+        if os.path.isfile(self.tmpPath + SEP + "%s.png"%OUTPUT_NAME):
             self.ImageMagicka()
             self.WriteOriginImgSizeInfo()
         else:
